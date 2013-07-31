@@ -9,20 +9,42 @@
 if (!window.console) window.console = {};
 if (!window.console.log) window.console.log = function () {
 };
-angular.module('rescour.app',
+angular.module('roomba.app',
         [
             'ui.bootstrap',
             'rescour.config',
             'rescour.auth',
             'rescour.user',
             'rescour.utility',
-            'rescour.market',
-            'rescour.market.map',
-            'rescour.browserDetect',
-            'ahTouch'
+            'rescour.marketplace'
         ])
-    .config(['$routeProvider', '$locationProvider', '$httpProvider', 'BrowserDetectProvider',
-        function ($routeProvider, $locationProvider, $httpProvider, BrowserDetectProvider) {
+    .value('$collections', {
+        listings: {
+            title: 'Listings',
+            tags: ['raw', 'staged', 'published'],
+            path: 'listings',
+            dimensions: {
+                discreet: {
+                    broker: {
+                        title: 'Broker',
+                        weight: 10
+                    },
+                    state: {
+                        title: 'State',
+                        weight: 9
+                    }
+                }
+            },
+            fields: {
+                description: {
+                    title: 'Description',
+                    weight: 8
+                }
+            }
+        }
+    })
+    .config(['$routeProvider', '$locationProvider', '$httpProvider',
+        function ($routeProvider, $locationProvider, $httpProvider) {
             $httpProvider.defaults.useXDomain = true;
             $httpProvider.defaults.withCredentials = true;
             $locationProvider.html5Mode(true);

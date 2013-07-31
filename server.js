@@ -25,6 +25,7 @@ app.configure(function() {
 });
 
 ignorePaths = [
+    '/listings', '/listings*',
     '/market', '/market*',
     '/account', '/account*',
     '/login', '/login*'

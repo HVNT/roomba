@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3">
+            <div ng-repeat="discreet in dimensions.discreet">
+                <ul class="ribbon-nav">
+                    <li class="header">{{discreet.title}}</li>
+                    <li ng-repeat="value in discreet.values"
+                        ng-class="{'active': value.isSelected}"
+                        ng-click="toggleDiscreet(value)"><a href="javascript:">{{value.title}}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="span9">
+            <ul>
+                <li ng-repeat="item in collection | limitVisible">
+                    <a ng-href="{{collectionID}}/{{item.id}}">
+                        {{item.title}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

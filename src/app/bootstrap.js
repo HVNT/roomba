@@ -7,4 +7,4 @@
  */
 
 
-angular.bootstrap(document, ['rescour.app']);
+angular.bootstrap(document, ['roomba.app']);

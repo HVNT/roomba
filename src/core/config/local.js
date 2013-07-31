@@ -11,7 +11,7 @@
 angular.module('rescour.config', [])
     .factory('$_api', function () {
         var url = {
-                local: ""
+                local: "/api/"
             },
             stripeTokens = {
                 test: 'pk_test_wSAqQNQKI7QqPmBpDcQLgGM7',

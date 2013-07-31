@@ -2,13 +2,10 @@
 @import "compass/reset";
 @import "compass_twitter_bootstrap";
 @import "rescour_variables";
-@import "market/desktop/styles/market";
-@import "market/tablet/styles/market";
-@import "login/desktop/styles/login";
-@import "account/desktop/styles/account";
 @import "header";
 @import "footer";
 @import "ngform";
+@import "ribbon_nav";
 
 .loading-background {
   position: absolute; left: 0px; top: 0px; bottom:0px; right: 0px; background: $light-gray; z-index: 5;

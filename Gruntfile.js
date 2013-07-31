@@ -325,6 +325,11 @@ module.exports = function (grunt) {
                 files: [
                     {expand: true, cwd: './src/', src: ['template/**'], dest: './dist/'}
                 ]
+            },
+            index: {
+                files: [
+                    {expand: true, cwd: './tmp/', src: ['index.html'], dest: './dist/'}
+                ]
             }
         },
         concat: {
@@ -429,6 +434,10 @@ module.exports = function (grunt) {
             server: {
                 files: ['server.js'],
                 tasks: 'express-restart:livereload'
+            },
+            indexLocal: {
+                files: ['./src/index.html.template'],
+                tasks: ['template:indexLocal', 'copy:index', 'livereload']
             }
         },
 
@@ -465,6 +474,12 @@ module.exports = function (grunt) {
                     './tmp/main.js': './src/main.js.template'
                 },
                 environment: 'prod'
+            },
+            shimLocal: {
+                files: {
+                    './tmp/main.js': './src/main.js.template'
+                },
+                environment: 'local'
             },
             indexLocal: {
                 files: {
@@ -521,11 +536,22 @@ module.exports = function (grunt) {
         'unit-tests'
     ]);
 
+    grunt.registerTask('watchSrc', [
+        'watch:styles',
+        'watch:appjs',
+        'watch:apphtml',
+        'watch:core',
+        'watch:images',
+        'watch:template',
+        'watch:server'
+    ]);
+
     grunt.registerTask('server', [
         'livereload-start',
         'express',
         'watch'
     ]);
+
 
     /*
      Compiles the app with non-optimized build settings, places the build artifacts in the dist directory, and watches for file changes.
@@ -536,6 +562,7 @@ module.exports = function (grunt) {
     grunt.registerTask('local', [
         'clean:dist',
         'compass:dev', // Compile compass: app -> tmp
+        'template:shimLocal',
         'copy:prep', // Copy all html/css/js: app -> tmp
         'template:indexLocal', // Compile templates: app -> tmp
         'copy:dev', // Copy all from: tmp -> dist
