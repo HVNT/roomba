@@ -12,144 +12,140 @@ angular.module('rescour.marketplace', ['rescour.config'])
     .service('Market', ['Dimensions', '$q',
         function (Dimensions, $q) {
             // Private items data
-            this.activeItem = null;
-            this.activeCollection = null;
-            this.items = {};
-            this.dimensions = {};
+            var activeItem = null,
+                activePath = null,
+                items = {},
+                dimensions = {};
+
             this.visibleIds = [];
 
-            this.setActive = function (item) {
-                var defer = $q.defer(),
-                    self = this;
-
-                if (!item.details) {
-                    item.$get()
-                        .then(function (_item) {
-                            self.activeItem = _item;
-                            defer.resolve(self.active);
-                        });
-                } else {
-                    this.activeItem = item;
-                    defer.resolve(this.active);
-                }
-
-                return defer.promise;
+            this.getActive = function () {
+                return activeItem;
             };
 
-            this.toArray = function () {
-                return _.map(this.items, function (val) {
+            this.setActive = function (id) {
+                if (angular.isObject(id)) {
+                    activeItem = id;
+                } else {
+                    activeItem = items[id];
+                }
+            };
+
+            this.getItems = function () {
+                return _.map(items, function (val) {
                     return val;
                 });
             };
 
-            this.initialize = function (Item, tag) {
+            this.getDimensions = function () {
+                return dimensions.toArray();
+            };
+
+            this.initialize = function (Model) {
                 var defer = $q.defer(),
                     self = this;
 
-                if (tag) {
-                   Item.path += '/' + tag;
+                // Apply any tags to the path
+                if (arguments.length > 1) {
+                    var tags = Array.prototype.slice.call(arguments).slice(1);
+                    Model.path = Model.collection.path;
+                    angular.forEach(tags, function (value) {
+                        Model.path += '/' + value;
+                    });
                 }
 
-                if (_.isEmpty(self.items)) {
-                    this.items = {};
-                    this.dimensions = new Dimensions(Item.collection.dimensions);
+                if (_.isEmpty(items) || activePath !== Model.path) {
+                    items = {};
+                    dimensions = new Dimensions(Model.collection);
 
-                    Item.query().then(
+                    Model.query().then(
                         function (response) {
                             var products = response.data;
-                            console.log(products);
                             for (var product in products) {
                                 if (products.hasOwnProperty(product)) {
                                     var _product = products[product];
                                     try {
-                                        self.items[_product.id] = new Item(_product);
-                                        self.items[_product.id].mapDimensions(self.dimensions);
-                                        self.dimensions.ids.push(_product.id);
+                                        items[_product.id] = new Model(_product);
+                                        items[_product.id].mapDimensions(dimensions);
+                                        dimensions.ids.push(_product.id);
                                     } catch (e) {
                                         console.log(e.message);
                                     }
                                 }
                             }
-                            self.dimensions.initialize().apply().predict();
+                            activePath = Model.path;
+                            dimensions.initialize().apply().predict();
                             self.render();
-                            defer.resolve(self.items);
+                            defer.resolve(items);
                         }, function (response) {
                             defer.reject(response);
                         }
                     );
                 } else {
-                    defer.resolve(self.items);
+                    defer.resolve(items);
                 }
 
                 return defer.promise;
             };
 
             this.reload = function () {
-                for (var id in this.items) {
-                    if (this.items.hasOwnProperty(id)) {
-                        this.items[id].mapDimensions(this.dimensions);
+                for (var id in items) {
+                    if (items.hasOwnProperty(id)) {
+                        items[id].mapDimensions(dimensions);
                     }
                 }
-                this.dimensions.initialize();
+                dimensions.initialize();
             };
 
             this.render = function (subset) {
-                var _dimensions = this.dimensions;
-                this.visibleIds = [];
+                var self = this;
+                self.visibleIds = [];
+                self.subset = subset || self.subset;
 
-                if (!subset || subset === 'all') {
-                    for (var id in this.items) {
-                        if (this.items.hasOwnProperty(id)) {
-                            this.items[id].isVisible = (_.contains(_dimensions.visibleIds, id) && !this.items[id].hidden);
-                            this.items[id].isVisible ? this.visibleIds.push(id) : null;
+                for (var id in items) {
+                    if (items.hasOwnProperty(id)) {
+                        if (!self.subset || self.subset === 'all') {
+                            items[id].isVisible = _.contains(dimensions.visibleIds, id) && !items[id].hidden;
+                        } else {
+                            items[id].isVisible = _.contains(dimensions.visibleIds, id) && items[id][self.subset];
                         }
-                    }
-                } else if (subset === 'notes') {
-                    for (var i = 0, len = _dimensions.visibleIds.length; i < len; i++) {
-                        var _id = _dimensions.visibleIds[i];
-                        if (this.items.hasOwnProperty(_id)) {
-                            this.items[_id].isVisible = this.items[_id].hasComments || this.items[_id].hasFinances;
-                            this.items[_id].isVisible ? this.visibleIds.push(_id) : null;
-                        }
-                    }
-                } else {
-                    for (var i = 0, len = _dimensions.visibleIds.length; i < len; i++) {
-                        var _id = _dimensions.visibleIds[i];
-                        if (this.items.hasOwnProperty(_id)) {
-                            this.items[_id].isVisible = this.items[_id][subset];
-                            this.items[_id].isVisible ? this.visibleIds.push(_id) : null;
-                        }
+                        items[id].isVisible ? self.visibleIds.push(id) : null;
                     }
                 }
             };
+
+            this.apply = function () {
+                // Toggle any values
+                if (arguments.length > 0) {
+                    angular.forEach(arguments, function (discreet) {
+                        if (discreet) {
+                            discreet.isSelected = !discreet.isSelected;
+                        }
+                    });
+                    dimensions.apply();
+                    this.render();
+                }
+            }
         }])
-    .factory('Item', ['$_api', '$q', '$http', '$collections',
-        function ($_api, $q, $http, $collections) {
+    .factory('Item', ['$_api', '$q', '$http',
+        function ($_api, $q, $http) {
+            function ItemFactory(collection) {
 
-            function ItemFactory (collection) {
-
-                var Item = function (data) {
-                    var defaults = {
+                var Item = function (data, defaults) {
+                    var _defaults = defaults || {
                             title: 'Untitled',
                             description: 'No description provided.',
                             thumbnail: 'http://placehold.it/100x100',
                             hidden: false,
                             isVisible: true
                         },
-                        opts = angular.extend({}, defaults, data),
+                        opts = angular.extend({}, _defaults, data),
                         self = this;
 
                     angular.copy(opts, this);
 
                     if (collection) {
-                        var _collection = collection;
-                        angular.forEach(_collection.discreet, function(value, key){
-                            self[key] = self[key] || (value.placeholder || "");
-                        });
-                        angular.forEach(_collection.range, function(value, key){
-                            self[key] = self[key] || (value.placeholder || "");
-                        });
-                        angular.forEach(_collection.misc, function(value, key){
+                        angular.forEach(collection.fields, function (value, key) {
                             self[key] = self[key] || (value.placeholder || "");
                         });
                     }
@@ -169,10 +165,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
                         }, $_api.config);
 
                     $http.get($_api.path + Item.path, config).then(function (response) {
-                        var items = {};
-                        angular.forEach(response.data, function(value, key){
-
-                        });
                         defer.resolve(response);
                     }, function (response) {
                         defer.reject(response);
@@ -184,12 +176,12 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 Item.prototype.mapDimensions = function (dimensions) {
                     var self = this;
 
-                    angular.forEach(collection.dimensions.discreet, function (attrValue, attrID) {
+                    angular.forEach(collection.dimensions.discreet, function (attrID) {
                         self[attrID] = self[attrID] || 'Unknown';
                         dimensions.pushDiscreetId(attrID, self.id, self[attrID]);
                     });
 
-                    angular.forEach(collection.dimensions.range, function (attrValue, attrID) {
+                    angular.forEach(collection.dimensions.range, function (attrID) {
                         self[attrID] = (_.isNaN(parseInt(self[attrID], 10)) || !self[attrID]) ? 'NA' : self[attrID];
                         dimensions.pushRangeId(attrID, self.id, self[attrID]);
                     });
@@ -258,19 +250,27 @@ angular.module('rescour.marketplace', ['rescour.config'])
 
             return ItemFactory;
         }])
-    .factory('Dimensions', ['$timeout', '$collections',
-        function ($timeout, $collections) {
+    .factory('Dimensions', ['$timeout',
+        function ($timeout) {
             // Dimensions Constructor
             function Dimensions(collection) {
-
                 var defaults = angular.extend({
-                        title: "",
-                        discreet: {},
-                        range: {},
-                        visibleIds: [],
-                        ids: []
-                    }, collection),
-                    discreetDefaults = {
+                    title: "",
+                    discreet: {},
+                    range: {},
+                    visibleIds: [],
+                    ids: []
+                });
+
+                angular.forEach(collection.dimensions.discreet, function (value, key) {
+                    defaults.discreet[value] = collection.fields[value];
+                });
+
+                angular.forEach(collection.dimensions.range, function (value, key) {
+                    defaults.range[value] = collection.fields[value];
+                });
+
+                var discreetDefaults = {
                         values: {},
                         selected: 0,
                         visibleIds: []
@@ -604,7 +604,5 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 return intersectArray;
             };
 
-
             return Dimensions;
         }]);
-

@@ -24,21 +24,25 @@ angular.module('roomba.app',
             tags: ['raw', 'staged', 'published'],
             path: 'listings',
             dimensions: {
-                discreet: {
-                    broker: {
-                        title: 'Broker',
-                        weight: 10
-                    },
-                    state: {
-                        title: 'State',
-                        weight: 9
-                    }
-                }
+                discreet: ['broker', 'state'],
+                range: []
             },
             fields: {
+                title: {
+                    title: 'Title',
+                    weight: 5000
+                },
                 description: {
                     title: 'Description',
                     weight: 8
+                },
+                broker: {
+                    title: 'Broker',
+                    weight: 10
+                },
+                state: {
+                    title: 'State',
+                    weight: 9
                 }
             }
         }

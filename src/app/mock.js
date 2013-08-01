@@ -32,22 +32,16 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             self.description = 'This item is pretty sweet.  This is the description';
             self.title = "";
 
-            angular.forEach(_collection.dimensions, function (dimension, key) {
-                if (key === 'discreet') {
-                    angular.forEach(dimension, function(value, key){
-                        if (collections.hasOwnProperty(collectionKey)) {
-                            self[key] = selectRandom(collections[collectionKey][key]);
-                        }
-                    });
+            angular.forEach(_collection.fields, function (value, key) {
+                if (_.contains(_collection.dimensions.discreet, key)) {
+                    self[key] = selectRandom(collections[collectionKey][key]);
+                } else if (_.contains(_collection.dimensions.range, key) && collections[collectionKey][key]) {
+                    self[key] = parseInt((Math.random() * (collections[collectionKey][key].high - collections[collectionKey][key].low)) + collections[collectionKey][key].low, 10);
                 } else {
-                    angular.forEach(dimension, function(value, key){
-                        if (collections.hasOwnProperty(collectionKey)) {
-                            self[key] = parseInt((Math.random() * (collections[collectionKey][key].high - collections[collectionKey][key].low)) + collections[collectionKey][key].low, 10);
-                        }
-                    });
+                    self[key] = key;
                 }
 
-                self.title += _collection.title + " " + idCounter;
+                self.title = _collection.title + " " + idCounter;
                 self.tags = [selectRandom(collections[collectionKey].tags)];
             });
 
@@ -91,7 +85,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                             return _.contains(value.tags, item_id);
                         })), {}];
                     } else {
-                        return [200, angular.extend({},items[key][item_id], itemDetails[key][item_id]), {}];
+                        return [200, angular.extend({}, items[key][item_id], itemDetails[key][item_id]), {}];
                     }
                 });
 
@@ -101,7 +95,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                         itemId = url.split("/")[4];
 
                     if (_.contains(collections[key].tags, tag)) {
-                        return [200, angular.extend({},items[key][itemId], itemDetails[key][itemId]), {}];
+                        return [200, angular.extend({}, items[key][itemId], itemDetails[key][itemId]), {}];
                     } else {
                         return [403, {message: 'Invalid Tag'}, {}];
                     }
@@ -109,7 +103,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
 
             $httpBackend.whenPOST(postPath).respond(
                 function (method, url, data, headers) {
-                    var _newID  = idCounter+= 1,
+                    var _newID = idCounter += 1,
                         _item = angular.fromJson(data);
 
                     _item.id = _newID.toString();
@@ -119,7 +113,6 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                     return [200, {id: _newID}, {}];
                 });
         });
-
 
 //        $httpBackend.whenGET(/\/items(\/?)$/).respond(
 //            function (method, url, data, headers) {
@@ -158,6 +151,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
 //            });
 
         $httpBackend.whenGET(/views\//).passThrough();
+        $httpBackend.whenGET(/partials\//).passThrough();
         $httpBackend.whenGET(/template\//).passThrough();
     }]);
 

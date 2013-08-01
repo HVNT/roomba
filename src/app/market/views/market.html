@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span3">
-            <div ng-repeat="discreet in dimensions.discreet">
+            <div ng-controller="MarketFilterCtrl" ng-repeat="discreet in dimensions.discreet">
                 <ul class="ribbon-nav">
                     <li class="header">{{discreet.title}}</li>
                     <li ng-repeat="value in discreet.values"
@@ -10,14 +10,16 @@
                 </ul>
             </div>
         </div>
-        <div class="span9">
+        <div class="span6">
             <ul>
                 <li ng-repeat="item in collection | limitVisible">
-                    <a ng-href="{{collectionID}}/{{item.id}}">
+                    <a href="javascript:" ng-click="openDetails(item.id)">
                         {{item.title}}
                     </a>
                 </li>
             </ul>
         </div>
+
+        <div ng-include="srcListingDetails" ng-controller="DetailsCtrl" ng-show="activeItem"></div>
     </div>
 </div>

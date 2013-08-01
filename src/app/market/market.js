@@ -11,21 +11,37 @@ angular.module('roomba.app')
                     templateUrl: '/app/market/views/market.html?v=' + Date.now(),
                     controller: 'CollectionCtrl',
                     resolve: {
-                        collection: function (Market, $route, $q, $timeout, Listing) {
+                        collection: function (Market, $route, $q, $timeout, Models) {
                             var defer = $q.defer();
 
-                            switch ($route.current.params.collection) {
-                                case 'listings':
-                                    Market.initialize(Listing, $route.current.params.tag)
-                                        .then(function (items) {
-                                            console.log(items);
-                                            defer.resolve(items);
-                                        });
-                                    return defer.promise;
-                                    break;
-                                default:
-                                    throw "Unknown collection";
-                            }
+                            Market.initialize(Models[$route.current.params.collection], $route.current.params.tag)
+                                .then(function () {
+                                    defer.resolve();
+                                });
+
+                            return defer.promise;
+                        }
+                    }
+                })
+                .when('/market/:collection/:tag/:id',
+                {
+                    templateUrl: '/app/market/views/market.html?v=' + Date.now(),
+                    controller: 'CollectionCtrl',
+                    resolve: {
+                        collection: function (Market, $route, $q, $timeout, Models) {
+                            var defer = $q.defer(),
+                                _collection = $route.current.params.collection,
+                                _tag = $route.current.params.tag,
+                                _id = $route.current.params.id;
+
+                            Market.initialize(Models[_collection], _tag)
+                                .then(function () {
+                                    // Set active item
+                                    Market.setActive(_id);
+                                    defer.resolve();
+                                });
+
+                            return defer.promise;
                         }
                     }
                 })
@@ -38,35 +54,45 @@ angular.module('roomba.app')
             $scope.collections = $collections;
             $scope.collection = collection;
         }])
-    .controller('CollectionCtrl', ['$scope', 'collection', 'Market', '$routeParams',
-        function ($scope, collection, Market, $routeParams) {
-            $scope.collection = collection;
-            $scope.dimensions = Market.dimensions;
-            console.log($scope.dimensions);
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location',
+        function ($scope, Market, $routeParams, $location) {
+            $scope.collection = Market.getItems();
+            $scope.dimensions = Market.getDimensions();
+            $scope.activeItem = Market.getActive();
             $scope.collectionID = $routeParams.collection;
+            $scope.srcListingDetails = '/app/market/partials/listing-details.html?v=' + Date.now();
 
-            $scope.toggleDiscreet = function (value) {
-                value.isSelected = !value.isSelected;
-                Market.dimensions.apply();
-                Market.render();
+            $scope.openDetails = function (id) {
+                $location.path('/market/' + $routeParams.collection + '/' +  $routeParams.tag + '/' + id)
             }
         }])
-    .factory('Listing', ['Item', '$collections',
-        function (Item, $collections) {
-            var Listing = Item($collections.listings);
+    .controller('MarketFilterCtrl', ['$scope', 'Market',
+        function ($scope, Market) {
+            $scope.toggleDiscreet = function (value) {
+                Market.apply(value);
+            };
+        }])
+    .controller('DetailsCtrl', ['$scope', '$routeParams',
+        function ($scope, $routeParams) {
+            $scope.collectionID = $routeParams.collection;
+            $scope.itemID = $routeParams.id;
+            $scope.test = "Hello!";
 
-            return Listing;
-        }]);
-//    .controller('DetailsCtrl', ['$scope', '$routeParams', 'active', 'user',
-//        function ($scope, $routeParams, active, user) {
-//            $scope.active = active;
-//            $scope.collectionID = $routeParams.collection;
-//            $scope.itemID = $routeParams.id;
-//
-//            // determine role
-//            // if active.sellerID === userID
-//            // $scope.role = 'seller'
-//            // else
-//            $scope.role = 'seller';
-//            $scope.detailsIncl = '/app/market/views/desktop/partials/' + $scope.collectionID + '_' + $scope.role + '.html';
-//        }]);
+            // determine role
+            // if active.sellerID === userID
+            // $scope.role = 'seller'
+            // else
+            $scope.role = 'seller';
+            $scope.detailsIncl = '/app/market/views/desktop/partials/' + $scope.collectionID + '_' + $scope.role + '.html';
+        }])
+    .factory('Models', ['Item', '$collections',
+        function (Item, $collections) {
+            var models = {};
+
+            angular.forEach($collections, function(value, key){
+                models[key] = Item(value);
+            });
+
+            return models;
+        }])
+
