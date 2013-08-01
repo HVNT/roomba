@@ -8,14 +8,15 @@
                             {{ activeTag }} <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li ng-class="{'active': isActive}" ng-repeat="(tag, isActive) in tags"><a href="javascript:" ng-click="changeTag(tag)">{{ tag }}</a></li>
+                            <li ng-class="{'active': isActive}" ng-repeat="(tag, isActive) in tags"><a
+                                    href="javascript:" ng-click="changeTag(tag)">{{ tag }}</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="scroll-container">
-                <div ng-repeat="discreet in dimensions.discreet">
-                    <ul class="ribbon-nav">
+            <div class="row">
+                <div class="col-lg-12 scroll-container">
+                    <ul ng-repeat="discreet in dimensions.discreet" class="ribbon-nav">
                         <li class="header">{{discreet.title}}</li>
                         <li ng-repeat="value in discreet.values"
                             ng-class="{'active': value.isSelected}"
