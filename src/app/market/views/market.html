@@ -1,25 +1,42 @@
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span3">
-            <div ng-controller="MarketFilterCtrl" ng-repeat="discreet in dimensions.discreet">
-                <ul class="ribbon-nav">
-                    <li class="header">{{discreet.title}}</li>
-                    <li ng-repeat="value in discreet.values"
-                        ng-class="{'active': value.isSelected}"
-                        ng-click="toggleDiscreet(value)"><a href="javascript:">{{value.title}}</a></li>
-                </ul>
+<div class="roomba-wrap">
+    <div class="row">
+        <div class="col-lg-2" ng-controller="MarketFilterCtrl">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="filter-actions">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            {{ activeTag }} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-class="{'active': isActive}" ng-repeat="(tag, isActive) in tags"><a href="javascript:" ng-click="changeTag(tag)">{{ tag }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-container">
+                <div ng-repeat="discreet in dimensions.discreet">
+                    <ul class="ribbon-nav">
+                        <li class="header">{{discreet.title}}</li>
+                        <li ng-repeat="value in discreet.values"
+                            ng-class="{'active': value.isSelected}"
+                            ng-click="toggleDiscreet(value)"><a href="javascript:">{{value.title}}</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="span6">
-            <ul>
-                <li ng-repeat="item in collection | limitVisible">
-                    <a href="javascript:" ng-click="openDetails(item.id)">
-                        {{item.title}}
-                    </a>
-                </li>
-            </ul>
+        <div class="col-lg-4">
+
+            <div class="scroll-container">
+                <div class="row listing-list-item" ng-repeat="item in collection | limitVisible"
+                     ng-click="openDetails(item.id)">
+                    <div class="col-lg-1"><input type="checkbox"/></div>
+                    <div class="col-lg-1"><input type="checkbox"/></div>
+                    <div class="col-lg-8">{{item.title}}</div>
+                    <div class="col-lg-2">prog</div>
+                </div>
+            </div>
         </div>
 
-        <div ng-include="srcListingDetails" ng-controller="DetailsCtrl" ng-show="activeItem"></div>
+        <div class="col-lg-6" ng-include="srcListingDetails" ng-controller="DetailsCtrl" ng-show="activeItem"></div>
     </div>
 </div>

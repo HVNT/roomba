@@ -63,33 +63,38 @@ angular.module('roomba.app')
             $scope.srcListingDetails = '/app/market/partials/listing-details.html?v=' + Date.now();
 
             $scope.openDetails = function (id) {
-                $location.path('/market/' + $routeParams.collection + '/' +  $routeParams.tag + '/' + id)
+                $location.path('/market/' + $routeParams.collection + '/' + $routeParams.tag + '/' + id);
             }
         }])
-    .controller('MarketFilterCtrl', ['$scope', 'Market',
-        function ($scope, Market) {
+    .controller('MarketFilterCtrl', ['$scope', 'Market', '$routeParams', '$location',
+        function ($scope, Market, $routeParams, $location) {
+            $scope.tags = {
+                raw: false,
+                published: false,
+                staged: false
+            };
+
+            $scope.activeTag = $routeParams.tag;
+
+            $scope.tags[$scope.activeTag] = true;
+
             $scope.toggleDiscreet = function (value) {
                 Market.apply(value);
             };
+
+            $scope.changeTag = function (tag) {
+                $location.path('/market/' + $routeParams.collection + '/' + tag);
+            }
         }])
     .controller('DetailsCtrl', ['$scope', '$routeParams',
         function ($scope, $routeParams) {
-            $scope.collectionID = $routeParams.collection;
-            $scope.itemID = $routeParams.id;
-            $scope.test = "Hello!";
 
-            // determine role
-            // if active.sellerID === userID
-            // $scope.role = 'seller'
-            // else
-            $scope.role = 'seller';
-            $scope.detailsIncl = '/app/market/views/desktop/partials/' + $scope.collectionID + '_' + $scope.role + '.html';
         }])
     .factory('Models', ['Item', '$collections',
         function (Item, $collections) {
             var models = {};
 
-            angular.forEach($collections, function(value, key){
+            angular.forEach($collections, function (value, key) {
                 models[key] = Item(value);
             });
 

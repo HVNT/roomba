@@ -14,8 +14,9 @@
     <meta http-equiv="cache-control" content="no-cache" />
     <meta http-equiv="expires" content="-1" />
     <meta http-equiv="pragma" content="no-cache" />
-    <link rel="stylesheet" href="/styles/main.css?v=<%= hash('./tmp/styles/main.css') %>"/>
+    <link rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/styles/main.css?v=<%= hash('./tmp/styles/main.css') %>"/>
     <link rel="icon" type="image/png" href="/img/favicon.png">
 
     <!-- ClickJacking Defense begin (https://www.owasp.org/index.php/Clickjacking_Defense_Cheat_Sheet) -->
@@ -61,20 +62,9 @@
 <script src="/scripts/scripts.dev.js?v=<%= hash('./tmp/scripts/scripts.dev.js') %>"></script>
 <% } else if (environment === 'prod') { %>
 <script src="/scripts/scripts.min.js?v=<%= hash('./tmp/scripts/scripts.min.js') %>"></script>
-<% } else if (environment === 'demo') { %>
-<script src="/scripts/scripts.demo.js?v=<%= hash('./tmp/scripts/scripts.demo.js') %>"></script>
 <% } else if (environment === 'localDev' || environment === 'local') { %>
 <script data-main="/main.js" src="/components/requirejs/require.js"></script>
 <% } %>
-
-<!--<% if (environment === 'local') { %>-->
-<!--<script src="/core/config/local.js"></script>-->
-<!--<script src="/components/angular-mocks/angular-mocks.js"></script>-->
-<!--<script src="/app/mock.js"></script>-->
-<!--<% } else if (environment === 'localDev') { %>-->
-<!--<script src="/core/config/local-dev.js"></script>-->
-<!--<script src="/app/bootstrap.js"></script>-->
-<!--<% } %>-->
 
 
 

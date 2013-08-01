@@ -1,11 +1,15 @@
 @import "compass";
 @import "compass/reset";
-@import "compass_twitter_bootstrap";
+@import "compass_twitter_bootstrap/mixins";
+@import "compass_twitter_bootstrap/variables";
+@import "compass_twitter_bootstrap/scaffolding";
 @import "rescour_variables";
 @import "header";
 @import "footer";
 @import "ngform";
 @import "ribbon_nav";
+
+$bgColor: $grayLighter;
 
 .loading-background {
   position: absolute; left: 0px; top: 0px; bottom:0px; right: 0px; background: $light-gray; z-index: 5;
@@ -75,37 +79,6 @@ header, section, footer {
   display: block;
 }
 
-body {
-  min-height: 100%;
-  margin: 0;
-  font-size: 14px;
-  line-height: 20px;
-  color: $dark-gray;
-  background-color: $grayLighter;
-}
-
-#Wrapper {
-  position: relative;
-  width: 100%;
-  min-height: 100%;
-  background-color: $light-gray;
-}
-
-.main-container {
-  position: absolute;
-  top: $headerHeight + 5px;
-  left: 0;
-  right: 0;
-  bottom: 21px;
-}
-
-.yellow {
-  color: $yellow;
-}
-
-.red {
-  color: $red;
-}
 
 /* Scroll Bar */
 ::-webkit-scrollbar, ::-webkit-scrollbar {
@@ -127,3 +100,47 @@ body {
 ::-webkit-scrollbar-corner, ::-webkit-scrollbar-corner {
   display: none;
 }
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background-color: $bgColor;
+}
+
+.roomba-wrap {
+  & > .row {
+    margin: 0;
+  }
+
+  .listing-list-item {
+    cursor: pointer;
+    padding: 10px 0;
+
+    &:hover {
+      background-color: darken($bgColor, 5%);
+    }
+  }
+
+  .filter-actions {
+    position: relative;
+  }
+}
+
+.scroll-container {
+  position: relative;
+
+  .row {
+    margin: 0;
+  }
+
+  .scroll-wrap {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: scroll;
+  }
+}
+
+

@@ -441,55 +441,31 @@ angular.module('rescour.utility', [])
             }
         };
     }])
-    .directive('dropdownToggle',
-        ['$document', '$location', '$window', function ($document, $location, $window) {
-            var openElement = null, close;
+    .directive('scrollContainer', ['$window',
+        function ($window) {
             return {
-                restrict: 'CA',
+                restrict: 'C',
+                transclude: true,
+                template: '<div class="scroll-wrap" ng-transclude></div>',
                 link: function (scope, element, attrs) {
-                    scope.$watch(function dropdownTogglePathWatch() {
-                        return $location.path();
-                    }, function dropdownTogglePathWatchAction() {
-                        if (close) {
-                            close();
-                        }
-                    });
+                    function calcElementHeight () {
+                        // find siblings
+                        var _siblings = $(element).siblings(),
+                            _siblingsHeight = 0;
 
-                    element.parent().bind('click', function (event) {
-                        if (close) {
-                            close();
-                        }
-                    });
-
-                    element.bind('click', function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        var iWasOpen = false;
-
-                        if (openElement) {
-                            iWasOpen = openElement === element;
-                            close();
+                        for (var i = 0; i < _siblings.length; i++) {
+                            _siblingsHeight += $(_siblings[i]).height();
                         }
 
-                        if (!iWasOpen) {
-                            element.parent().parent().addClass('open');
-                            openElement = element;
+                        return ($window.innerHeight - _siblingsHeight) + 'px';
+                    }
 
-                            close = function (event) {
-                                if (event) {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                }
-                                $document.unbind('click', close);
-                                element.parent().parent().removeClass('open');
-                                close = null;
-                                openElement = null;
-                            };
 
-                            $document.bind('click', close);
-                        }
-                    });
+                    angular.element($window).bind('resize', _.debounce(function () {
+                        element.css({'height': calcElementHeight()});
+                    }, 300));
+
+                    element.css({'height': calcElementHeight()});
                 }
             };
         }]);
