@@ -29,6 +29,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 } else {
                     activeItem = items[id];
                 }
+                return activeItem;
             };
 
             this.getItems = function () {

@@ -19,7 +19,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             items = {},
             itemDetails = {},
             idCounter = 0,
-            COLLECTION_COUNT = 100;
+            COLLECTION_COUNT = 500;
 
         function selectRandom(arr) {
             return arr[parseInt(Math.random() * arr.length, 10)]

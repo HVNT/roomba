@@ -10,38 +10,24 @@ angular.module('roomba.app')
                 {
                     templateUrl: '/app/market/views/market.html?v=' + Date.now(),
                     controller: 'CollectionCtrl',
+                    reloadOnSearch: false,
                     resolve: {
-                        collection: function (Market, $route, $q, $timeout, Models) {
+                        collection: function (Market, $route, $q, $timeout, Models, $location) {
                             var defer = $q.defer();
 
+                            console.log("doing this");
                             Market.initialize(Models[$route.current.params.collection], $route.current.params.tag)
-                                .then(function () {
+                                .then(function (items) {
+                                    if ($location.search().id) {
+                                        Market.setActive($location.search().id);
+                                    }
                                     defer.resolve();
                                 });
 
                             return defer.promise;
-                        }
-                    }
-                })
-                .when('/market/:collection/:tag/:id',
-                {
-                    templateUrl: '/app/market/views/market.html?v=' + Date.now(),
-                    controller: 'CollectionCtrl',
-                    resolve: {
-                        collection: function (Market, $route, $q, $timeout, Models) {
-                            var defer = $q.defer(),
-                                _collection = $route.current.params.collection,
-                                _tag = $route.current.params.tag,
-                                _id = $route.current.params.id;
-
-                            Market.initialize(Models[_collection], _tag)
-                                .then(function () {
-                                    // Set active item
-                                    Market.setActive(_id);
-                                    defer.resolve();
-                                });
-
-                            return defer.promise;
+                        },
+                        Model: function ($route, Models) {
+                            return Models[$route.current.params.collection];
                         }
                     }
                 })
@@ -54,17 +40,36 @@ angular.module('roomba.app')
             $scope.collections = $collections;
             $scope.collection = collection;
         }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location',
-        function ($scope, Market, $routeParams, $location) {
-            $scope.collection = Market.getItems();
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model',
+        function ($scope, Market, $routeParams, $location, Model) {
+            $scope.items = Market.getItems();
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
             $scope.collectionID = $routeParams.collection;
+            $scope.collection = Model.collection;
             $scope.srcListingDetails = '/app/market/partials/listing-details.html?v=' + Date.now();
 
+            $scope.$on('$locationChangeSuccess', function (e, newLocation, oldLocation) {
+                $scope.activeItem = Market.setActive($location.search().id);
+            });
+
             $scope.openDetails = function (id) {
-                $location.path('/market/' + $routeParams.collection + '/' + $routeParams.tag + '/' + id);
-            }
+                $location.search('id', id);
+            };
+
+            $scope.sortFields = {
+                title: false,
+                completion: false,
+                state: false
+            };
+
+            $scope.setSortField = function (sortField) {
+                angular.forEach($scope.sortFields, function (value, key) {
+                    $scope.sortFields[key] = false;
+                });
+                $scope.sortBy = sortField;
+                $scope.sortFields[sortField] = true;
+            };
         }])
     .controller('MarketFilterCtrl', ['$scope', 'Market', '$routeParams', '$location',
         function ($scope, Market, $routeParams, $location) {
@@ -84,11 +89,14 @@ angular.module('roomba.app')
 
             $scope.changeTag = function (tag) {
                 $location.path('/market/' + $routeParams.collection + '/' + tag);
-            }
+            };
         }])
     .controller('DetailsCtrl', ['$scope', '$routeParams',
         function ($scope, $routeParams) {
 
+            $scope.notPublished = function (item) {
+                return !_.contains(item.tags, 'published');
+            }
         }])
     .factory('Models', ['Item', '$collections',
         function (Item, $collections) {
@@ -99,5 +107,5 @@ angular.module('roomba.app')
             });
 
             return models;
-        }])
+        }]);
 

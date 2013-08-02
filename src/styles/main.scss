@@ -1,5 +1,5 @@
 @import "compass";
-@import "compass/reset";
+//@import "compass/reset";
 @import "compass_twitter_bootstrap/mixins";
 @import "compass_twitter_bootstrap/variables";
 @import "compass_twitter_bootstrap/scaffolding";
@@ -8,8 +8,34 @@
 @import "footer";
 @import "ngform";
 @import "ribbon_nav";
+@import "_thotpod_btn";
 
 $bgColor: $grayLighter;
+
+%input-edit {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 0 !important;
+  border: none;
+  background: $grayLight;
+  font-size: 12px;
+  font-weight: bold;
+  color: $white;
+  padding-left: 15px;
+  padding-right: 40px;
+  //height: 40px;
+  @include box-shadow(none !important);
+  @include box-sizing(border-box !important);
+  z-index: 1;
+
+  &:focus {
+    background: $white !important;
+  }
+
+  &:hover:not(:focus) {
+    background: lighten($grayLight, 10%);
+  }
+}
 
 .loading-background {
   position: absolute; left: 0px; top: 0px; bottom:0px; right: 0px; background: $light-gray; z-index: 5;
@@ -124,6 +150,13 @@ body {
   .filter-actions {
     position: relative;
   }
+
+  .actions-bar {
+    position: relative;
+    background: darken($bgColor, 10%);
+    margin-bottom: 15px;
+    padding: 15px 25px;
+  }
 }
 
 .scroll-container {
@@ -140,6 +173,13 @@ body {
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
+    padding: 10px;
+  }
+}
+
+.edit-container {
+  input {
+    @extend %input-edit;
   }
 }
 
