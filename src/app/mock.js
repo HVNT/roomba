@@ -14,6 +14,10 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                     broker: ['ARA', 'Engler', 'Cushman Wakefield', 'HFF'],
                     state: ['Georgia', 'Tennessee', 'Kentucky', 'Alabama', 'Arkansas', 'Texas'],
                     tags: ['raw', 'staged', 'published']
+                },
+                articles: {
+                    state: ['Georgia', 'Tennessee', 'Kentucky', 'Alabama', 'Arkansas', 'Texas'],
+                    tags: ['raw', 'staged', 'published']
                 }
             },
             items = {},
@@ -54,18 +58,44 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             for (var i = 0; i < COLLECTION_COUNT; i++) {
                 items[key][idCounter] = new Item(key);
                 itemDetails[key][idCounter] = {
-                    contacts: {
-                        1: {
-                            text: 'This is the first comment'
+                    contacts: [
+                        {
+                            name: 'Contact ' + i * idCounter,
+                            email: 'contact@gmail.com',
+                            phone: '678-123-1234'
                         },
-                        2: {
-                            text: 'This is the second comment'
+                        {
+                            name: 'Contact ' + i * idCounter + 1,
+                            email: 'contact@gmail.com',
+                            phone: '678-123-1234'
                         }
-                    }
+                    ],
+                    unitMix: [
+                        {
+                            type: '1 BR/1BA',
+                            units: '48',
+                            sqft: '605',
+                            rent: '729',
+                            rentpsqft: '1.20'
+                        },
+                        {
+                            type: '2 BR/1BA',
+                            units: '23',
+                            sqft: '924',
+                            rent: '950',
+                            rentpsqft: '1.10'
+                        },
+                        {
+                            type: '2 BR/2BA',
+                            units: '220',
+                            sqft: '1310',
+                            rent: '1280',
+                            rentpsqft: '0.90'
+                        }
+                    ]
                 };
             }
 
-            console.log(items);
 
             var collectionPath = new RegExp('\/api\/' + value.path + '(\/?)$'),
                 tagPath = new RegExp('\/api\/' + value.path + '\/[0-9]+|[a-z]+(\/?)$'),
@@ -79,23 +109,25 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
 
             $httpBackend.whenGET(tagPath).respond(
                 function (method, url, data, headers) {
-                    var item_id = url.split("/")[3];
-                    if (_.contains(collections[key].tags, item_id)) {
-                        return [200, angular.extend({}, _.filter(items[key], function (value) {
+                    var item_id = url.split("/")[3],
+                        _key = url.split("/")[2] ;
+                    if (_.contains(collections[_key].tags, item_id)) {
+                        return [200, angular.extend({}, _.filter(items[_key], function (value) {
                             return _.contains(value.tags, item_id);
                         })), {}];
                     } else {
-                        return [200, angular.extend({}, items[key][item_id], itemDetails[key][item_id]), {}];
+                        return [200, angular.extend({}, items[_key][item_id], itemDetails[_key][item_id]), {}];
                     }
                 });
 
             $httpBackend.whenGET(detailsPath).respond(
                 function (method, url, data, headers) {
                     var tag = url.split("/")[3],
-                        itemId = url.split("/")[4];
+                        itemId = url.split("/")[4],
+                        _key = url.split("/")[2];
 
-                    if (_.contains(collections[key].tags, tag)) {
-                        return [200, angular.extend({}, items[key][itemId], itemDetails[key][itemId]), {}];
+                    if (_.contains(collections[_key].tags, tag)) {
+                        return [200, angular.extend({}, items[_key][itemId], itemDetails[_key][itemId]), {}];
                     } else {
                         return [403, {message: 'Invalid Tag'}, {}];
                     }
@@ -104,14 +136,16 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             $httpBackend.whenPOST(postPath).respond(
                 function (method, url, data, headers) {
                     var _newID = idCounter += 1,
-                        _item = angular.fromJson(data);
+                        _key = url.split("/")[2];
+                    _item = angular.fromJson(data);
 
                     _item.id = _newID.toString();
-                    items[key][_newID] = _item;
+                    items[_key][_newID] = _item;
 
                     console.log(_item);
                     return [200, {id: _newID}, {}];
                 });
+
         });
 
 //        $httpBackend.whenGET(/\/items(\/?)$/).respond(
@@ -153,7 +187,8 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
         $httpBackend.whenGET(/views\//).passThrough();
         $httpBackend.whenGET(/partials\//).passThrough();
         $httpBackend.whenGET(/template\//).passThrough();
-    }]);
+    }])
+;
 
 angular.bootstrap(document, ['roomba.mock']);
 

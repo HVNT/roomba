@@ -52,7 +52,9 @@ angular.module('roomba.app')
             $scope.$on('$locationChangeSuccess', function (e, newLocation, oldLocation) {
                 $scope.activeItem = Market.setActive($location.search().id);
             });
-
+        }])
+    .controller('MarketListCtrl', ['$scope', '$location',
+        function($scope, $location) {
             $scope.openDetails = function (id) {
                 $location.search('id', id);
             };

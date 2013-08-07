@@ -2,13 +2,13 @@
 //@import "compass/reset";
 @import "compass_twitter_bootstrap/mixins";
 @import "compass_twitter_bootstrap/variables";
-@import "compass_twitter_bootstrap/scaffolding";
+//@import "compass_twitter_bootstrap/scaffolding";
 @import "rescour_variables";
-@import "header";
+//@import "header";
 @import "footer";
 @import "ngform";
 @import "ribbon_nav";
-@import "_thotpod_btn";
+@import "thotpod_btn";
 
 $bgColor: $grayLighter;
 
@@ -101,11 +101,6 @@ $bgColor: $grayLighter;
   display: none;
 }
 
-header, section, footer {
-  display: block;
-}
-
-
 /* Scroll Bar */
 ::-webkit-scrollbar, ::-webkit-scrollbar {
   width: 7px;
@@ -133,6 +128,17 @@ body {
   background-color: $bgColor;
 }
 
+header {
+  padding: 0 20px;
+  .navbar {
+    margin-bottom: 0;
+    padding-right: 0;
+    .navbar-brand {
+      padding: 10px;
+    }
+  }
+}
+
 .roomba-wrap {
   & > .row {
     margin: 0;
@@ -145,17 +151,57 @@ body {
     &:hover {
       background-color: darken($bgColor, 5%);
     }
+
+    i {
+      color: $grayLight;
+      cursor: pointer;
+
+      &:hover {
+        color: darken($grayLight, 5%);
+      }
+    }
+
+    .list-item-title {
+      &:hover {
+        text-decoration: underline;
+        font-weight: bold;
+      }
+    }
+
+    .progress {
+      margin-bottom: 0;
+    }
   }
 
   .filter-actions {
     position: relative;
   }
 
-  .actions-bar {
+  $headerColor: $grayLight;
+  .header-actions {
     position: relative;
-    background: darken($bgColor, 10%);
+    @include gradient-vertical(lighten($headerColor, 2%), darken($headerColor, 2%));
     margin-bottom: 15px;
     padding: 15px 25px;
+    @include box-shadow(#{0 1px $white, inset 0 1px rgba(0,0,0,0.3)});
+  }
+
+  .footer-actions {
+    position: relative;
+    margin-top: 15px;
+    padding: 15px 25px;
+  }
+}
+
+.market-filter {
+}
+
+.market-list {
+}
+
+.market-details {
+  input {
+    @extend %input-edit;
   }
 }
 
@@ -174,12 +220,6 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
     padding: 10px;
-  }
-}
-
-.edit-container {
-  input {
-    @extend %input-edit;
   }
 }
 

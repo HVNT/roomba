@@ -44,6 +44,101 @@ angular.module('roomba.app',
                     title: 'State',
                     weight: 9
                 }
+            },
+            models: {
+                contacts: {
+                    title: 'Contacts',
+                    fields: {
+                        name: {
+                            title: 'Name'
+                        },
+                        email: {
+                            title: 'Email'
+                        },
+                        phone: {
+                            title: 'Phone'
+                        }
+                    }
+                },
+                unitMix: {
+                    title: 'Unit Mix',
+                    fields: {
+                        type: {
+                            title: 'Type'
+                        },
+                        units: {
+                            title: 'Units'
+                        },
+                        sqft: {
+                            title: 'Sq Ft'
+                        },
+                        rent: {
+                            title: 'Rent'
+                        },
+                        rentpsqft: {
+                            title: 'Rent / Sq Ft'
+                        }
+                    }
+                }
+            }
+        },
+        articles: {
+            title: 'Articles',
+            tags: ['raw', 'staged', 'published'],
+            path: 'articles',
+            dimensions: {
+                discreet: ['state'],
+                range: []
+            },
+            fields: {
+                title: {
+                    title: 'Title',
+                    weight: 5000
+                },
+                description: {
+                    title: 'Description',
+                    weight: 8
+                },
+                state: {
+                    title: 'State',
+                    weight: 9
+                }
+            },
+            models: {
+                contacts: {
+                    title: 'Contacts',
+                    fields: {
+                        name: {
+                            title: 'Name'
+                        },
+                        email: {
+                            title: 'Email'
+                        },
+                        phone: {
+                            title: 'Phone'
+                        }
+                    }
+                },
+                unitMix: {
+                    title: 'Unit Mix',
+                    fields: {
+                        type: {
+                            title: 'Type'
+                        },
+                        units: {
+                            title: 'Units'
+                        },
+                        sqft: {
+                            title: 'Sq Ft'
+                        },
+                        rent: {
+                            title: 'Rent'
+                        },
+                        rentpsqft: {
+                            title: 'Rent / Sq Ft'
+                        }
+                    }
+                }
             }
         }
     })

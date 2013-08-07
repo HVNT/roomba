@@ -441,31 +441,32 @@ angular.module('rescour.utility', [])
             }
         };
     }])
-    .directive('scrollContainer', ['$window',
-        function ($window) {
+    .directive('scrollContainer', ['$window', '$document',
+        function ($window, $document) {
             return {
                 restrict: 'C',
                 transclude: true,
                 template: '<div class="scroll-wrap" ng-transclude></div>',
                 link: function (scope, element, attrs) {
-                    function calcElementHeight () {
+                    function calcElementHeight (e) {
                         // find siblings
-                        var _siblings = $(element).siblings(),
-                            _siblingsHeight = 0;
+                        var _siblings = $(e).siblings(),
+                            _siblingsHeight = 0,
+                            _windowHeight = $window.innerHeight,
+                            _headerHeight = $document.find('header')[0].clientHeight;;
 
                         for (var i = 0; i < _siblings.length; i++) {
                             _siblingsHeight += $(_siblings[i]).height();
                         }
 
-                        return ($window.innerHeight - _siblingsHeight) + 'px';
+                        return (_windowHeight - _siblingsHeight - _headerHeight) + 'px';
                     }
 
-
                     angular.element($window).bind('resize', _.debounce(function () {
-                        element.css({'height': calcElementHeight()});
+                        element.css({'height': calcElementHeight(element)});
                     }, 300));
 
-                    element.css({'height': calcElementHeight()});
+                    element.css({'height': calcElementHeight(element)});
                 }
             };
         }]);

@@ -1,8 +1,24 @@
+<header>
+    <div class="navbar">
+        <ul class="nav navbar-nav">
+            <li class="navbar-brand"><img src="/img/favicon.png" height="30" alt=""/></li>
+            <li class="active"><a href="/market/listings">Listings</a></li>
+            <li><a href="/market/articles">Articles</a></li>
+            <li><a href="#">Link</a></li>
+        </ul>
+        <div class="btn-group pull-right">
+            <button class="btn btn-success" ng-class="{'disabled': !activeItem  }">Publish Selected</button>
+            <button class="btn btn-danger"
+                    ng-class="{'disabled': (!activeItem || notPublished(activeItem)) }">Unpublish Selected
+            </button>
+        </div>
+    </div>
+</header>
 <div class="roomba-wrap">
     <div class="row">
-        <div class="col-lg-2" ng-controller="MarketFilterCtrl">
+        <div class="col-lg-2 market-filter" ng-controller="MarketFilterCtrl">
             <div class="row">
-                <div class="col-lg-12 actions-bar">
+                <div class="col-lg-12 header-actions">
                     <div class="btn-group">
                         <button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
                             {{ activeTag }} <span class="caret"></span>
@@ -26,14 +42,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4 market-list" ng-controller="MarketListCtrl">
             <div class="row">
-                <div class="col-lg-12 actions-bar">
-                    <div class="btn-group">
-                        <button class="btn">Publish</button>
-                        <button class="btn">Unpublish</button>
-                    </div>
-
+                <div class="col-lg-12 header-actions">
                     <div class="btn-group">
                         <button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
                             Sort <span class="caret"></span>
@@ -44,21 +55,29 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="btn-group pull-right">
+                        <button class="btn" ng-class="{'disabled': !activeItem}">Save</button>
+                    </div>
                 </div>
             </div>
             <div class="scroll-container">
                 <div class="row listing-list-item" ng-repeat="item in items | limitVisible | orderBy:sortBy">
-                    <div class="col-lg-1"><input type="checkbox"/></div>
-                    <div class="col-lg-1"></div>
-                    <div class="col-lg-8" ng-click="openDetails(item.id)">{{item.title}}</div>
-                    <div class="col-lg-2">prog</div>
+                    <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox"/></div>
+                    <div class="col-lg-1 col-sm-1 col-1"><i class="icon-star"></i></div>
+                    <div class="col-lg-1 col-sm-1 col-1"><i class="icon-ban-circle"></i></div>
+                    <div class="col-lg-6 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">{{item.title}}</div>
+                    <div class="col-lg-3 col-sm-3 col-3">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 60%;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-6 edit-container" ng-controller="DetailsCtrl">
+        <div class="col-lg-6 market-details" ng-controller="DetailsCtrl">
             <div class="row">
-                <div class="col-lg-12 actions-bar">
+                <div class="col-lg-12 header-actions">
                     <div class="btn-group">
                         <button class="btn btn-success" ng-class="{'disabled': !activeItem  }">Publish</button>
                         <button class="btn btn-danger"
@@ -71,7 +90,40 @@
                     </div>
                 </div>
             </div>
-            <div class="scroll-container" ng-show="activeItem" ng-include="srcListingDetails"></div>
+
+            <div class="scroll-container row" ng-show="activeItem" >
+                <div class="col-lg-12">
+                    <div class="page-header"><h3>{{ activeItem.title }}</h3></div>
+                    <form class="form-horizontal">
+                        <div class="form-group" ng-repeat="(field, value) in collection.fields">
+                            <label class="col-lg-2 control-label">
+                                {{ value.title }}
+                            </label>
+
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" ng-model="activeItem[field]"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!--<div ng-show="activeItem" ng-include="srcListingDetails"></div>-->
+
+            <!--<div class="row" ng-show="activeItem">-->
+                <!--<div class="col-lg-12 footer-actions">-->
+                    <!--<div class="btn-group">-->
+                        <!--<button class="btn btn-success" ng-class="{'disabled': !activeItem  }">Publish</button>-->
+                        <!--<button class="btn btn-danger"-->
+                                <!--ng-class="{'disabled': (!activeItem || notPublished(activeItem)) }">Unpublish-->
+                        <!--</button>-->
+                    <!--</div>-->
+
+                    <!--<div class="btn-group pull-right">-->
+                        <!--<button class="btn" ng-class="{'disabled': !activeItem}">Save</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
     </div>
 </div>
