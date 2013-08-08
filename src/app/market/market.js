@@ -6,6 +6,30 @@ angular.module('roomba.app')
                 {
                     redirectTo: '/market/listings/raw'
                 })
+                .when('/market/:collection',
+                {
+                    templateUrl: '/app/market/views/market.html?v=' + Date.now(),
+                    controller: 'CollectionCtrl',
+                    reloadOnSearch: false,
+                    resolve: {
+                        collection: function (Market, $route, $q, $timeout, Models, $location) {
+                            var defer = $q.defer();
+
+                            Market.initialize(Models[$route.current.params.collection])
+                                .then(function (items) {
+                                    if ($location.search().id) {
+                                        Market.setActive($location.search().id);
+                                    }
+                                    defer.resolve();
+                                });
+
+                            return defer.promise;
+                        },
+                        Model: function ($route, Models) {
+                            return Models[$route.current.params.collection];
+                        }
+                    }
+                })
                 .when('/market/:collection/:tag',
                 {
                     templateUrl: '/app/market/views/market.html?v=' + Date.now(),

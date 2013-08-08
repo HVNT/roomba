@@ -75,6 +75,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
                                 }
                             }
                             activePath = Model.path;
+                            console.log(dimensions);
                             dimensions.initialize().apply().predict();
                             self.render();
                             defer.resolve(items);
@@ -131,7 +132,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
     .factory('Item', ['$_api', '$q', '$http',
         function ($_api, $q, $http) {
             function ItemFactory(collection) {
-
                 var Item = function (data, defaults) {
                     var _defaults = defaults || {
                             title: 'Untitled',
@@ -156,6 +156,30 @@ angular.module('rescour.marketplace', ['rescour.config'])
 
                 Item.path = collection.path;
 
+                Item.prototype.mapDimensions = function (dimensions) {
+                    var self = this;
+
+                    angular.forEach(collection.dimensions.discreet, function (attrID) {
+                        if (collection.fields.hasOwnProperty(attrID)) {
+                            console.log(attrID);
+                            self[attrID] = self[attrID] || 'Unknown';
+                            dimensions.pushDiscreetId(attrID, self.id, self[attrID]);
+                        } else {
+                            throw Error("Field " + attrID + " is not defined in collection");
+                        }
+                    });
+
+                    angular.forEach(collection.dimensions.range, function (attrID) {
+                        if (collection.fields.hasOwnProperty(attrID)) {
+                            self[attrID] = (_.isNaN(parseInt(self[attrID], 10)) || !self[attrID]) ? 'NA' : self[attrID];
+                            dimensions.pushRangeId(attrID, self.id, self[attrID]);
+                        } else {
+                            throw Error("Field " + attrID + " is not defined in collection");
+                        }
+
+                    });
+                };
+
                 Item.query = function () {
                     // if collection is undefined, just query
                     var defer = $q.defer(),
@@ -166,6 +190,8 @@ angular.module('rescour.marketplace', ['rescour.config'])
                         }, $_api.config);
 
                     $http.get($_api.path + Item.path, config).then(function (response) {
+                        console.log(Item.path);
+                        console.log(response);
                         defer.resolve(response);
                     }, function (response) {
                         defer.reject(response);
@@ -174,19 +200,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
                     return defer.promise;
                 };
 
-                Item.prototype.mapDimensions = function (dimensions) {
-                    var self = this;
-
-                    angular.forEach(collection.dimensions.discreet, function (attrID) {
-                        self[attrID] = self[attrID] || 'Unknown';
-                        dimensions.pushDiscreetId(attrID, self.id, self[attrID]);
-                    });
-
-                    angular.forEach(collection.dimensions.range, function (attrID) {
-                        self[attrID] = (_.isNaN(parseInt(self[attrID], 10)) || !self[attrID]) ? 'NA' : self[attrID];
-                        dimensions.pushRangeId(attrID, self.id, self[attrID]);
-                    });
-                };
 
                 Item.prototype.$get = function () {
                     var self = this,
@@ -264,11 +277,19 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 });
 
                 angular.forEach(collection.dimensions.discreet, function (value, key) {
-                    defaults.discreet[value] = collection.fields[value];
+                    if (collection.fields.hasOwnProperty(value)) {
+                        defaults.discreet[value] = collection.fields[value];
+                    } else {
+                        throw Error(value + " is not defined in collection")
+                    }
                 });
 
                 angular.forEach(collection.dimensions.range, function (value, key) {
-                    defaults.range[value] = collection.fields[value];
+                    if (collection.fields.hasOwnProperty(value)) {
+                        defaults.range[value] = collection.fields[value];
+                    } else {
+                        throw Error(value + " is not defined in collection")
+                    }
                 });
 
                 var discreetDefaults = {

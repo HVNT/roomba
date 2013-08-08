@@ -57,6 +57,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             itemDetails[key] = itemDetails[key] || {};
             for (var i = 0; i < COLLECTION_COUNT; i++) {
                 items[key][idCounter] = new Item(key);
+
                 itemDetails[key][idCounter] = {
                     contacts: [
                         {
@@ -96,7 +97,6 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                 };
             }
 
-
             var collectionPath = new RegExp('\/api\/' + value.path + '(\/?)$'),
                 tagPath = new RegExp('\/api\/' + value.path + '\/[0-9]+|[a-z]+(\/?)$'),
                 detailsPath = new RegExp('\/api\/' + value.path + '\/[a-z]+\/[0-9]+(\/?)$'),
@@ -104,7 +104,8 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
 
             $httpBackend.whenGET(collectionPath).respond(
                 function (method, url, data, headers) {
-                    return [200, items[key], {}];
+                    var _key = url.split("/")[2];
+                    return [200, angular.extend({}, items[_key]), {}];
                 });
 
             $httpBackend.whenGET(tagPath).respond(

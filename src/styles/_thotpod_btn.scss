@@ -61,7 +61,7 @@ $btnBorderRadius: 5px;
   *border: 0;
   line-height: $baseLineHeight;
   text-align: center;
-  padding: 0.5em 1.5em;
+  padding: $baseFontSize/2 $baseFontSize*1.5;
   cursor: pointer;
   @include border-radius($btnBorderRadius);
   @include box-sizing(border-box);
@@ -75,7 +75,7 @@ $btnBorderRadius: 5px;
   @include tpBtn($btnPrimaryBackground);
 
   &.btn-small {
-    font-size: $baseFontSize + 2px;
+    font-size: $baseFontSize - 2px;
     line-height: $baseLineHeight - 2px;
   }
 
@@ -120,7 +120,7 @@ $btnBorderRadius: 5px;
 }
 
 .navbar > .btn-group {
-  margin: 5px;
+  margin: 7px;
 }
 
 // Cross-browser Jank
