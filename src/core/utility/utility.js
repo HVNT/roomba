@@ -140,12 +140,13 @@ angular.module('rescour.utility', [])
             });
         };
     })
-    .directive('chunk', ['$filter', '$parse', function ($filter, $parse) {
+    .directive('chunk', ['$timeout', function ($timeout) {
         return {
             link: function (scope, element, attrs) {
                 var raw = element[0],
                     currentSlice,
                     chunkSize = parseInt(attrs.chunkSize, 10) || 10;
+
 
                 function initChunk() {
                     scope.visibleItems = scope.$eval(attrs.chunk);
@@ -157,6 +158,7 @@ angular.module('rescour.utility', [])
                 element.bind('scroll', function () {
                     // Check if within bottom of scrollable div
                     if ((raw.scrollTop + raw.offsetHeight) >= raw.scrollHeight) {
+                        console.log("sup");
                         // increase chunkSize and re-filter
                         scope.$apply(function () {
                             // take next limit
@@ -445,8 +447,6 @@ angular.module('rescour.utility', [])
         function ($window, $document) {
             return {
                 restrict: 'C',
-                transclude: true,
-                template: '<div class="scroll-wrap" ng-transclude></div>',
                 link: function (scope, element, attrs) {
                     function calcElementHeight (e) {
                         // find siblings
