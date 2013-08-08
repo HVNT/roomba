@@ -109,8 +109,8 @@ angular.module('roomba.app')
 
             $scope.tags[$scope.activeTag] = true;
 
-            $scope.toggleDiscreet = function (value) {
-                Market.apply(value);
+            $scope.toggleDiscreet = function (discreet, value) {
+                Market.apply(discreet, value);
             };
 
             $scope.changeTag = function (tag) {
