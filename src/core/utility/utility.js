@@ -445,8 +445,6 @@ angular.module('rescour.utility', [])
         function ($window, $document) {
             return {
                 restrict: 'C',
-                transclude: true,
-                template: '<div class="scroll-wrap" ng-transclude></div>',
                 link: function (scope, element, attrs) {
                     function calcElementHeight (e) {
                         // find siblings
