@@ -161,7 +161,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
 
                     angular.forEach(collection.dimensions.discreet, function (attrID) {
                         if (collection.fields.hasOwnProperty(attrID)) {
-                            console.log(attrID);
                             self[attrID] = self[attrID] || 'Unknown';
                             dimensions.pushDiscreetId(attrID, self.id, self[attrID]);
                         } else {
@@ -190,8 +189,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
                         }, $_api.config);
 
                     $http.get($_api.path + Item.path, config).then(function (response) {
-                        console.log(Item.path);
-                        console.log(response);
                         defer.resolve(response);
                     }, function (response) {
                         defer.reject(response);
