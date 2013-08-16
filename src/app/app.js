@@ -153,7 +153,11 @@ angular.module('roomba.app',
                             description: 'No description provided.',
                             thumbnail: 'http://placehold.it/100x100',
                             hidden: false,
-                            isVisible: true
+                            isVisible: true,
+                            dimensions: {
+                                discreet: {},
+                                range: {}
+                            }
                         },
                         opts = angular.extend({}, _defaults, data),
                         self = this;
@@ -164,25 +168,24 @@ angular.module('roomba.app',
                         angular.forEach(collection.fields, function (value, key) {
                             self[key] = self[key] || (value.placeholder || "");
                         });
+
+                        angular.forEach(collection.dimensions.discreet, function (val) {
+                            if (self.edited) {
+                                self.dimensions.discreet[val] = self.edited[val];
+                            }
+                        });
+
+                        angular.forEach(collection.dimensions.range, function (val) {
+                            if (self.edited) {
+                                self.dimensions.range[val] = self.edited[val];
+                            }
+                        });
                     }
                 };
 
                 Item.collection = collection;
 
                 Item.path = collection.path;
-
-                Item.prototype.mapDimensions = function (dimensions, idPosition) {
-                    var self = this;
-
-                    angular.forEach(collection.dimensions.discreet, function (attrID) {
-                        if (collection.fields.hasOwnProperty(attrID)) {
-                            self[attrID] = self[attrID] || 'Unknown';
-                            dimensions.pushDiscreetId(attrID, idPosition, self[attrID]);
-                        } else {
-                            throw Error("Field " + attrID + " is not defined in collection");
-                        }
-                    });
-                };
 
                 Item.query = function () {
                     // if collection is undefined, just query

@@ -109,9 +109,12 @@
                                 <label class="col-lg-2 control-label">
                                     {{ value.title }}
                                 </label>
-
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" ng-model="activeItem[field]"/>
+                                <button class="btn col-lg-5" ng-click="copyFromRaw(activeItem, field)" ng-class="{'btn-success': activeItem.raw[field].status == 0}">
+                                    {{activeItem.raw[field].value}}
+                                    <i class="icon-chevron-right"></i>
+                                </button>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" ng-model="activeItem.edited[field]"/>
                                 </div>
                             </div>
                         </form>

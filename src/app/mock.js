@@ -35,14 +35,33 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             self.id = idCounter.toString();
             self.description = 'This item is pretty sweet.  This is the description';
             self.title = "";
+            self.raw = {};
+            self.edited = {};
 
             angular.forEach(_collection.fields, function (value, key) {
                 if (_.contains(_collection.dimensions.discreet, key)) {
-                    self[key] = selectRandom(collections[collectionKey][key]);
+                    var _randDiscreet = selectRandom(collections[collectionKey][key]);
+                    self.raw[key] = {
+                        value: _randDiscreet,
+                        status: 0
+                    };
+
+                    self.edited[key] = _randDiscreet;
                 } else if (_.contains(_collection.dimensions.range, key) && collections[collectionKey][key]) {
-                    self[key] = parseInt((Math.random() * (collections[collectionKey][key].high - collections[collectionKey][key].low)) + collections[collectionKey][key].low, 10);
+                    var _randRange = parseInt((Math.random() * (collections[collectionKey][key].high - collections[collectionKey][key].low)) + collections[collectionKey][key].low, 10);
+                    self.raw[key] = {
+                        value: _randRange,
+                        status: 0
+                    };
+
+                    self.edited[key] = _randRange;
                 } else {
-                    self[key] = key;
+                    self.raw[key] = {
+                        value: key,
+                        status: 0
+                    };
+
+                    self.edited[key] = key;
                 }
 
                 self.title = _collection.title + " " + idCounter;
@@ -112,7 +131,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             $httpBackend.whenGET(tagPath).respond(
                 function (method, url, data, headers) {
                     var item_id = url.split("/")[3],
-                        _key = url.split("/")[2] ;
+                        _key = url.split("/")[2];
                     if (_.contains(collections[_key].tags, item_id)) {
                         return [200, angular.extend({}, _.filter(items[_key], function (value) {
                             return _.contains(value.tags, item_id);

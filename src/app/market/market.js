@@ -123,6 +123,10 @@ angular.module('roomba.app')
             $scope.notPublished = function (item) {
                 return !_.contains(item.tags, 'published');
             }
+
+            $scope.copyFromRaw = function (activeItem, field) {
+                activeItem.edited[field] = activeItem.raw[field].value;
+            }
         }])
     .factory('Models', ['Item', '$collections',
         function (Item, $collections) {
