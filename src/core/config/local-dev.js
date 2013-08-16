@@ -12,7 +12,7 @@ angular.module('rescour.config', [])
     .factory('$_api', function () {
         var url = {
                 local: "http://10.0.1.92:8080/rescour",
-                dev: "http://roomba-dev.rescour.com/api"
+                dev: "http://dev.maasive.net/SuperSpock/rescour"
             },
             stripeTokens = {
                 test: 'pk_test_wSAqQNQKI7QqPmBpDcQLgGM7',

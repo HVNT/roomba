@@ -23,7 +23,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             items = {},
             itemDetails = {},
             idCounter = 0,
-            COLLECTION_COUNT = 300000;
+            COLLECTION_COUNT = 500;
 
         function selectRandom(arr) {
             return arr[parseInt(Math.random() * arr.length, 10)]
@@ -97,11 +97,12 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                 };
             }
 
-            var collectionPath = new RegExp('\/api\/' + value.path + '(\/?)$'),
+            var collectionPath = new RegExp('\/api\/' + value.path.replace('/', '') + '(\/?)$'),
                 tagPath = new RegExp('\/api\/' + value.path + '\/[0-9]+|[a-z]+(\/?)$'),
                 detailsPath = new RegExp('\/api\/' + value.path + '\/[a-z]+\/[0-9]+(\/?)$'),
                 postPath = new RegExp('\/api\/' + value.path + '\/$');
 
+            console.log(collectionPath);
             $httpBackend.whenGET(collectionPath).respond(
                 function (method, url, data, headers) {
                     var _key = url.split("/")[2];

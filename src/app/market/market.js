@@ -4,7 +4,7 @@ angular.module('roomba.app')
             $routeProvider
                 .when('/market',
                 {
-                    redirectTo: '/market/listings/raw'
+                    redirectTo: '/market/listings'
                 })
                 .when('/market/:collection',
                 {

@@ -22,7 +22,7 @@ angular.module('roomba.app',
         listings: {
             title: 'Listings',
             tags: ['raw', 'staged', 'published'],
-            path: 'listings',
+            path: '/listings/',
             dimensions: {
                 discreet: ['broker', 'state'],
                 range: []
@@ -85,7 +85,7 @@ angular.module('roomba.app',
         articles: {
             title: 'Articles',
             tags: ['raw', 'staged', 'published'],
-            path: 'articles',
+            path: '/articles/',
             dimensions: {
                 discreet: ['state'],
                 range: []
@@ -142,6 +142,134 @@ angular.module('roomba.app',
             }
         }
     })
+    .factory('Item', ['$_api', '$q', '$http',
+        function ($_api, $q, $http) {
+
+            function ItemFactory(collection) {
+
+                var Item = function (data, defaults) {
+                    var _defaults = defaults || {
+                            title: 'Untitled',
+                            description: 'No description provided.',
+                            thumbnail: 'http://placehold.it/100x100',
+                            hidden: false,
+                            isVisible: true
+                        },
+                        opts = angular.extend({}, _defaults, data),
+                        self = this;
+
+                    angular.copy(opts, this);
+
+                    if (collection) {
+                        angular.forEach(collection.fields, function (value, key) {
+                            self[key] = self[key] || (value.placeholder || "");
+                        });
+                    }
+                };
+
+                Item.collection = collection;
+
+                Item.path = collection.path;
+
+                Item.prototype.mapDimensions = function (dimensions, idPosition) {
+                    var self = this;
+
+                    angular.forEach(collection.dimensions.discreet, function (attrID) {
+                        if (collection.fields.hasOwnProperty(attrID)) {
+                            self[attrID] = self[attrID] || 'Unknown';
+                            dimensions.pushDiscreetId(attrID, idPosition, self[attrID]);
+                        } else {
+                            throw Error("Field " + attrID + " is not defined in collection");
+                        }
+                    });
+                };
+
+                Item.query = function () {
+                    // if collection is undefined, just query
+                    var defer = $q.defer(),
+                        config = angular.extend({
+                            transformRequest: function (data) {
+                                return data;
+                            }
+                        }, $_api.config);
+
+                    console.log($_api.path + Item.path);
+
+                    $http.get($_api.path + Item.path, config).then(function (response) {
+                        console.log(Item.path);
+                        console.log(response);
+                        defer.resolve(response);
+                    }, function (response) {
+                        defer.reject(response);
+                    });
+
+                    return defer.promise;
+                };
+
+
+                Item.prototype.$get = function () {
+                    var self = this,
+                        defer = $q.defer(),
+                        config = angular.extend({
+                            transformRequest: function (data) {
+                                self.$spinner = true;
+                                return data;
+                            }
+                        });
+
+                    $http.get($_api.path + Item.path + '/' + this.id, config).then(function (response) {
+                        angular.extend(self, {}, response.data);
+                        self.$spinner = false;
+                        defer.resolve(self);
+
+                    }, function (response) {
+                        self.$spinner = false;
+                        defer.reject(response);
+                    });
+
+                    return defer.promise;
+                };
+
+                Item.prototype.$save = function () {
+                    var self = this,
+                        defer = $q.defer(),
+                        config = angular.extend({
+                            transformRequest: function (data) {
+                                self.$spinner = true;
+                                return data;
+                            }
+                        }),
+                        body = JSON.stringify(self);
+
+                    if (self.id) {
+                        $http.put($_api.path + Item.path + '/' + self.id, body, config)
+                            .then(function (response) {
+                                self.$spinner = false;
+                                defer.resolve(response);
+                            }, function (response) {
+                                self.$spinner = false;
+                                defer.reject(response);
+                            });
+                    } else {
+                        $http.post($_api.path + Item.path + '/', body, config)
+                            .then(function (response) {
+                                self.$spinner = false;
+                                self.id = response.data.id;
+                                defer.resolve(response);
+                            }, function (response) {
+                                self.$spinner = false;
+                                defer.reject(response);
+                            });
+                    }
+
+                    return defer.promise;
+                };
+
+                return Item;
+            }
+
+            return ItemFactory;
+        }])
     .config(['$routeProvider', '$locationProvider', '$httpProvider',
         function ($routeProvider, $locationProvider, $httpProvider) {
             $httpProvider.defaults.useXDomain = true;
@@ -158,6 +286,7 @@ angular.module('roomba.app',
         }])
     .controller("AppController", ['$scope', '$rootScope', '$location', '$_api', '$http',
         function ($scope, $rootScope, $location, $_api, $http) {
+
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 $scope.loading = true;
                 $scope.failure = false;
