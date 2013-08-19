@@ -121,7 +121,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                 detailsPath = new RegExp('\/api\/' + value.path + '\/[a-z]+\/[0-9]+(\/?)$'),
                 postPath = new RegExp('\/api\/' + value.path + '\/$');
 
-            console.log(collectionPath);
+
             $httpBackend.whenGET(collectionPath).respond(
                 function (method, url, data, headers) {
                     var _key = url.split("/")[2];

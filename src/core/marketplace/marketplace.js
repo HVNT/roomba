@@ -75,7 +75,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
                                         angular.forEach(items[model.id].dimensions.discreet, function (attrValue, attrID) {
                                             if (Model.collection.fields.hasOwnProperty(attrID)) {
                                                 var _discreetVal = items[model.id].dimensions.discreet[attrID] = items[model.id].dimensions.discreet[attrID] || 'Unknown';
-                                                console.log(attrID, _discreetVal);
                                                 dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
                                             } else {
                                                 throw Error("Field " + attrID + " is not defined in collection");
