@@ -80,9 +80,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
                                                 throw Error("Field " + attrID + " is not defined in collection");
                                             }
                                         });
-
-//                                        items[model.id].mapDimensions(dimensions, idPosition);
-                                        idPosition++;
+                                        idPosition+=1;
                                     } catch (e) {
                                         console.log(e.message);
                                     }

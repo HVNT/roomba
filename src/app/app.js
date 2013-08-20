@@ -45,9 +45,10 @@ angular.module('roomba.app',
                     weight: 9
                 }
             },
-            models: {
+            resources: {
                 contacts: {
                     title: 'Contacts',
+                    path: '/contacts/',
                     fields: {
                         name: {
                             title: 'Name'
@@ -60,6 +61,17 @@ angular.module('roomba.app',
                         }
                     }
                 },
+                images: {
+                    title: 'Images',
+                    path: '/images/',
+                    fields: {
+                        url: {
+                            title: 'URL'
+                        }
+                    }
+                }
+            },
+            models: {
                 unitMix: {
                     title: 'Unit Mix',
                     fields: {
@@ -104,9 +116,10 @@ angular.module('roomba.app',
                     weight: 9
                 }
             },
-            models: {
+            resources: {
                 contacts: {
                     title: 'Contacts',
+                    path: '/contacts/',
                     fields: {
                         name: {
                             title: 'Name'
@@ -119,6 +132,18 @@ angular.module('roomba.app',
                         }
                     }
                 },
+                images: {
+                    title: 'Images',
+                    path: '/images/',
+                    fields: {
+                        url: {
+                            title: 'URL'
+                        }
+                    }
+                }
+            },
+            models: {
+
                 unitMix: {
                     title: 'Unit Mix',
                     fields: {
@@ -231,6 +256,39 @@ angular.module('roomba.app',
                     });
 
                     return defer.promise;
+                };
+
+                Item.prototype.$getResources = function () {
+                    var self = this,
+                        promises = [],
+                        config = angular.extend({
+                            transformRequest: function (data) {
+                                self.$spinner = true;
+                                return data;
+                            }
+                        });
+
+                    for (var _resource in collection.resources) {
+                        if (collection.resources.hasOwnProperty(_resource)) {
+                            var _defer = $q.defer(),
+                                resourcePath = collection.resources[_resource].path;
+
+                            $http.get($_api.path + Item.path + '/' + this.id + '/resources' + resourcePath, config).then(function (response) {
+                                angular.extend(self, {}, response.data);
+                                self.$spinner = false;
+                                console.log(response);
+                                _defer.resolve(response);
+
+                            }, function (response) {
+                                self.$spinner = false;
+                                _defer.reject(response);
+                            });
+                        }
+
+                        promises.push(_defer.promise);
+                    }
+
+                    return $q.all(promises);
                 };
 
                 Item.prototype.$save = function () {

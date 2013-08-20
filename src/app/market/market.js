@@ -64,21 +64,6 @@ angular.module('roomba.app')
             $scope.collections = $collections;
             $scope.collection = collection;
 
-            var path = 'http://dev.maasive.net/SuperSpock/account/apis/51afcfaa53d4c904b173923d',
-                config = angular.extend({
-                    transformRequest: function (data) {
-                        return data;
-                    }
-                }, $_api.config);
-
-            $http.get(path, config).then(
-                function (response) {
-                            console.log(response);
-                },
-                function (response) {
-
-                }
-            );
         }])
     .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model',
         function ($scope, Market, $routeParams, $location, Model) {
@@ -91,6 +76,8 @@ angular.module('roomba.app')
 
             $scope.$on('$locationChangeSuccess', function (e, newLocation, oldLocation) {
                 $scope.activeItem = Market.setActive($location.search().id);
+                $scope.activeItem.$getResources();
+
             });
         }])
     .controller('MarketListCtrl', ['$scope', '$location',
@@ -104,8 +91,6 @@ angular.module('roomba.app')
                 completion: false,
                 state: false
             };
-
-
 
             $scope.setSortField = function (sortField) {
                 angular.forEach($scope.sortFields, function (value, key) {
