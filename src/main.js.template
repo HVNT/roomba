@@ -21,6 +21,8 @@ require(
                     'core/config/local'
                 <% } else if (environment === 'prod') { %>
                     'core/config/prod'
+                 <% } else if (environment === 'localDev') { %>
+                    'core/config/local-dev'
                 <% } %>
                 ]
             },
@@ -31,6 +33,9 @@ require(
                 deps: ['components/angular/angular']
             },
             'app/market/market': {
+                deps: ['app/app']
+            },
+            'app/login/login': {
                 deps: ['app/app']
             },
             'app/bootstrap': {
@@ -51,9 +56,10 @@ require(
         'components/jquery-ui/jquery-ui',
         'components/angular-ui-bootstrap-bower/ui-bootstrap',
         'components/angular/angular',
-        'app/market/market'
+        'app/market/market',
+        'app/login/login'
     ]
-    <% if (environment === 'dev' || environment === 'prod') { %>
+    <% if (environment === 'dev' || environment === 'prod' || environment === 'localDev') { %>
     ,function (require) {
         return require(['app/bootstrap']);
     }

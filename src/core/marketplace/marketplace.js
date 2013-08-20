@@ -51,7 +51,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
                     var tags = Array.prototype.slice.call(arguments).slice(1);
                     Model.path = Model.collection.path;
                     angular.forEach(tags, function (value) {
-                        Model.path += '/' + value;
+                        Model.path += value;
                     });
                 }
 
@@ -61,23 +61,35 @@ angular.module('rescour.marketplace', ['rescour.config'])
 
                     Model.query().then(
                         function (response) {
-                            var products = response.data;
-                            for (var product in products) {
-                                if (products.hasOwnProperty(product)) {
-                                    var _product = products[product];
+                            var _models = response.data;
+                            var idPosition = 0;
+                            for (var _model in _models) {
+                                if (_models.hasOwnProperty(_model)) {
+                                    var model = _models[_model];
+
                                     try {
-                                        items[_product.id] = new Model(_product);
-                                        items[_product.id].mapDimensions(dimensions);
-                                        dimensions.ids.push(_product.id);
+                                        items[model.id] = new Model(model);
+                                        dimensions.idMap.push(model.id);
+
+                                        // Map them dimensions
+                                        angular.forEach(items[model.id].dimensions.discreet, function (attrValue, attrID) {
+                                            if (Model.collection.fields.hasOwnProperty(attrID)) {
+                                                var _discreetVal = items[model.id].dimensions.discreet[attrID] = items[model.id].dimensions.discreet[attrID] || 'Unknown';
+                                                dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
+                                            } else {
+                                                throw Error("Field " + attrID + " is not defined in collection");
+                                            }
+                                        });
+                                        idPosition+=1;
                                     } catch (e) {
                                         console.log(e.message);
                                     }
                                 }
                             }
                             activePath = Model.path;
-                            console.log(dimensions);
-                            dimensions.initialize().apply().predict();
-                            self.render();
+                            dimensions.initialize();
+                            self.apply();
+//                            self.render();
                             defer.resolve(items);
                         }, function (response) {
                             defer.reject(response);
@@ -116,153 +128,64 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 }
             };
 
-            this.apply = function () {
-                // Toggle any values
-                if (arguments.length > 0) {
-                    angular.forEach(arguments, function (discreet) {
-                        if (discreet) {
-                            discreet.isSelected = !discreet.isSelected;
+            this.apply = function (discreet, value) {
+                // apply is called on init, so we have to check whether args are passed in
+                if (discreet && value) {
+                    value.isSelected = !value.isSelected;
+                    value.isSelected ? discreet.selected ++ : discreet.selected --;
+                }
+
+                // determines how many integers we need to store n bits, if n is number of items
+                var BIT_SET_LENGTH = Math.ceil(dimensions.idMap.length / 32),
+                    bitSet = [],
+                    i;
+
+                // each integer is first flattened into a single integer within each discreet category
+                // by taking the union of all sets. Each of those flattened integers are
+                for (i = 0; i < BIT_SET_LENGTH; i ++) {
+                    bitSet.push(~0);
+
+                    for (var attrId in dimensions.discreet) {
+                        if (dimensions.discreet.hasOwnProperty(attrId)) {
+                            var _discreet = dimensions.discreet[attrId],
+                                union = 0;
+
+                            for (var valueId in _discreet.values) {
+                                if (_discreet.values.hasOwnProperty(valueId)) {
+                                    var _value = _discreet.values[valueId];
+
+                                    if (_value.isSelected || _discreet.selected === 0) {
+                                        union = union | _value.ids[i];
+                                    }
+                                }
+                            }
+
+                            bitSet[i] = bitSet[i] & union;
                         }
-                    });
-                    dimensions.apply();
-                    this.render();
+                    }
+
+                    for (var p = 0; p < 32; p++) {
+                        // index is (i * 32) + whatever bit number is flipped
+                        var itemIndex = (i * 32) + p;
+                        if (dimensions.idMap[itemIndex]) {
+                            items[dimensions.idMap[itemIndex]].isVisible = !!(1 & bitSet[i]);
+                            dimensions.visibleIds.push(dimensions.idMap[itemIndex]);
+                        }
+
+                        bitSet[i] = bitSet[i] >> 1;
+                    }
                 }
             }
         }])
-    .factory('Item', ['$_api', '$q', '$http',
-        function ($_api, $q, $http) {
-            function ItemFactory(collection) {
-                var Item = function (data, defaults) {
-                    var _defaults = defaults || {
-                            title: 'Untitled',
-                            description: 'No description provided.',
-                            thumbnail: 'http://placehold.it/100x100',
-                            hidden: false,
-                            isVisible: true
-                        },
-                        opts = angular.extend({}, _defaults, data),
-                        self = this;
-
-                    angular.copy(opts, this);
-
-                    if (collection) {
-                        angular.forEach(collection.fields, function (value, key) {
-                            self[key] = self[key] || (value.placeholder || "");
-                        });
-                    }
-                };
-
-                Item.collection = collection;
-
-                Item.path = collection.path;
-
-                Item.prototype.mapDimensions = function (dimensions) {
-                    var self = this;
-
-                    angular.forEach(collection.dimensions.discreet, function (attrID) {
-                        if (collection.fields.hasOwnProperty(attrID)) {
-                            self[attrID] = self[attrID] || 'Unknown';
-                            dimensions.pushDiscreetId(attrID, self.id, self[attrID]);
-                        } else {
-                            throw Error("Field " + attrID + " is not defined in collection");
-                        }
-                    });
-
-                    angular.forEach(collection.dimensions.range, function (attrID) {
-                        if (collection.fields.hasOwnProperty(attrID)) {
-                            self[attrID] = (_.isNaN(parseInt(self[attrID], 10)) || !self[attrID]) ? 'NA' : self[attrID];
-                            dimensions.pushRangeId(attrID, self.id, self[attrID]);
-                        } else {
-                            throw Error("Field " + attrID + " is not defined in collection");
-                        }
-
-                    });
-                };
-
-                Item.query = function () {
-                    // if collection is undefined, just query
-                    var defer = $q.defer(),
-                        config = angular.extend({
-                            transformRequest: function (data) {
-                                return data;
-                            }
-                        }, $_api.config);
-
-                    $http.get($_api.path + Item.path, config).then(function (response) {
-                        defer.resolve(response);
-                    }, function (response) {
-                        defer.reject(response);
-                    });
-
-                    return defer.promise;
-                };
-
-
-                Item.prototype.$get = function () {
-                    var self = this,
-                        defer = $q.defer(),
-                        config = angular.extend({
-                            transformRequest: function (data) {
-                                self.$spinner = true;
-                                return data;
-                            }
-                        });
-
-                    $http.get($_api.path + Item.path + '/' + this.id, config).then(function (response) {
-                        angular.extend(self, {}, response.data);
-                        self.$spinner = false;
-                        defer.resolve(self);
-
-                    }, function (response) {
-                        self.$spinner = false;
-                        defer.reject(response);
-                    });
-
-                    return defer.promise;
-                };
-
-                Item.prototype.$save = function () {
-                    var self = this,
-                        defer = $q.defer(),
-                        config = angular.extend({
-                            transformRequest: function (data) {
-                                self.$spinner = true;
-                                return data;
-                            }
-                        }),
-                        body = JSON.stringify(self);
-
-                    if (self.id) {
-                        $http.put($_api.path + Item.path + '/' + self.id, body, config)
-                            .then(function (response) {
-                                self.$spinner = false;
-                                defer.resolve(response);
-                            }, function (response) {
-                                self.$spinner = false;
-                                defer.reject(response);
-                            });
-                    } else {
-                        $http.post($_api.path + Item.path + '/', body, config)
-                            .then(function (response) {
-                                self.$spinner = false;
-                                self.id = response.data.id;
-                                defer.resolve(response);
-                            }, function (response) {
-                                self.$spinner = false;
-                                defer.reject(response);
-                            });
-                    }
-
-                    return defer.promise;
-                };
-
-                return Item;
-            }
-
-            return ItemFactory;
-        }])
     .factory('Dimensions', ['$timeout',
         function ($timeout) {
+
+            function setBit(idPos, bitSet) {
+                var bitSetIndex = parseInt((idPos / 32), 10);
+                bitSet[bitSetIndex] = bitSet[bitSetIndex] | ( 1 << (idPos % 32) );
+                return bitSet;
+            }
+
             // Dimensions Constructor
             function Dimensions(collection) {
                 var defaults = angular.extend({
@@ -270,7 +193,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
                     discreet: {},
                     range: {},
                     visibleIds: [],
-                    ids: []
+                    idMap: []
                 });
 
                 angular.forEach(collection.dimensions.discreet, function (value, key) {
@@ -315,20 +238,24 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 });
             }
 
-            Dimensions.prototype.pushDiscreetId = function (attrID, itemID, value) {
+            Dimensions.prototype.pushDiscreetId = function (attrID, idPosition, value) {
                 // Only add if dimension already exists
                 if (_.has(this.discreet, attrID)) {
                     var _discreet = this.discreet[attrID];
                     value = value || "Unknown";
 
                     if (_.has(_discreet.values, value)) {
-                        _discreet.values[value].ids.push(itemID);
+                        if (_discreet.values[value].ids.length < this.idMap.length / 32) {
+                            _discreet.values[value].ids.push(0);
+                        }
+                        _discreet.values[value].ids = setBit(idPosition, _discreet.values[value].ids);
                     } else {
                         _discreet.values[value] = {
-                            ids: [itemID],
+                            ids: [0],
                             title: value,
                             isSelected: false
                         };
+                        _discreet.values[value].ids = setBit(idPosition, _discreet.values[value].ids);
                     }
                 }
             };
@@ -382,10 +309,44 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 return this;
             };
 
-            Dimensions.prototype.apply = function () {
-                this.visibleIds = this._calcRangeVisible()._calcDiscreetVisible()._intersectVisible();
-                return this;
-            };
+
+//            Dimensions.prototype.apply = function (items) {
+////                this.visibleIds = this._calcRangeVisible()._calcDiscreetVisible()._intersectVisible();
+//                var BIT_SET_SIZE = Math.ceil(this.idMap / 32),
+//                    bitIntersectedSet = [];
+//
+//                this._calcDiscreetVisible();
+//
+//                var prevBitIds = new Array(this.);
+//
+//                for (var discreetID in self.discreet) {
+//                    if (this.discreet.hasOwnProperty(discreetID)) {
+//                        var _discreet = this.discreet[discreetID];
+//
+//                        if (_discreet.visibleIds.length === 0) {
+//                            continue;
+//                        }
+//                        intersectArray = _.intersection(intersectArray, _discreet.visibleIds);
+//                    }
+//                }
+//
+//                for (var i = BIT_SET_SIZE- 1; i >= 0; i--) {
+//                    idBitSet1[i] & idBitSet2[i]
+//                    bitIntersectedSet.push();
+//                    var currentBitSet = bitIntersectedSet[i];
+//                    for (var p = 0; p < 32; p++) {
+//                        // index is (i * 32) + whatever bit number is flipped
+//                        var itemIndex = (i * 32) + p;
+//                        if (!!(1 & currentBitSet) && idMap[itemIndex]) {
+//                            console.log("bitwise ", items[idMap[itemIndex]].id);
+//                            items[idMap[itemIndex]].isVisible = !!(1 & currentBitSet);
+//                        }
+//
+//                        currentBitSet = currentBitSet >> 1;
+//                    }
+//                }
+//                return this;
+//            };
 
             Dimensions.prototype.predict = function () {
                 var self = this;

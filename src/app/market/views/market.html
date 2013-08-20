@@ -38,7 +38,8 @@
                             <li class="header">{{discreet.title}}</li>
                             <li ng-repeat="value in discreet.values"
                                 ng-class="{'active': value.isSelected}"
-                                ng-click="toggleDiscreet(value)"><a href="javascript:">{{value.title}}</a></li>
+                                ng-click="toggleDiscreet(discreet, value)"><a href="javascript:">{{value.title}}</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -65,17 +66,19 @@
             <div class="scroll-container">
                 <div class="scroll-wrap" chunk="items | limitVisible | orderBy:sortBy" chunk-size="100">
                     <div class="row listing-list-item" ng-repeat="item in chunk">
-                        <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox"/></div>
-                        <div class="col-lg-1 col-sm-1 col-1"><i class="icon-star"></i></div>
-                        <div class="col-lg-1 col-sm-1 col-1"><i class="icon-ban-circle"></i></div>
-                        <div class="col-lg-6 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
+                        <!--<div class="col-lg-1 col-sm-1 col-1"><input type="checkbox"/></div>-->
+                        <!--<div class="col-lg-1 col-sm-1 col-1"><i class="icon-star"></i></div>-->
+                        <!--<div class="col-lg-1 col-sm-1 col-1"><i class="icon-ban-circle"></i></div>-->
+                        <div class="col-lg-4 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
                             {{item.title}}
                         </div>
-                        <div class="col-lg-3 col-sm-3 col-3">
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 60%;"></div>
-                            </div>
-                        </div>
+                        <div class="col-lg-4 col-sm-6 col-6">{{item.broker}}</div>
+                        <div class="col-lg-4 col-sm-6 col-6">{{item.state}}</div>
+                        <!--<div class="col-lg-3 col-sm-3 col-3">-->
+                        <!--<div class="progress">-->
+                        <!--<div class="progress-bar" style="width: 60%;"></div>-->
+                        <!--</div>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </div>
@@ -106,9 +109,12 @@
                                 <label class="col-lg-2 control-label">
                                     {{ value.title }}
                                 </label>
-
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" ng-model="activeItem[field]"/>
+                                <button class="btn col-lg-5" ng-click="copyFromRaw(activeItem, field)" ng-class="{'btn-success': activeItem.raw[field].status == 0}">
+                                    {{activeItem.raw[field].value}}
+                                    <i class="icon-chevron-right"></i>
+                                </button>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" ng-model="activeItem.edited[field]"/>
                                 </div>
                             </div>
                         </form>

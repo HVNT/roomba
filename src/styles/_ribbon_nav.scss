@@ -80,7 +80,7 @@ ul.ribbon-nav {
       @include transition(all .2s ease);
 
       &::before {
-        content: "\00BB";
+        content: "+";
         top: 0;
         left: 0;
         position:absolute;

@@ -463,6 +463,12 @@ module.exports = function (grunt) {
                 },
                 environment: 'dev'
             },
+            shimLocalDev: {
+                files: {
+                    './tmp/main.js': './src/main.js.template'
+                },
+                environment: 'localDev'
+            },
             shimDemo: {
                 files: {
                     './tmp/main.js': './src/main.js.template'
@@ -580,6 +586,7 @@ module.exports = function (grunt) {
     grunt.registerTask('dev', [
         'clean:dist',
         'compass:dev', // Compile compass: app -> tmp
+        'template:shimLocalDev',
         'copy:prep', // Copy all html/css/js: app -> tmp
         'template:indexLocalDev', // Compile templates: app -> tmp
         'copy:dev', // Copy all from: tmp -> dist

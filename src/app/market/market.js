@@ -4,7 +4,7 @@ angular.module('roomba.app')
             $routeProvider
                 .when('/market',
                 {
-                    redirectTo: '/market/listings/raw'
+                    redirectTo: '/market/listings'
                 })
                 .when('/market/:collection',
                 {
@@ -59,10 +59,11 @@ angular.module('roomba.app')
                     redirectTo: '/market'
                 });
         }])
-    .controller('MarketCtrl', ['$scope', '$collections', '$location', 'collection',
-        function ($scope, $collections, $location, collection) {
+    .controller('MarketCtrl', ['$scope', '$collections', '$location', 'collection', '$http',
+        function ($scope, $collections, $location, collection, $http) {
             $scope.collections = $collections;
             $scope.collection = collection;
+
         }])
     .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model',
         function ($scope, Market, $routeParams, $location, Model) {
@@ -75,6 +76,8 @@ angular.module('roomba.app')
 
             $scope.$on('$locationChangeSuccess', function (e, newLocation, oldLocation) {
                 $scope.activeItem = Market.setActive($location.search().id);
+                $scope.activeItem.$getResources();
+
             });
         }])
     .controller('MarketListCtrl', ['$scope', '$location',
@@ -109,8 +112,8 @@ angular.module('roomba.app')
 
             $scope.tags[$scope.activeTag] = true;
 
-            $scope.toggleDiscreet = function (value) {
-                Market.apply(value);
+            $scope.toggleDiscreet = function (discreet, value) {
+                Market.apply(discreet, value);
             };
 
             $scope.changeTag = function (tag) {
@@ -122,6 +125,10 @@ angular.module('roomba.app')
 
             $scope.notPublished = function (item) {
                 return !_.contains(item.tags, 'published');
+            }
+
+            $scope.copyFromRaw = function (activeItem, field) {
+                activeItem.edited[field] = activeItem.raw[field].value;
             }
         }])
     .factory('Models', ['Item', '$collections',

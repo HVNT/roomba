@@ -68,6 +68,11 @@ $btnBorderRadius: 5px;
   @include transition(all 0.1s);
   @include tpBtnBg($color);
   @include tpBtnAnimation($color);
+
+  i {
+    font-size: $baseFontSize - 2px;
+    padding-left: $baseFontSize;
+  }
 }
 
 
@@ -110,8 +115,8 @@ $btnBorderRadius: 5px;
   }
   // Inverse appears as dark gray
   &.btn-inverse {
-    @include tpBtnBg($btnInverseBackground);
-    @include tpBtnAnimation($btnInverseBackground);
+    @include tpBtnBg($grayLight);
+    @include tpBtnAnimation($grayLight);
   }
 
   .caret {

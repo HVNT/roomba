@@ -35,14 +35,33 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             self.id = idCounter.toString();
             self.description = 'This item is pretty sweet.  This is the description';
             self.title = "";
+            self.raw = {};
+            self.edited = {};
 
             angular.forEach(_collection.fields, function (value, key) {
                 if (_.contains(_collection.dimensions.discreet, key)) {
-                    self[key] = selectRandom(collections[collectionKey][key]);
+                    var _randDiscreet = selectRandom(collections[collectionKey][key]);
+                    self.raw[key] = {
+                        value: _randDiscreet,
+                        status: 0
+                    };
+
+                    self.edited[key] = _randDiscreet;
                 } else if (_.contains(_collection.dimensions.range, key) && collections[collectionKey][key]) {
-                    self[key] = parseInt((Math.random() * (collections[collectionKey][key].high - collections[collectionKey][key].low)) + collections[collectionKey][key].low, 10);
+                    var _randRange = parseInt((Math.random() * (collections[collectionKey][key].high - collections[collectionKey][key].low)) + collections[collectionKey][key].low, 10);
+                    self.raw[key] = {
+                        value: _randRange,
+                        status: 0
+                    };
+
+                    self.edited[key] = _randRange;
                 } else {
-                    self[key] = key;
+                    self.raw[key] = {
+                        value: key,
+                        status: 0
+                    };
+
+                    self.edited[key] = key;
                 }
 
                 self.title = _collection.title + " " + idCounter;
@@ -97,10 +116,98 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                 };
             }
 
-            var collectionPath = new RegExp('\/api\/' + value.path + '(\/?)$'),
+            var collectionPath = new RegExp('\/api\/' + value.path.replace('/', '') + '(\/?)$'),
                 tagPath = new RegExp('\/api\/' + value.path + '\/[0-9]+|[a-z]+(\/?)$'),
                 detailsPath = new RegExp('\/api\/' + value.path + '\/[a-z]+\/[0-9]+(\/?)$'),
-                postPath = new RegExp('\/api\/' + value.path + '\/$');
+                postPath = new RegExp('\/api\/' + value.path + '\/$'),
+                resourcesPath = new RegExp('\/api\/' + value.path + '\/[a-z]+\/[0-9]+\/resources\/[0-9]+|[a-z]+(\/?)$');
+
+            var contacts = [
+                    {
+                        edited: {
+                            name: 'Alan Pledger',
+                            phone: '678-592-1982',
+                            email: 'apledger3@gmail.com',
+                            broker: 'HFF'
+                        },
+                        raw: {
+                            name: {
+                                value: 'Alann Pledger',
+                                status: 0
+                            },
+                            phone: {
+                                value: '6785921982',
+                                status: 0
+                            },
+                            email: {
+                                value: 'apledger3@gmail',
+                                status: 0
+                            },
+                            broker: {
+                                value: 'HFF',
+                                status: 0
+                            }
+                        },
+                        id: 'contact0',
+                        tags: []
+                    },
+                    {
+                        edited: {
+                            name: 'Adam Kitain',
+                            phone: '404-123-7531',
+                            email: 'adamkitain@gmail.com',
+                            broker: 'BB'
+                        },
+                        raw: {
+                            name: {
+                                value: 'Adamm Kitain',
+                                status: 0
+                            },
+                            phone: {
+                                value: '',
+                                status: 0
+                            },
+                            email: {
+                                value: 'akitain@gmail',
+                                status: 0
+                            },
+                            broker: {
+                                value: 'BB',
+                                status: 0
+                            }
+                        },
+                        id: 'contact1',
+                        tags: []
+                    }
+                ],
+                images = [
+                    {
+                        edited: {
+                            url: 'http://placehold.it/500x500'
+                        },
+                        raw: {
+                            url: {
+                                value: 'http://placehold.it/500x500',
+                                status: 0
+                            }
+                        },
+                        id: 'image0',
+                        tags: []
+                    },
+                    {
+                        edited: {
+                            url: 'http://placehold.it/200x200'
+                        },
+                        raw: {
+                            url: {
+                                value: 'http://placehold.it/200x200',
+                                status: 0
+                            }
+                        },
+                        id: 'image1',
+                        tags: []
+                    }
+                ];
 
             $httpBackend.whenGET(collectionPath).respond(
                 function (method, url, data, headers) {
@@ -108,10 +215,27 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                     return [200, angular.extend({}, items[_key]), {}];
                 });
 
+            $httpBackend.whenGET(resourcesPath).respond(
+                function (method, url, data, headers) {
+                    var itemId = url.split("/")[3],
+                        resourceType = url.split("/")[6];
+
+                    switch (resourceType) {
+                        case 'images':
+                            return [200, images, {}];
+                            break;
+                        case 'contacts':
+                            return [200, contacts, {}];
+                            break;
+                        default:
+                            return [400, { error: 'Resource type not recognized' }, {}]
+                    }
+                });
+
             $httpBackend.whenGET(tagPath).respond(
                 function (method, url, data, headers) {
                     var item_id = url.split("/")[3],
-                        _key = url.split("/")[2] ;
+                        _key = url.split("/")[2];
                     if (_.contains(collections[_key].tags, item_id)) {
                         return [200, angular.extend({}, _.filter(items[_key], function (value) {
                             return _.contains(value.tags, item_id);
