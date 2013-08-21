@@ -161,19 +161,47 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                         raw: {
                             name: {
                                 value: 'Adamm Kitain',
-                                status: 0
+                                status: 1
                             },
                             phone: {
                                 value: '',
-                                status: 0
+                                status: 1
                             },
                             email: {
                                 value: 'akitain@gmail',
-                                status: 0
+                                status: 1
                             },
                             broker: {
                                 value: 'BB',
-                                status: 0
+                                status: 2
+                            }
+                        },
+                        id: 'contact1',
+                        tags: []
+                    },
+                    {
+                        edited: {
+                            name: 'Hunter Brennick',
+                            phone: '404-123-7531',
+                            email: 'hb@gmail.com',
+                            broker: 'BB'
+                        },
+                        raw: {
+                            name: {
+                                value: null,
+                                status: null
+                            },
+                            phone: {
+                                value: null,
+                                status: null
+                            },
+                            email: {
+                                value: null,
+                                status: null
+                            },
+                            broker: {
+                                value: null,
+                                status: null
                             }
                         },
                         id: 'contact1',

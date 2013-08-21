@@ -49,9 +49,10 @@ $btnBorderRadius: 5px;
   }
 
   &:active {
-    @include translate3d(0, 1px, 0);
+    //@include translate3d(0, 1px, 0);
     @include transition(all 0.1s ease);
   }
+
 }
 
 @mixin tpBtn($color: $baseColor, $fontColor: $white) {

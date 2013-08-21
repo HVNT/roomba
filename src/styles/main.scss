@@ -31,6 +31,7 @@ $bgColor: $grayLighter;
 
   &:focus {
     background: $white !important;
+    font-weight: normal;
   }
 
   &:hover:not(:focus) {
@@ -224,4 +225,119 @@ header {
   }
 }
 
+.model-group {
+
+  .input-preview {
+    position: absolute;
+    left: 0;
+  }
+
+  .table-icon-action {
+    cursor: pointer;
+    font-size: 16px;
+    background: transparent;
+    text-align: center;
+    width: 35px;
+
+    &:hover {
+      background: rgba(0,0,0,0.1);
+    }
+
+    &.table-icon-success {
+      &:hover {
+        i {
+          color: white;
+        }
+        background: $green;
+      }
+      &:active {
+        background: darken($green, 10%);
+      }
+      i {
+        color: $green;
+      }
+    }
+
+    &.table-icon-error {
+      &:hover {
+        i {
+          color: white;
+        }
+        background: $red;
+      }
+
+      &:active {
+        background: darken($red, 10%);
+      }
+      i {
+        color: $red;
+      }
+    }
+
+  }
+
+  .input-overlay {
+    color: $green;
+  }
+
+  .table-input-action {
+    font-size: 10px;
+    position: absolute;
+    right: 0;
+    padding: 5px;
+    top: 5px;
+    color: white;
+    cursor: pointer;
+    @include border-radius(4px);
+    @include tpBtnBg($blue);
+
+
+    &.status-0 {
+      display: none;
+    }
+
+    &.status-1 {
+      @include tpBtnBg($green);
+    }
+
+    &.status-2 {
+      @include tpBtnBg($orange);
+    }
+  }
+
+  table {
+    padding: 15px;
+
+    td {
+      position: relative;
+    }
+
+    .hover-display {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+
+      i {
+        color: red;
+      }
+    }
+
+    tr:hover {
+
+      & > hover-display {
+        display: block;
+      }
+    }
+  }
+
+  input {
+    background: transparent;
+    color: $black;
+
+    &:hover {
+      background: rgba(0,0,0,0.1);
+    }
+  }
+}
 

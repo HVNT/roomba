@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 market-list" ng-controller="MarketListCtrl">
+        <div class="col-lg-3 market-list" ng-controller="MarketListCtrl">
             <div class="row">
                 <div class="col-lg-12 header-actions">
                     <div class="btn-group">
@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6 market-details" ng-controller="DetailsCtrl">
+        <div class="col-lg-7 market-details" ng-controller="DetailsCtrl">
             <div class="row">
                 <div class="col-lg-12 header-actions">
                     <div class="btn-group">
@@ -102,26 +102,68 @@
 
             <div class="scroll-container row" ng-show="activeItem">
                 <div class="scroll-wrap">
-                    <div class="col-lg-12">
-                        <div class="page-header"><h3>{{ activeItem.title }}</h3></div>
-                        <form class="form-horizontal">
-                            <div class="form-group" ng-repeat="(field, value) in collection.fields">
-                                <label class="col-lg-2 control-label">
-                                    {{ value.title }}
-                                </label>
-                                <button class="btn col-lg-5" ng-click="copyFromRaw(activeItem, field)" ng-class="{'btn-success': activeItem.raw[field].status == 0}">
-                                    {{activeItem.raw[field].value}}
-                                    <i class="icon-chevron-right"></i>
-                                </button>
-                                <div class="col-lg-5">
-                                    <input type="text" class="form-control" ng-model="activeItem.edited[field]"/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="page-header"><h4>{{ activeItem.title }}</h4></div>
+
+                            <form class="form-horizontal">
+                                <div class="form-group" ng-repeat="(field, value) in collection.fields">
+                                    <label class="col-lg-2 control-label">
+                                        {{ value.title }}
+                                    </label>
+                                    <button class="btn col-lg-5" ng-click="copyFromRaw(activeItem, field)"
+                                            ng-class="{'btn-success': activeItem.raw[field].status == 0}">
+                                        {{activeItem.raw[field].value}}
+                                        <i class="icon-chevron-right"></i>
+                                    </button>
+                                    <div class="col-lg-5">
+                                        <input type="text" class="form-control" ng-model="activeItem.edited[field]"/>
+                                    </div>
                                 </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="model-group" ng-repeat="(resourceKey, resource) in collection.resources">
+                                <h4>{{ resource.title }}</h4>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th class="table-icon-action table-icon-success">
+                                            <i class="icon-plus-sign"></i>
+                                        </th>
+                                        <th ng-repeat="resourceField in resource.fields">
+                                            <input type="text" placeholder="{{resourceField.title}}" ng-model=""/>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="itemResource in activeItemResources[resourceKey]">
+                                        <td class="table-icon-action table-icon-error">
+                                            <i class="icon-remove-sign"></i>
+                                        </td>
+                                        <td ng-repeat="(resourceFieldKey, resourceField) in resource.fields">
+                                            <input ng-hide="itemResource.raw[resourceFieldKey].showRaw" type="text"
+                                                   ng-model="itemResource.edited[resourceFieldKey]"/>
+                                            <input class="input-overlay status-{{itemResource.raw[resourceFieldKey].status}}"
+                                                   ng-show="itemResource.raw[resourceFieldKey].showRaw" readonly
+                                                   type="text" ng-model="itemResource.raw[resourceFieldKey].value"/>
+
+                                            <div class="table-input-action" ng-hide="isNull(itemResource.raw[resourceFieldKey].status)"
+                                                 ng-mouseover="itemResource.raw[resourceFieldKey].showRaw = true"
+                                                 ng-mouseleave="itemResource.raw[resourceFieldKey].showRaw = false"
+                                                 ng-click="copyFromRaw(itemResource, resourceFieldKey)">Raw
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <!--<div ng-show="activeItem" ng-include="srcListingDetails"></div>-->
 
             <!--<div class="row" ng-show="activeItem">-->
