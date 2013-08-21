@@ -53,12 +53,12 @@ angular.module('rescour.marketplace', ['rescour.config'])
                     angular.forEach(tags, function (value) {
                         Model.path += value;
                     });
+
                 }
 
                 if (_.isEmpty(items) || activePath !== Model.path) {
                     items = {};
                     dimensions = new Dimensions(Model.collection);
-
                     Model.query().then(
                         function (response) {
                             var _models = response.data;
@@ -96,6 +96,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
                         }
                     );
                 } else {
+                    console.log("else");
                     defer.resolve(items);
                 }
 

@@ -18,8 +18,6 @@ angular.module('roomba.app')
                             Market.initialize(Models[$route.current.params.collection])
                                 .then(function (items) {
                                     defer.resolve();
-                                }).then(function () {
-                                    defer.resolve();
                                 });
 
                             return defer.promise;
@@ -37,10 +35,8 @@ angular.module('roomba.app')
                     resolve: {
                         collection: function (Market, $route, $q, $timeout, Models, $location) {
                             var defer = $q.defer();
-
                             Market.initialize(Models[$route.current.params.collection], $route.current.params.tag)
                                 .then(function (items) {
-
                                     defer.resolve();
                                 });
 
@@ -73,16 +69,19 @@ angular.module('roomba.app')
 
             function setActiveItem(id) {
                 $scope.activeItem = Market.setActive(id);
-                $scope.activeItem.$getResources().then(function (results) {
-                    for (var i = results.length - 1; i >= 0; i--) {
-                        for (var _resource in results[i]) {
-                            if (results[i].hasOwnProperty(_resource)) {
-                                $scope.activeItemResources[_resource] = [];
-                                angular.copy(results[i][_resource], $scope.activeItemResources[_resource])
+
+                if ($scope.activeItem) {
+                    $scope.activeItem.$getResources().then(function (results) {
+                        for (var i = results.length - 1; i >= 0; i--) {
+                            for (var _resource in results[i]) {
+                                if (results[i].hasOwnProperty(_resource)) {
+                                    $scope.activeItemResources[_resource] = [];
+                                    angular.copy(results[i][_resource], $scope.activeItemResources[_resource])
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
 
             if ($location.search().id) {
@@ -90,7 +89,9 @@ angular.module('roomba.app')
             }
 
             $scope.$on('$locationChangeSuccess', function (e, newLocation, oldLocation) {
-                setActiveItem ($location.search().id);
+                if ($location.search().id) {
+                    setActiveItem ($location.search().id);
+                }
             });
 
             $scope.isNull = function (prop) {
@@ -148,16 +149,33 @@ angular.module('roomba.app')
                 activeItem.edited[field] = activeItem.raw[field].value;
             };
 
-            $scope.removeResource = function (resourceKey, id) {
-                // Remove id from resource
-            };
 
             $scope.saveItem = function () {
 
             };
 
+
             $scope.displayRaw = function (resource, field) {
 
+            };
+        }])
+    .controller('ResourceCtrl', ['$scope',
+        function($scope) {
+            $scope.newResource = {};
+
+            $scope.addResource = function (resourceKey, resource) {
+                if (resource === {}) {
+                    console.log("empty!");
+                } else {
+                    $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource }));
+                    $scope.newResource = {};
+                }
+                // POST to resources/resourceKey, get back ID
+                // Push ID to activeItem.resources[resourceKey]
+            };
+
+            $scope.removeResource = function (resourceKey, id) {
+                // Remove id from resource
             };
         }])
     .factory('Models', ['Item', '$collections',
@@ -169,12 +187,5 @@ angular.module('roomba.app')
             });
 
             return models;
-        }])
-    .directive('hoverButton', function() {
-            return {
-                link: function(scope, element, attrs) {
-
-                }        
-            };
-        });
+        }]);
 

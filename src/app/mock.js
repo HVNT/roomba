@@ -117,10 +117,10 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             }
 
             var collectionPath = new RegExp('\/api\/' + value.path.replace('/', '') + '(\/?)$'),
-                tagPath = new RegExp('\/api\/' + value.path + '\/[0-9]+|[a-z]+(\/?)$'),
-                detailsPath = new RegExp('\/api\/' + value.path + '\/[a-z]+\/[0-9]+(\/?)$'),
-                postPath = new RegExp('\/api\/' + value.path + '\/$'),
-                resourcesPath = new RegExp('\/api\/' + value.path + '\/[a-z]+\/[0-9]+\/resources\/[0-9]+|[a-z]+(\/?)$');
+                tagPath = new RegExp('\/api\/' + value.path.replace('/', '') + '\/[0-9]+|[a-z]+(\/?)$'),
+                detailsPath = new RegExp('\/api\/' + value.path.replace('/', '') + '\/[a-z]+\/[0-9]+(\/?)$'),
+                postPath = new RegExp('\/api\/' + value.path.replace('/', '') + '\/$'),
+                resourcesPath = new RegExp('\/api\/' + value.path.replace('/', '') + '\/[a-z]+\/[0-9]+\/resources\/[0-9]+|[a-z]+(\/?)$');
 
             var contacts = [
                     {
@@ -230,12 +230,14 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                             url: {
                                 value: 'http://placehold.it/200x200',
                                 status: 0
+
                             }
                         },
                         id: 'image1',
                         tags: []
                     }
                 ];
+
 
             $httpBackend.whenGET(collectionPath).respond(
                 function (method, url, data, headers) {
@@ -272,6 +274,8 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                         return [200, angular.extend({}, items[_key][item_id], itemDetails[_key][item_id]), {}];
                     }
                 });
+
+
 
             $httpBackend.whenGET(detailsPath).respond(
                 function (method, url, data, headers) {

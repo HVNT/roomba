@@ -69,11 +69,9 @@
                         <!--<div class="col-lg-1 col-sm-1 col-1"><input type="checkbox"/></div>-->
                         <!--<div class="col-lg-1 col-sm-1 col-1"><i class="icon-star"></i></div>-->
                         <!--<div class="col-lg-1 col-sm-1 col-1"><i class="icon-ban-circle"></i></div>-->
-                        <div class="col-lg-4 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
+                        <div class="col-lg-12 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
                             {{item.title}}
                         </div>
-                        <div class="col-lg-4 col-sm-6 col-6">{{item.broker}}</div>
-                        <div class="col-lg-4 col-sm-6 col-6">{{item.state}}</div>
                         <!--<div class="col-lg-3 col-sm-3 col-3">-->
                         <!--<div class="progress">-->
                         <!--<div class="progress-bar" style="width: 60%;"></div>-->
@@ -125,22 +123,23 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="model-group" ng-repeat="(resourceKey, resource) in collection.resources">
+                            <div class="model-group" ng-repeat="(resourceKey, resource) in collection.resources" ng-controller="ResourceCtrl">
                                 <h4>{{ resource.title }}</h4>
                                 <table class="table table-striped">
                                     <thead>
                                     <tr>
-                                        <th class="table-icon-action table-icon-success">
+                                        <th class="table-icon-action table-icon-success" ng-click="addResource(resourceKey, newResource)">
+
                                             <i class="icon-plus-sign"></i>
                                         </th>
-                                        <th ng-repeat="resourceField in resource.fields">
-                                            <input type="text" placeholder="{{resourceField.title}}" ng-model=""/>
+                                        <th ng-repeat="(resourceFieldKey, resourceField) in resource.fields">
+                                            <input type="text" ng-model="newResource[resourceFieldKey]" placeholder="{{resourceField.title}}"/>
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="itemResource in activeItemResources[resourceKey]">
-                                        <td class="table-icon-action table-icon-error">
+                                        <td class="table-icon-action table-icon-error" ng-click="removeResource(itemResource)">
                                             <i class="icon-remove-sign"></i>
                                         </td>
                                         <td ng-repeat="(resourceFieldKey, resourceField) in resource.fields">
@@ -150,7 +149,8 @@
                                                    ng-show="itemResource.raw[resourceFieldKey].showRaw" readonly
                                                    type="text" ng-model="itemResource.raw[resourceFieldKey].value"/>
 
-                                            <div class="table-input-action" ng-hide="isNull(itemResource.raw[resourceFieldKey].status)"
+                                            <div class="table-input-action"
+                                                 ng-hide="isNull(itemResource.raw[resourceFieldKey].status)"
                                                  ng-mouseover="itemResource.raw[resourceFieldKey].showRaw = true"
                                                  ng-mouseleave="itemResource.raw[resourceFieldKey].showRaw = false"
                                                  ng-click="copyFromRaw(itemResource, resourceFieldKey)">Raw
