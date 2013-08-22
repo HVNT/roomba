@@ -15,13 +15,13 @@ require(
                     'core/spinner/spinner',
                     'core/browser-detect/browser-detect',
                     'core/marketplace/marketplace',
-                <% if (environment === 'dev') { %>
+                <% if (config.environment === 'dev') { %>
                     'core/config/dev'
-                <% } else if (environment === 'demo' || environment === 'local') { %>
+                <% } else if (config.environment === 'demo' || config.environment === 'local') { %>
                     'core/config/local'
-                <% } else if (environment === 'prod') { %>
+                <% } else if (config.environment === 'prod') { %>
                     'core/config/prod'
-                 <% } else if (environment === 'localDev') { %>
+                 <% } else if (config.environment === 'localDev') { %>
                     'core/config/local-dev'
                 <% } %>
                 ]
@@ -41,7 +41,7 @@ require(
             'app/bootstrap': {
                 deps: ['app/app']
             }
-            <% if (environment === 'local') { %>
+            <% if (config.environment === 'local') { %>
             ,'app/mock': {
                 deps: [
                     'components/angular-mocks/angular-mocks',
@@ -59,11 +59,11 @@ require(
         'app/market/market',
         'app/login/login'
     ]
-    <% if (environment === 'dev' || environment === 'prod' || environment === 'localDev') { %>
+    <% if (config.environment === 'dev' || config.environment === 'prod' || config.environment === 'localDev') { %>
     ,function (require) {
         return require(['app/bootstrap']);
     }
-    <% } else if (environment === 'local') { %>
+    <% } else if (config.environment === 'local') { %>
     ,function (require) {
             return require(['app/mock']);
         }

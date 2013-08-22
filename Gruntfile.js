@@ -25,7 +25,8 @@ module.exports = function (grunt) {
     path = require('path');
     crypto = require('crypto');
     // load all grunt tasks
-    require('matchdep').filterDev('grunt-*').concat(['gruntacular']).forEach(grunt.loadNpmTasks);
+//    require('matchdep').filterDev('grunt-*').concat(['gruntacular']).forEach(grunt.loadNpmTasks);
+    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 //    var normalizeFiles = function (config) {
 //        var data, dest, destExt, dirs, files, groups, inDest, inFileDest, inFileSrc, inFiles, inSrc, isDestADirectory, isIndexed, src;
@@ -519,6 +520,8 @@ module.exports = function (grunt) {
             }
         }
     });
+
+    grunt.loadNpmTasks('grunt-hustler');
 
     // A task to run unit tests in testacular.
     grunt.registerTask('unit-tests', 'run the testacular test driver on jasmine unit tests', function () {
