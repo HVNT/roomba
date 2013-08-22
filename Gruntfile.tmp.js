@@ -27,145 +27,145 @@ module.exports = function (grunt) {
     // load all grunt tasks
     require('matchdep').filterDev('grunt-*').concat(['gruntacular']).forEach(grunt.loadNpmTasks);
 
-//    var normalizeFiles = function (config) {
-//        var data, dest, destExt, dirs, files, groups, inDest, inFileDest, inFileSrc, inFiles, inSrc, isDestADirectory, isIndexed, src;
-//
-//        config = grunt.util.recurse(config, function (prop) {
-//            if (typeof prop !== 'string') {
-//                return prop;
-//            }
-//            return grunt.template.process(prop);
-//        }, function () {
-//            return false;
-//        });
-//        data = config.data;
-//        inDest = data.dest;
-//        inSrc = data.src;
-//        inFiles = data.files;
-//        files = {};
-//        dirs = {};
-//        groups = {};
-//        isIndexed = false;
-//        if (inFiles) {
-//            if (Array.isArray(inFiles)) {
-//                isIndexed = true;
-//                inFiles.forEach(function (inFileSrc, index) {
-//                    if (!Array.isArray(inFileSrc)) {
-//                        inFileSrc = [inFileSrc];
-//                    }
-//                    return files[index] = inFileSrc;
-//                });
-//            } else {
-//                for (inFileDest in inFiles) {
-//                    inFileSrc = inFiles[inFileDest];
-//                    inFileDest = path.relative('./', inFileDest);
-//                    if (!Array.isArray(inFileSrc)) {
-//                        inFileSrc = [inFileSrc];
-//                    }
-//                    files[inFileDest] = inFileSrc;
-//                }
-//            }
-//        }
-//        if (inSrc) {
-//            if (!Array.isArray(inSrc)) {
-//                inSrc = [inSrc];
-//            }
-//        }
-//        if (inDest && inSrc) {
-//            inDest = path.relative('./', inDest);
-//            files[inDest] = inSrc;
-//        }
-//        if (inSrc && !(inDest != null)) {
-//            isIndexed = true;
-//            files[0] = inSrc;
-//        }
-//        if (files) {
-//            for (dest in files) {
-//                src = files[dest];
-//                destExt = path.extname(dest);
-//                isDestADirectory = destExt.length === 0 && !isIndexed;
-//                src.forEach(function (source) {
-//                    var isSourceADirectory, sourceExt, sourceFiles;
-//                    sourceExt = path.extname(source);
-//                    isSourceADirectory = sourceExt.length === 0;
-//                    if (isSourceADirectory) {
-//                        source = path.join(source, '/**/*.*');
-//                    }
-//                    sourceFiles = grunt.file.expand(source);
-//                    return sourceFiles.forEach(function (sourceFile) {
-//                        var absoluteDestination, cleanSource, destination, relative, sourceDirectory;
-//                        if (isDestADirectory) {
-//                            sourceDirectory = path.dirname(source.replace('**', ''));
-//                            if (sourceFile.indexOf('//') === 0) {
-//                                relative = sourceFile.substr(sourceDirectory.length);
-//                            } else {
-//                                relative = path.relative(sourceDirectory, sourceFile);
-//                            }
-//                            absoluteDestination = path.resolve(dest, relative);
-//                            destination = path.relative('./', absoluteDestination);
-//                        } else {
-//                            destination = dest;
-//                        }
-//                        if (isSourceADirectory) {
-//                            cleanSource = source.replace('/**/*.*', '/').replace('\\**\\*.*', '\\');
-//                            if (!dirs[cleanSource]) {
-//                                dirs[cleanSource] = [];
-//                            }
-//                            dirs[cleanSource].push(sourceFile);
-//                        }
-//                        if (!groups[destination]) {
-//                            groups[destination] = [];
-//                        }
-//                        return groups[destination].push(sourceFile);
-//                    });
-//                });
-//            }
-//        }
-//        return {
-//            dirs: dirs,
-//            groups: groups
-//        };
-//    };
-//
-//    var gTemplate = function (config) {
-//        var compiled, contents, dest, destination, groups, normalized, separator, sourceContents, src, _results;
-//
-//        normalized = normalizeFiles(config);
-//        groups = normalized.groups;
-//        config.data.include = grunt.file.read;
-//        config.data.hash = function (filePath) {
-//            var contents, hash;
-//            contents = grunt.file.read(filePath);
-//            return hash = crypto.createHash('sha1').update(contents).digest('hex').substr(0, 10);
-//        };
-//        config.data.uniqueVersion = function () {
-//            var uniqueVersion;
-//            return uniqueVersion = (new Date()).getTime();
-//        };
-//        _results = [];
-//        for (dest in groups) {
-//            src = groups[dest];
-//            sourceContents = [];
-//            src.forEach(function (source) {
-//                var contents;
-//                contents = grunt.file.read(source);
-//                return sourceContents.push(contents);
-//            });
-//            separator = grunt.util.linefeed;
-//            contents = sourceContents.join(grunt.util.normalizelf(separator));
-//            compiled = grunt.template.process(contents, {
-//                data: config.data
-//            });
-//            destination = dest.replace('.template', '');
-//            grunt.file.write(destination, compiled);
-//            _results.push(grunt.verbose.ok("" + src + " -> " + destination));
-//        }
-//        return _results;
-//    };
-//
-//    grunt.registerMultiTask('template', 'Compiles HTML Templates', function () {
-//        return gTemplate(this);
-//    });
+    var normalizeFiles = function (config) {
+        var data, dest, destExt, dirs, files, groups, inDest, inFileDest, inFileSrc, inFiles, inSrc, isDestADirectory, isIndexed, src;
+
+        config = grunt.util.recurse(config, function (prop) {
+            if (typeof prop !== 'string') {
+                return prop;
+            }
+            return grunt.template.process(prop);
+        }, function () {
+            return false;
+        });
+        data = config.data;
+        inDest = data.dest;
+        inSrc = data.src;
+        inFiles = data.files;
+        files = {};
+        dirs = {};
+        groups = {};
+        isIndexed = false;
+        if (inFiles) {
+            if (Array.isArray(inFiles)) {
+                isIndexed = true;
+                inFiles.forEach(function (inFileSrc, index) {
+                    if (!Array.isArray(inFileSrc)) {
+                        inFileSrc = [inFileSrc];
+                    }
+                    return files[index] = inFileSrc;
+                });
+            } else {
+                for (inFileDest in inFiles) {
+                    inFileSrc = inFiles[inFileDest];
+                    inFileDest = path.relative('./', inFileDest);
+                    if (!Array.isArray(inFileSrc)) {
+                        inFileSrc = [inFileSrc];
+                    }
+                    files[inFileDest] = inFileSrc;
+                }
+            }
+        }
+        if (inSrc) {
+            if (!Array.isArray(inSrc)) {
+                inSrc = [inSrc];
+            }
+        }
+        if (inDest && inSrc) {
+            inDest = path.relative('./', inDest);
+            files[inDest] = inSrc;
+        }
+        if (inSrc && !(inDest != null)) {
+            isIndexed = true;
+            files[0] = inSrc;
+        }
+        if (files) {
+            for (dest in files) {
+                src = files[dest];
+                destExt = path.extname(dest);
+                isDestADirectory = destExt.length === 0 && !isIndexed;
+                src.forEach(function (source) {
+                    var isSourceADirectory, sourceExt, sourceFiles;
+                    sourceExt = path.extname(source);
+                    isSourceADirectory = sourceExt.length === 0;
+                    if (isSourceADirectory) {
+                        source = path.join(source, '/**/*.*');
+                    }
+                    sourceFiles = grunt.file.expand(source);
+                    return sourceFiles.forEach(function (sourceFile) {
+                        var absoluteDestination, cleanSource, destination, relative, sourceDirectory;
+                        if (isDestADirectory) {
+                            sourceDirectory = path.dirname(source.replace('**', ''));
+                            if (sourceFile.indexOf('//') === 0) {
+                                relative = sourceFile.substr(sourceDirectory.length);
+                            } else {
+                                relative = path.relative(sourceDirectory, sourceFile);
+                            }
+                            absoluteDestination = path.resolve(dest, relative);
+                            destination = path.relative('./', absoluteDestination);
+                        } else {
+                            destination = dest;
+                        }
+                        if (isSourceADirectory) {
+                            cleanSource = source.replace('/**/*.*', '/').replace('\\**\\*.*', '\\');
+                            if (!dirs[cleanSource]) {
+                                dirs[cleanSource] = [];
+                            }
+                            dirs[cleanSource].push(sourceFile);
+                        }
+                        if (!groups[destination]) {
+                            groups[destination] = [];
+                        }
+                        return groups[destination].push(sourceFile);
+                    });
+                });
+            }
+        }
+        return {
+            dirs: dirs,
+            groups: groups
+        };
+    };
+
+    var gTemplate = function (config) {
+        var compiled, contents, dest, destination, groups, normalized, separator, sourceContents, src, _results;
+
+        normalized = normalizeFiles(config);
+        groups = normalized.groups;
+        config.data.include = grunt.file.read;
+        config.data.hash = function (filePath) {
+            var contents, hash;
+            contents = grunt.file.read(filePath);
+            return hash = crypto.createHash('sha1').update(contents).digest('hex').substr(0, 10);
+        };
+        config.data.uniqueVersion = function () {
+            var uniqueVersion;
+            return uniqueVersion = (new Date()).getTime();
+        };
+        _results = [];
+        for (dest in groups) {
+            src = groups[dest];
+            sourceContents = [];
+            src.forEach(function (source) {
+                var contents;
+                contents = grunt.file.read(source);
+                return sourceContents.push(contents);
+            });
+            separator = grunt.util.linefeed;
+            contents = sourceContents.join(grunt.util.normalizelf(separator));
+            compiled = grunt.template.process(contents, {
+                data: config.data
+            });
+            destination = dest.replace('.template', '');
+            grunt.file.write(destination, compiled);
+            _results.push(grunt.verbose.ok("" + src + " -> " + destination));
+        }
+        return _results;
+    };
+
+    grunt.registerMultiTask('template', 'Compiles HTML Templates', function () {
+        return gTemplate(this);
+    });
 
     grunt.initConfig({
         yeoman: yeomanConfig,
