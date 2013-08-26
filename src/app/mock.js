@@ -34,7 +34,6 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                 _collection = $collections[collectionKey];
             self.id = idCounter.toString();
             self.description = 'This item is pretty sweet.  This is the description';
-            self.title = "";
             self.raw = {};
             self.edited = {};
 
@@ -64,10 +63,14 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                     self.edited[key] = key;
                 }
 
-                self.title = _collection.title + " " + idCounter;
-                self.tags = [selectRandom(collections[collectionKey].tags)];
             });
 
+            self.tags = [selectRandom(collections[collectionKey].tags)];
+            self.raw.title = {
+                value: _collection.title + " " + idCounter,
+                status: 0
+            };
+            self.edited.title = _collection.title + " " + idCounter;
             idCounter += 1;
         };
 
@@ -204,7 +207,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                                 status: null
                             }
                         },
-                        id: 'contact1',
+                        id: 'contact2',
                         tags: []
                     }
                 ],
@@ -238,7 +241,6 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                     }
                 ];
 
-
             $httpBackend.whenGET(collectionPath).respond(
                 function (method, url, data, headers) {
                     var _key = url.split("/")[2];
@@ -248,7 +250,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             $httpBackend.whenGET(resourcesPath).respond(
                 function (method, url, data, headers) {
                     var itemId = url.split("/")[3],
-                        resourceType = url.split("/")[6];
+                        resourceType = url.split("/")[5];
 
                     switch (resourceType) {
                         case 'images':
@@ -274,8 +276,6 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                         return [200, angular.extend({}, items[_key][item_id], itemDetails[_key][item_id]), {}];
                     }
                 });
-
-
 
             $httpBackend.whenGET(detailsPath).respond(
                 function (method, url, data, headers) {

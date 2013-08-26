@@ -16,7 +16,8 @@ angular.module('roomba.app',
             'rescour.auth',
             'rescour.user',
             'rescour.utility',
-            'rescour.marketplace'
+            'rescour.marketplace',
+            'thotpod.spinner'
         ])
     .value('$collections', {
         listings: {
@@ -223,7 +224,6 @@ angular.module('roomba.app',
                             }
                         }, $_api.config);
 
-
                     $http.get($_api.path + Item.path, config).then(function (response) {
                         defer.resolve(response);
                     }, function (response) {
@@ -241,7 +241,7 @@ angular.module('roomba.app',
                                 self.$spinner = true;
                                 return data;
                             }
-                        });
+                        }, $_api.config);
 
                     $http.get($_api.path + Item.path + '/' + this.id, config).then(function (response) {
                         angular.extend(self, {}, response.data);
@@ -264,10 +264,9 @@ angular.module('roomba.app',
                                 self.$spinner = true;
                                 return data;
                             }
-                        });
+                        }, $_api.config);
 
                     self.resources = {};
-                    console.log(self.id);
 
                     for (var _resource in collection.resources) {
                         if (collection.resources.hasOwnProperty(_resource)) {

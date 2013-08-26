@@ -21,7 +21,7 @@ $btnBorderRadius: 5px;
   border: 1px solid $color;
   text-shadow: 0 -1px 1px darken($color, 25%);
   @include gloss();
-  @include box-shadow(#{0px 2px 1px darken($color,10%), inset 0 1px 3px rgba(255, 255, 255, 0.3)});
+  @include box-shadow(#{0px 2px 1px darken($color,15%), inset 0 1px 3px rgba(255, 255, 255, 0.3)});
 
   &:hover:not(:active) {
     background: lighten($color, 5%);
@@ -31,7 +31,7 @@ $btnBorderRadius: 5px;
   &:active {
     color: $fontColor;
     background: $color;
-    @include box-shadow(#{0px 1px 1px darken($color,10%), inset 0 2px 4px rgba(0,0,0,0.3)});
+    @include box-shadow(#{0px 1px 1px darken($color,15%), inset 0 2px 4px darken($color,15%)});
 
     &::after {
       opacity: 0.3;

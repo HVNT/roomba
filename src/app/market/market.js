@@ -71,6 +71,7 @@ angular.module('roomba.app')
                 $scope.activeItem = Market.setActive(id);
 
                 if ($scope.activeItem) {
+                    $scope.activeItemResources = {};
                     $scope.activeItem.$getResources().then(function (results) {
                         for (var i = results.length - 1; i >= 0; i--) {
                             for (var _resource in results[i]) {
@@ -176,6 +177,10 @@ angular.module('roomba.app')
 
             $scope.removeResource = function (resourceKey, id) {
                 // Remove id from resource
+                $scope.activeItem[resourceKey] = _.without($scope.activeItem[resourceKey], id);
+                $scope.activeItemResources[resourceKey] = _.reject($scope.activeItemResources[resourceKey], function (val) {
+                    return val.id === id;
+                });
             };
         }])
     .factory('Models', ['Item', '$collections',
