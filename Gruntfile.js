@@ -8,187 +8,65 @@
 
 'use strict';
 var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
-var path = require('path');
-
 var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
 
-var yeomanConfig = {
-    app: 'src',
-    dist: 'dist'
-};
 
 module.exports = function (grunt) {
-    var path;
-    var crypto;
-    path = require('path');
-    crypto = require('crypto');
     // load all grunt tasks
-//    require('matchdep').filterDev('grunt-*').concat(['gruntacular']).forEach(grunt.loadNpmTasks);
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-//    var normalizeFiles = function (config) {
-//        var data, dest, destExt, dirs, files, groups, inDest, inFileDest, inFileSrc, inFiles, inSrc, isDestADirectory, isIndexed, src;
-//
-//        config = grunt.util.recurse(config, function (prop) {
-//            if (typeof prop !== 'string') {
-//                return prop;
-//            }
-//            return grunt.template.process(prop);
-//        }, function () {
-//            return false;
-//        });
-//        data = config.data;
-//        inDest = data.dest;
-//        inSrc = data.src;
-//        inFiles = data.files;
-//        files = {};
-//        dirs = {};
-//        groups = {};
-//        isIndexed = false;
-//        if (inFiles) {
-//            if (Array.isArray(inFiles)) {
-//                isIndexed = true;
-//                inFiles.forEach(function (inFileSrc, index) {
-//                    if (!Array.isArray(inFileSrc)) {
-//                        inFileSrc = [inFileSrc];
-//                    }
-//                    return files[index] = inFileSrc;
-//                });
-//            } else {
-//                for (inFileDest in inFiles) {
-//                    inFileSrc = inFiles[inFileDest];
-//                    inFileDest = path.relative('./', inFileDest);
-//                    if (!Array.isArray(inFileSrc)) {
-//                        inFileSrc = [inFileSrc];
-//                    }
-//                    files[inFileDest] = inFileSrc;
-//                }
-//            }
-//        }
-//        if (inSrc) {
-//            if (!Array.isArray(inSrc)) {
-//                inSrc = [inSrc];
-//            }
-//        }
-//        if (inDest && inSrc) {
-//            inDest = path.relative('./', inDest);
-//            files[inDest] = inSrc;
-//        }
-//        if (inSrc && !(inDest != null)) {
-//            isIndexed = true;
-//            files[0] = inSrc;
-//        }
-//        if (files) {
-//            for (dest in files) {
-//                src = files[dest];
-//                destExt = path.extname(dest);
-//                isDestADirectory = destExt.length === 0 && !isIndexed;
-//                src.forEach(function (source) {
-//                    var isSourceADirectory, sourceExt, sourceFiles;
-//                    sourceExt = path.extname(source);
-//                    isSourceADirectory = sourceExt.length === 0;
-//                    if (isSourceADirectory) {
-//                        source = path.join(source, '/**/*.*');
-//                    }
-//                    sourceFiles = grunt.file.expand(source);
-//                    return sourceFiles.forEach(function (sourceFile) {
-//                        var absoluteDestination, cleanSource, destination, relative, sourceDirectory;
-//                        if (isDestADirectory) {
-//                            sourceDirectory = path.dirname(source.replace('**', ''));
-//                            if (sourceFile.indexOf('//') === 0) {
-//                                relative = sourceFile.substr(sourceDirectory.length);
-//                            } else {
-//                                relative = path.relative(sourceDirectory, sourceFile);
-//                            }
-//                            absoluteDestination = path.resolve(dest, relative);
-//                            destination = path.relative('./', absoluteDestination);
-//                        } else {
-//                            destination = dest;
-//                        }
-//                        if (isSourceADirectory) {
-//                            cleanSource = source.replace('/**/*.*', '/').replace('\\**\\*.*', '\\');
-//                            if (!dirs[cleanSource]) {
-//                                dirs[cleanSource] = [];
-//                            }
-//                            dirs[cleanSource].push(sourceFile);
-//                        }
-//                        if (!groups[destination]) {
-//                            groups[destination] = [];
-//                        }
-//                        return groups[destination].push(sourceFile);
-//                    });
-//                });
-//            }
-//        }
-//        return {
-//            dirs: dirs,
-//            groups: groups
-//        };
-//    };
-//
-//    var gTemplate = function (config) {
-//        var compiled, contents, dest, destination, groups, normalized, separator, sourceContents, src, _results;
-//
-//        normalized = normalizeFiles(config);
-//        groups = normalized.groups;
-//        config.data.include = grunt.file.read;
-//        config.data.hash = function (filePath) {
-//            var contents, hash;
-//            contents = grunt.file.read(filePath);
-//            return hash = crypto.createHash('sha1').update(contents).digest('hex').substr(0, 10);
-//        };
-//        config.data.uniqueVersion = function () {
-//            var uniqueVersion;
-//            return uniqueVersion = (new Date()).getTime();
-//        };
-//        _results = [];
-//        for (dest in groups) {
-//            src = groups[dest];
-//            sourceContents = [];
-//            src.forEach(function (source) {
-//                var contents;
-//                contents = grunt.file.read(source);
-//                return sourceContents.push(contents);
-//            });
-//            separator = grunt.util.linefeed;
-//            contents = sourceContents.join(grunt.util.normalizelf(separator));
-//            compiled = grunt.template.process(contents, {
-//                data: config.data
-//            });
-//            destination = dest.replace('.template', '');
-//            grunt.file.write(destination, compiled);
-//            _results.push(grunt.verbose.ok("" + src + " -> " + destination));
-//        }
-//        return _results;
-//    };
-//
-//    grunt.registerMultiTask('template', 'Compiles HTML Templates', function () {
-//        return gTemplate(this);
-//    });
+    // configurable paths
+    var yeomanConfig = {
+        app: 'src',
+        dist: 'dist'
+    };
+
+    try {
+        yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
+    } catch (e) {}
 
     grunt.initConfig({
         yeoman: yeomanConfig,
+        watch: {
+            compass: {
+                files: ['<%= yeoman.app %>/styles/{,**/}*.{scss,sass}'],
+                tasks: ['compass']
+            },
+            livereload: {
+                files: [
+                    '<%= yeoman.app %>/{,**/}*.html',
+                    '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
+                    '{.tmp,<%= yeoman.app %>}/app/{,**/}*.js',
+                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+                ],
+                tasks: ['livereload']
+            }
+        },
         connect: {
+            options: {
+                port: 9000,
+                // Change this to '0.0.0.0' to access the server from outside.
+                hostname: 'localhost'
+            },
             livereload: {
                 options: {
-                    port: 9000,
                     middleware: function (connect) {
-
                         return [
                             lrSnippet,
-                            mountFolder(connect, './dist')
+                            mountFolder(connect, '.tmp'),
+                            mountFolder(connect, yeomanConfig.app)
                         ];
                     }
                 }
             },
             test: {
                 options: {
-                    port: 9000,
                     middleware: function (connect) {
                         return [
-                            mountFolder(connect, 'test')
+                            mountFolder(connect, '.tmp')
+//                            mountFolder(connect, 'test')
                         ];
                     }
                 }
@@ -196,18 +74,64 @@ module.exports = function (grunt) {
         },
         open: {
             server: {
-                url: 'http://localhost:<%= connect.livereload.options.port %>'
+                url: 'http://localhost:<%= connect.options.port %>'
             }
         },
         clean: {
-            dist: ['./tmp', './dist'],
-            buildDemo: ['./tmp', './build/demo'],
-            buildProd: ['./tmp', './build/prod'],
-            buildDev: ['./tmp', './build/dev'],
-            temp: './tmp',
-            images: './dist/img'
+            options: {
+                dot: true
+            },
+            local: {
+                files: [{
+                    src: [
+                        '.tmp'
+                    ]
+                }]
+            },
+            demo: {
+                files: [{
+                    src: [
+                        '.tmp',
+                        '<%= yeoman.dist %>/demo/*',
+                        '!<%= yeoman.dist %>/.git*'
+                    ]
+                }]
+            },
+            prod: {
+                files: [{
+                    src: [
+                        '.tmp',
+                        '<%= yeoman.dist %>/prod/*',
+                        '!<%= yeoman.dist %>/.git*'
+                    ]
+                }]
+            },
+            dev: {
+                files: [{
+                    src: [
+                        '.tmp',
+                        '<%= yeoman.dist %>/dev/*',
+                        '!<%= yeoman.dist %>/.git*'
+                    ]
+                }]
+            }
+//            dist: ['./tmp', './dist'],
+//            buildDemo: ['./tmp', './build/demo'],
+//            buildProd: ['./tmp', './build/prod'],
+//            buildDev: ['./tmp', './build/dev'],
+//            temp: './tmp',
+//            images: './dist/img'
         },
         compass: {
+            options: {
+                sassDir: '<%= yeoman.app %>/styles',
+                cssDir: './tmp/styles',
+                imagesDir: '<%= yeoman.app %>/img',
+                fontsDir: '<%= yeoman.app %>/styles/fonts',
+                javascriptsDir: '<%= yeoman.app %>/app',
+                importPath: '<%= yeoman.app %>/components',
+                relativeAssets: true
+            },
             dist: {
                 options: {
                     config: 'config.rb',
@@ -218,17 +142,6 @@ module.exports = function (grunt) {
                 options: {
                     config: 'config.rb',
                     outputStyle: 'expanded'
-                }
-            }
-        },
-        express: {
-            livereload: {
-                options: {
-                    port: 3005,
-                    bases: path.resolve('./dist'),
-                    debug: true,
-                    monitor: {},
-                    server: path.resolve('./server')
                 }
             }
         },
@@ -404,41 +317,6 @@ module.exports = function (grunt) {
                         no_mangle: true
                     }
                 }
-            }
-        },
-
-        watch: {
-            styles: {
-                files: ['./src/styles/*.{scss,sass}', './src/styles/**/*.{scss,sass}', './src/app/**/*.{scss,sass}'],
-                tasks: ['compass:dev', 'copy:styles', 'livereload']
-            },
-            appjs: {
-                files: ['./src/app/**/*.js'],
-                tasks: ['copy:appjs' , 'livereload']
-            },
-            apphtml: {
-                files: ['./src/app/**/*.html'],
-                tasks: ['copy:apphtml' , 'livereload']
-            },
-            core: {
-                files: ['./src/core/**'],
-                tasks: ['copy:core' , 'livereload']
-            },
-            images: {
-                files: ['./src/img/**'],
-                tasks: ['copy:images', 'livereload']
-            },
-            template: {
-                files: ['./src/template/**'],
-                tasks: ['copy:template', 'livereload']
-            },
-            server: {
-                files: ['server.js'],
-                tasks: 'express-restart:livereload'
-            },
-            indexLocal: {
-                files: ['./src/index.html.template'],
-                tasks: ['template:indexLocal', 'copy:index', 'livereload']
             }
         },
 
