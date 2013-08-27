@@ -8,6 +8,7 @@
 
 'use strict';
 var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
+var path = require('path');
 var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
@@ -431,10 +432,19 @@ module.exports = function (grunt) {
                     ]
                 }
             }
+        },
+        express: {
+            livereload: {
+                options: {
+                    port: 3005,
+                    bases: path.resolve('./dist'),
+                    debug: true,
+                    monitor: {},
+                    server: path.resolve('./server')
+                }
+            }
         }
     });
-//
-//    grunt.loadNpmTasks('grunt-hustler');
 
     grunt.renameTask('regarde', 'watch');
 
@@ -450,6 +460,7 @@ module.exports = function (grunt) {
         'copy:local',
         'template:local',
         'clean:template',
+        'express',
         'livereload-start',
         'connect:livereload',
         'open',

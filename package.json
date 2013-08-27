@@ -3,11 +3,11 @@
   "version": "0.0.1",
   "deescription": "Frontend application for REscour's scraper application",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/rescour/roomba"
+    "type": "git",
+    "url": "https://github.com/rescour/roomba"
   },
   "bugs": {
-      "url": "https://github.com/rescoure/roomba/issues"
+    "url": "https://github.com/rescoure/roomba/issues"
   },
   "dependencies": {},
   "peerDependencies": {},
@@ -34,7 +34,8 @@
     "grunt-contrib-requirejs": "~0.4.0",
     "grunt-hustler": "~0.11.2",
     "matchdep": "~0.1.1",
-    "generator-angular": "~0.1.3"
+    "generator-angular": "~0.1.3",
+    "grunt-express": "~1.0.0-beta2"
   },
   "engines": {
     "node": ">=0.8.0"
