@@ -37,9 +37,13 @@ module.exports = function (grunt) {
             livereload: {
                 files: [
                     '<%= yeoman.app %>/{,**/}*.html',
-                    '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-                    '{.tmp,<%= yeoman.app %>}/app/{,**/}*.js',
+                    '{tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
+                    '{tmp,<%= yeoman.app %>}/app/{,**/}*.js',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+//                    '<%= yeoman.app %>/{,**/}*.html',
+//                    '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
+//                    '{.tmp,<%= yeoman.app %>}/app/{,**/}*.js',
+//                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
                 tasks: ['livereload']
             }
@@ -55,8 +59,9 @@ module.exports = function (grunt) {
                     middleware: function (connect) {
                         return [
                             lrSnippet,
-                            mountFolder(connect, '.tmp'),
-                            mountFolder(connect, yeomanConfig.app)
+//                            mountFolder(connect, 'tmp'),
+//                            mountFolder(connect, yeomanConfig.app)
+                            mountFolder(connect, yeomanConfig.dist + '/dev')
                         ];
                     }
                 }
@@ -84,6 +89,7 @@ module.exports = function (grunt) {
             local: {
                 files: [{
                     src: [
+                        '<%= yeoman.dist %>/dev/*.template',
                         '.tmp'
                     ]
                 }]
@@ -125,23 +131,24 @@ module.exports = function (grunt) {
         compass: {
             options: {
                 sassDir: '<%= yeoman.app %>/styles',
-                cssDir: './tmp/styles',
+                cssDir: '.tmp/styles',
                 imagesDir: '<%= yeoman.app %>/img',
                 fontsDir: '<%= yeoman.app %>/styles/fonts',
                 javascriptsDir: '<%= yeoman.app %>/app',
                 importPath: '<%= yeoman.app %>/components',
                 relativeAssets: true
             },
-            dist: {
+            prod: {
                 options: {
-                    config: 'config.rb',
+                    debugInfo: false,
                     outputStyle: 'compressed'
                 }
             },
             dev: {
                 options: {
-                    config: 'config.rb',
+                    debugInfo: true,
                     outputStyle: 'expanded'
+//                    cssDir: '<%= yeoman.dist %>/dev/styles'
                 }
             }
         },
@@ -165,9 +172,16 @@ module.exports = function (grunt) {
              In 'dev' individual files are used.
              */
             dev: {
-                files: [
-                    {expand: true, cwd: './tmp/', src: ['**'], dest: './dist/'}
-                ]
+//                files: [
+//                    {expand: true, cwd: './tmp/', src: ['**'], dest: './dist/'}
+//                ]
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.dist %>/dev',
+                    src: ['**']
+                }]
             },
             /*
              Copies select files from the temp directory to the dev directory.
@@ -336,6 +350,13 @@ module.exports = function (grunt) {
          <% } %>
          */
         template: {
+            local: {
+                files: {
+                    './dist/dev/main.js': './src/main.js.template',
+                    './dist/dev/index.html': './src/index.html.template'
+                },
+                environment: 'local'
+            },
             shimDev: {
                 files: {
                     './tmp/main.js': './src/main.js.template'
@@ -401,44 +422,7 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-hustler');
 
-    // A task to run unit tests in testacular.
-    grunt.registerTask('unit-tests', 'run the testacular test driver on jasmine unit tests', function () {
-        var done = this.async();
-
-        require('child_process').exec('./node_modules/testacular/bin/testacular start ./testacular.conf.js --single-run', function (err, stdout) {
-            grunt.log.write(stdout);
-            done(err);
-        });
-    });
-
     grunt.renameTask('regarde', 'watch');
-
-    /*
-     Compiles the app with non-optimized build settings, places the build artifacts in the dist directory, and runs unit tests.
-     Enter the following command at the command line to execute this build task:
-     grunt test
-     */
-    grunt.registerTask('test', [
-        'default',
-        'unit-tests'
-    ]);
-
-    grunt.registerTask('watchSrc', [
-        'watch:styles',
-        'watch:appjs',
-        'watch:apphtml',
-        'watch:core',
-        'watch:images',
-        'watch:template',
-        'watch:server'
-    ]);
-
-    grunt.registerTask('server', [
-        'livereload-start',
-        'express',
-        'watch'
-    ]);
-
 
     /*
      Compiles the app with non-optimized build settings, places the build artifacts in the dist directory, and watches for file changes.
@@ -447,14 +431,14 @@ module.exports = function (grunt) {
      grunt local
      */
     grunt.registerTask('local', [
-        'clean:dist',
-        'compass:dev', // Compile compass: app -> tmp
-        'template:shimLocal',
-        'copy:prep', // Copy all html/css/js: app -> tmp
-        'template:indexLocal', // Compile templates: app -> tmp
-        'copy:dev', // Copy all from: tmp -> dist
-        'clean:temp',
-        'server'
+        'compass:dev',
+        'copy:dev',
+        'template:local',
+        'clean:local',
+        'livereload-start',
+        'connect:livereload',
+        'open',
+        'watch'
     ]);
 
     /*
