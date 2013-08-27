@@ -20,7 +20,8 @@ module.exports = function (grunt) {
     // configurable paths
     var yeomanConfig = {
         app: 'src',
-        dist: 'dist'
+        dist: 'dist',
+        stage: '.tmp'
     };
 
     try {
@@ -37,13 +38,9 @@ module.exports = function (grunt) {
             livereload: {
                 files: [
                     '<%= yeoman.app %>/{,**/}*.html',
-                    '{tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-                    '{tmp,<%= yeoman.app %>}/app/{,**/}*.js',
+                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/styles/{,*/}*.css',
+                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/app/{,**/}*.js',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-//                    '<%= yeoman.app %>/{,**/}*.html',
-//                    '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-//                    '{.tmp,<%= yeoman.app %>}/app/{,**/}*.js',
-//                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
                 tasks: ['livereload']
             }
@@ -59,9 +56,7 @@ module.exports = function (grunt) {
                     middleware: function (connect) {
                         return [
                             lrSnippet,
-//                            mountFolder(connect, 'tmp'),
-//                            mountFolder(connect, yeomanConfig.app)
-                            mountFolder(connect, yeomanConfig.dist + '/dev')
+                            mountFolder(connect, yeomanConfig.stage)
                         ];
                     }
                 }
@@ -70,8 +65,7 @@ module.exports = function (grunt) {
                 options: {
                     middleware: function (connect) {
                         return [
-                            mountFolder(connect, '.tmp')
-//                            mountFolder(connect, 'test')
+                            mountFolder(connect, yeomanConfig.stage)
                         ];
                     }
                 }
@@ -89,15 +83,14 @@ module.exports = function (grunt) {
             local: {
                 files: [{
                     src: [
-                        '<%= yeoman.dist %>/dev/*.template',
-                        '.tmp'
+                        '<%= yeoman.stage %>'
                     ]
                 }]
             },
             demo: {
                 files: [{
                     src: [
-                        '.tmp',
+                        '<%= yeoman.stage %>',
                         '<%= yeoman.dist %>/demo/*',
                         '!<%= yeoman.dist %>/.git*'
                     ]
@@ -106,7 +99,7 @@ module.exports = function (grunt) {
             prod: {
                 files: [{
                     src: [
-                        '.tmp',
+                        '<%= yeoman.stage %>',
                         '<%= yeoman.dist %>/prod/*',
                         '!<%= yeoman.dist %>/.git*'
                     ]
@@ -115,9 +108,16 @@ module.exports = function (grunt) {
             dev: {
                 files: [{
                     src: [
-                        '.tmp',
+                        '<%= yeoman.stage %>',
                         '<%= yeoman.dist %>/dev/*',
                         '!<%= yeoman.dist %>/.git*'
+                    ]
+                }]
+            },
+            template: {
+                files: [{
+                    src: [
+                        '<%= yeoman.stage %>/*.template'
                     ]
                 }]
             }
@@ -131,7 +131,7 @@ module.exports = function (grunt) {
         compass: {
             options: {
                 sassDir: '<%= yeoman.app %>/styles',
-                cssDir: '.tmp/styles',
+                cssDir: '<%= yeoman.stage %>/styles',
                 imagesDir: '<%= yeoman.app %>/img',
                 fontsDir: '<%= yeoman.app %>/styles/fonts',
                 javascriptsDir: '<%= yeoman.app %>/app',
@@ -148,24 +148,26 @@ module.exports = function (grunt) {
                 options: {
                     debugInfo: true,
                     outputStyle: 'expanded'
-//                    cssDir: '<%= yeoman.dist %>/dev/styles'
                 }
             }
         },
         // Copies directories and files from one location to another.
         copy: {
             // Copies libs and img directories to temp.
-            prep: {
-                files: [
-                    {expand: true, cwd: './src/', src: [
-                        'img/**',
-                        'app/**',
-                        'core/**',
-                        'styles/**',
-                        'components/**',
-                        '**/*.html'
-                    ], dest: './tmp/'}
-                ]
+            local: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.stage %>',
+                    src: [
+                        'app/**/*',
+                        'components/**/*',
+                        'core/**/*',
+                        'img/**/*',
+                        '*.html*'
+                    ]
+                }]
             },
             /*
              Copies the contents of the temp directory to the dist directory.
@@ -352,8 +354,8 @@ module.exports = function (grunt) {
         template: {
             local: {
                 files: {
-                    './dist/dev/main.js': './src/main.js.template',
-                    './dist/dev/index.html': './src/index.html.template'
+                    '.tmp/main.js': './src/main.js.template',
+                    '.tmp/index.html': './src/index.html.template'
                 },
                 environment: 'local'
             },
@@ -431,10 +433,11 @@ module.exports = function (grunt) {
      grunt local
      */
     grunt.registerTask('local', [
-        'compass:dev',
-        'copy:dev',
-        'template:local',
         'clean:local',
+        'compass:dev',
+        'copy:local',
+        'template:local',
+        'clean:template',
         'livereload-start',
         'connect:livereload',
         'open',
