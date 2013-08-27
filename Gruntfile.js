@@ -436,7 +436,7 @@ module.exports = function (grunt) {
         express: {
             livereload: {
                 options: {
-                    port: 3005,
+                    port: 9000,
                     bases: path.resolve('./dist'),
                     debug: true,
                     monitor: {},
@@ -460,9 +460,9 @@ module.exports = function (grunt) {
         'copy:local',
         'template:local',
         'clean:template',
-        'express',
         'livereload-start',
-        'connect:livereload',
+        'express',
+//        'connect:livereload',
         'open',
         'watch'
     ]);
