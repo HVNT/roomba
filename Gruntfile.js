@@ -360,6 +360,13 @@ module.exports = function (grunt) {
                 },
                 environment: 'local'
             },
+            localDev: {
+                files: {
+                    '.tmp/main.js': './src/main.js.template',
+                    '.tmp/index.html': './src/index.html.template'
+                },
+                environment: 'localDev'
+            },
             shimDev: {
                 files: {
                     './tmp/main.js': './src/main.js.template'
@@ -437,7 +444,7 @@ module.exports = function (grunt) {
             livereload: {
                 options: {
                     port: 9000,
-                    bases: path.resolve('./dist'),
+                    bases: path.resolve('./.tmp'),
                     debug: true,
                     monitor: {},
                     server: path.resolve('./server')
@@ -462,7 +469,6 @@ module.exports = function (grunt) {
         'clean:template',
         'livereload-start',
         'express',
-//        'connect:livereload',
         'open',
         'watch'
     ]);
@@ -474,15 +480,16 @@ module.exports = function (grunt) {
      grunt dev
      */
 
-    grunt.registerTask('dev', [
-        'clean:dist',
-        'compass:dev', // Compile compass: app -> tmp
-        'template:shimLocalDev',
-        'copy:prep', // Copy all html/css/js: app -> tmp
-        'template:indexLocalDev', // Compile templates: app -> tmp
-        'copy:dev', // Copy all from: tmp -> dist
-        'clean:temp',
-        'server'
+    grunt.registerTask('localDev', [
+        'clean:local',
+        'compass:dev',
+        'copy:local',
+        'template:localDev',
+        'clean:template',
+        'livereload-start',
+        'express',
+        'open',
+        'watch'
     ]);
 
     /*
