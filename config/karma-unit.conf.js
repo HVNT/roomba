@@ -17,6 +17,8 @@ files = [
     'src/components/angular-cookies/angular-cookies.js',
     'src/components/underscore/underscore.js',
     'src/components/jquery/jquery.js',
+    'src/components/angular-ui-bootstrap-bower/ui-bootstrap.js',
+    'src/core/**/*.js',
     'src/app/**/*.js',
     'src/app/**/*.unit.js'
 ];
