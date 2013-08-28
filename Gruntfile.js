@@ -186,6 +186,20 @@ module.exports = function (grunt) {
                     src: ['**']
                 }]
             },
+            demo: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: './',
+                    dest: '<%= yeoman.dist %>/demo',
+                    src: [
+//                        '<%= yeoman.stage %>/**/*.js',
+                        '<%= yeoman.app $>/*.{ico,txt}',
+                        '<%= yeoman.app $>/img/{,*/}*.{gif,webp}',
+                        '<%= yeoman.app $>/styles/fonts/*'
+                    ]
+                }]
+            },
             /*
              Copies select files from the temp directory to the dev directory.
              Dev is deployed to subtree dev for remote testing
@@ -265,6 +279,17 @@ module.exports = function (grunt) {
         },
         concat: {
             demo: {
+                files: {
+                    '<%= yeoman.dist %>/demo/scripts/scripts.js': [
+//                        '<%= yeoman.stage %>/scripts/{,*/}*.js',
+                        '<%= yeoman.app %>/app/**/*.js',
+                        '<%= yeoman.app %>/core/**/*.js',
+                        '!<%= yeoman.app %>/app/**/*.unit.js',
+                        '!<%= yeoman.app %>/app/**/*.e2e.js'
+                    ]
+                }
+            },
+            demo2: {
                 src: [
                     './tmp/scripts/scripts.min.js',
                     './tmp/components/angular-mocks/angular-mocks.js',
@@ -477,6 +502,106 @@ module.exports = function (grunt) {
                 configFile: 'config/karma-e2e.conf.js',
                 singleRun: true
             }
+        },
+        useminPrepare: {
+            html: '<%= yeoman.stage %>/index.html',
+            options: {
+                dest: '<%= yeoman.dist %>/demo'
+            }
+        },
+        usemin: {
+            html: ['<%= yeoman.dist %>/{,*/}*.html'],
+            css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+            options: {
+                dirs: ['<%= yeoman.dist %>']
+            }
+        },
+        imagemin: {
+            demo: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/img',
+                    src: '{,*/}*.{png,jpg,jpeg}',
+                    dest: '<%= yeoman.dist %>/demo/img'
+                }]
+            }
+        },
+        cssmin: {
+            demo: {
+                files: {
+                    '<%= yeoman.dist %>/demo/styles/main.css': [
+                        '.tmp/styles/{,*/}*.css',
+                        '<%= yeoman.app %>/styles/{,*/}*.css'
+                    ]
+                }
+            }
+        },
+        htmlmin: {
+            options: {
+                /*removeCommentsFromCDATA: true,
+                 // https://github.com/yeoman/grunt-usemin/issues/44
+                 //collapseWhitespace: true,
+                 collapseBooleanAttributes: true,
+                 removeAttributeQuotes: true,
+                 removeRedundantAttributes: true,
+                 useShortDoctype: true,
+                 removeEmptyAttributes: true,
+                 removeOptionalTags: true*/
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>',
+                    src: ['*.html', 'app/**/*.html'],
+                    dest: '<%= yeoman.dist %>'
+                }]
+            },
+            stage: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.stage %>',
+                    src: [
+                        '*.html'
+                    ],
+                    dest: '<%= yeoman.dist%>/demo'
+                }]
+            },
+            demo: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>',
+                    src: [
+                        'app/**/*.html',
+                        'template/**/*.html',
+                        '!<%= yeoman.app %>/components/**/*.html'
+                    ],
+                    dest: '<%= yeoman.dist%>/demo'
+                }]
+            }
+        },
+        cdnify: {
+            demo: {
+                html: ['<%= yeoman.dist %>/demo/*.html']
+            }
+        },
+        ngmin: {
+            demo: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.dist %>/demo/scripts',
+                    src: '*.js',
+                    dest: '<%= yeoman.dist %>/demo/scripts'
+                }]
+            }
+        },
+        uglify: {
+            demo: {
+                files: {
+                    '<%= yeoman.dist %>/demo/scripts/scripts.js': [
+                        '<%= yeoman.dist %>/demo/scripts/scripts.js'
+                    ]
+                }
+            }
         }
     });
 
@@ -533,15 +658,27 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('buildDemo', [
         'clean:demo',
-        'jshint',
+//        'jshint',
+//        'test',
+        'concat:demo',
         'compass:prod', // Compile compass: app -> tmp
-        'template:shimDemo', // Template requirejs shim -> tmp
-        'copy:prep', // Copy components, styles, app, core, assets, **.html: app -> tmp
-        'requirejs:prod', // Create minified scripts from shim: app -> tmp
-        'concat:demo', // Attach angular-mocks and mock.js to tmp/scripts/scripts.min.js -> tmp/scripts/scripts.demo.js
-        'template:indexDemo', // Compile templates: app -> tmp
-        'copy:buildDemo', // Copy all from: tmp -> demo
-        'clean:temp'
+        'template:demo',
+        'useminPrepare',
+        'imagemin:demo',
+        'cssmin:demo',
+        'htmlmin:stage',
+        'htmlmin:demo',
+        'copy:demo',
+        'cdnify:demo',
+        'ngmin:demo',
+        'uglify:demo'
+//        'template:shimDemo', // Template requirejs shim -> tmp
+//        'copy:prep', // Copy components, styles, app, core, assets, **.html: app -> tmp
+//        'requirejs:prod', // Create minified scripts from shim: app -> tmp
+////        'concat:demo', // Attach angular-mocks and mock.js to tmp/scripts/scripts.min.js -> tmp/scripts/scripts.demo.js
+//        'template:indexDemo', // Compile templates: app -> tmp
+//        'copy:buildDemo', // Copy all from: tmp -> demo
+//        'clean:temp'
     ]);
 
     /*

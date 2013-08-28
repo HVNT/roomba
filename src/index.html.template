@@ -68,14 +68,42 @@
 
 <div ng-view></div>
 
-<% if (config.environment === 'dev') { %>
-<script src="/scripts/scripts.dev.js?v=<%= config.hash('./tmp/scripts/scripts.dev.js') %>"></script>
-<% } else if (config.environment === 'prod') { %>
-<script src="/scripts/scripts.min.js?v=<%= config.hash('./tmp/scripts/scripts.min.js') %>"></script>
-<% } else if (config.environment === 'localDev' || config.environment === 'local') { %>
-<script data-main="/main.js" src="/components/requirejs/require.js"></script>
-<% } %>
+<!-- External libraries -->
+<script src="components/jquery/jquery.js"></script>
+<script src="components/jquery-ui/jquery-ui.js"></script>
+<script src="components/angular/angular.js"></script>
+<script src="components/angular-resource/angular-resource.js"></script>
+<script src="components/angular-cookies/angular-cookies.js"></script>
+<script src="components/angular-sanitize/angular-sanitize.js"></script>
+<script src="components/angular-ui-bootstrap-bower/ui-bootstrap.js"></script>
+<script src="components/spin/dist/spin.min.js"></script>
+<script src="components/underscore/underscore.min.js"></script>
 
+<!-- build:js scripts/scripts.js -->
+<script src="app/app.js"></script>
+<% if (config.environment == 'local') { %>
+    <script src="core/config/local.js"></script>
+    <script src="app/mock.js"></script>
+    <script src="components/angular-mocks/angular-mocks.js"></script>
+<% } else if (config.environment == 'localDev') { %>
+    <script src="core/config/local-dev.js"></script>
+<% } else if (config.environment == 'demo') { %>
+    <script src="core/config/local.js"></script>
+<% } else if (config.environment == 'dev') { %>
+    <script src="core/config/dev.js"></script>
+<% } else if (config.environment == 'prod') { %>
+    <script src="core/config/prod.js"></script>
+<% } %>
+<script src="app/login/login.js"></script>
+<script src="app/market/market.js"></script>
+<!-- Need to make these bower components -->
+<script src="core/auth/auth.js"></script>
+<script src="core/browser-detect/browser-detect.js"></script>
+<script src="core/marketplace/marketplace.js"></script>
+<script src="core/spinner/spinner.js"></script>
+<script src="core/user/user.js"></script>
+<script src="core/utility/utility.js"></script>
+<!-- endbuild -->
 
 <% if (config.environment === 'prod') { %>
 <script>
