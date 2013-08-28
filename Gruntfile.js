@@ -21,7 +21,7 @@ module.exports = function (grunt) {
     // configurable paths
     var yeomanConfig = {
         app: 'src',
-        dist: 'dist',
+        dist: 'build',
         stage: '.tmp'
     };
 
@@ -367,6 +367,14 @@ module.exports = function (grunt) {
                 },
                 environment: 'localDev'
             },
+            demo: {
+                files: {
+                    '.tmp/main.js': './src/main.js.template',
+                    '.tmp/index.html': './src/index.html.template'
+                },
+                environment: 'demo'
+
+            },
             shimDev: {
                 files: {
                     './tmp/main.js': './src/main.js.template'
@@ -450,10 +458,35 @@ module.exports = function (grunt) {
                     server: path.resolve('./server')
                 }
             }
+        },
+        jshint: {
+            options: {
+                jshintrc: 'config/.jshintrc'
+            },
+            all: [
+                'Gruntfile.js',
+                '<%= yeoman.app %>/app/{,*/}*.js'
+            ]
+        },
+        karma: {
+            unit: {
+                configFile: 'config/karma-unit.conf.js',
+                singleRun: true
+            },
+            e2e: {
+                configFile: 'config/karma-e2e.conf.js',
+                singleRun: true
+            }
         }
     });
 
     grunt.renameTask('regarde', 'watch');
+
+    grunt.registerTask('test', [
+        'clean:local',
+        'connect:test',
+        'karma:unit'
+    ]);
 
     /*
      Compiles the app with non-optimized build settings, places the build artifacts in the dist directory, and watches for file changes.
@@ -480,7 +513,7 @@ module.exports = function (grunt) {
      grunt dev
      */
 
-    grunt.registerTask('localDev', [
+    grunt.registerTask('dev', [
         'clean:local',
         'compass:dev',
         'copy:local',
@@ -499,8 +532,9 @@ module.exports = function (grunt) {
      grunt local
      */
     grunt.registerTask('buildDemo', [
-        'clean:buildDemo',
-        'compass:dist', // Compile compass: app -> tmp
+        'clean:demo',
+        'jshint',
+        'compass:prod', // Compile compass: app -> tmp
         'template:shimDemo', // Template requirejs shim -> tmp
         'copy:prep', // Copy components, styles, app, core, assets, **.html: app -> tmp
         'requirejs:prod', // Create minified scripts from shim: app -> tmp
