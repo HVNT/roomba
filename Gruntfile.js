@@ -194,9 +194,10 @@ module.exports = function (grunt) {
                     dest: '<%= yeoman.dist %>/demo',
                     src: [
 //                        '<%= yeoman.stage %>/**/*.js',
-                        '<%= yeoman.app $>/*.{ico,txt}',
-                        '<%= yeoman.app $>/img/{,*/}*.{gif,webp}',
-                        '<%= yeoman.app $>/styles/fonts/*'
+                        '<%= yeoman.app %>/*.{ico,txt}',
+                        '<%= yeoman.app %>/img/{,*/}*.{gif,webp}',
+                        '<%= yeoman.app %>/styles/fonts/*',
+                        '<%= yeoman.app %>/components/angular-ui-bootstrap-bower/ui-bootstrap.min.js'
                     ]
                 }]
             },
@@ -462,13 +463,13 @@ module.exports = function (grunt) {
             }
         },
         rev: {
-            dist: {
+            demo: {
                 files: {
                     src: [
-                        '<%= yeoman.dist %>/scripts/{,*/}*.js',
-                        '<%= yeoman.dist %>/styles/{,*/}*.css',
-                        '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-                        '<%= yeoman.dist %>/styles/fonts/*'
+                        '<%= yeoman.dist %>/demo/scripts/{,*/}*.js',
+                        '<%= yeoman.dist %>/demo/styles/{,*/}*.css',
+                        '<%= yeoman.dist %>/demo/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+                        '<%= yeoman.dist %>/demo/styles/fonts/*'
                     ]
                 }
             }
@@ -506,14 +507,30 @@ module.exports = function (grunt) {
         useminPrepare: {
             html: '<%= yeoman.stage %>/index.html',
             options: {
-                dest: '<%= yeoman.dist %>/demo'
+                dest:
+                    '<%= yeoman.dist %>'
+//                    '<%= yeoman.dist %>/dev',
+//                    '<%= yeoman.dist %>/prod'
+
             }
         },
         usemin: {
-            html: ['<%= yeoman.dist %>/{,*/}*.html'],
-            css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+            html: [
+                '<%= yeoman.dist %>/demo/{,*/}*.html',
+                '<%= yeoman.dist %>/dev/{,*/}*.html',
+                '<%= yeoman.dist %>/prod/{,*/}*.html'
+            ],
+            css: [
+                '<%= yeoman.dist %>/demo/styles/{,*/}*.css',
+                '<%= yeoman.dist %>/dev/styles/{,*/}*.css',
+                '<%= yeoman.dist %>/prod/styles/{,*/}*.css'
+            ],
             options: {
-                dirs: ['<%= yeoman.dist %>']
+                dirs: [
+                    '<%= yeoman.dist %>/demo',
+                    '<%= yeoman.dist %>/dev',
+                    '<%= yeoman.dist %>/prod'
+                ]
             }
         },
         imagemin: {
@@ -661,7 +678,7 @@ module.exports = function (grunt) {
 //        'jshint',
 //        'test',
         'concat:demo',
-        'compass:prod', // Compile compass: app -> tmp
+        'compass:prod',
         'template:demo',
         'useminPrepare',
         'imagemin:demo',
@@ -671,14 +688,9 @@ module.exports = function (grunt) {
         'copy:demo',
         'cdnify:demo',
         'ngmin:demo',
-        'uglify:demo'
-//        'template:shimDemo', // Template requirejs shim -> tmp
-//        'copy:prep', // Copy components, styles, app, core, assets, **.html: app -> tmp
-//        'requirejs:prod', // Create minified scripts from shim: app -> tmp
-////        'concat:demo', // Attach angular-mocks and mock.js to tmp/scripts/scripts.min.js -> tmp/scripts/scripts.demo.js
-//        'template:indexDemo', // Compile templates: app -> tmp
-//        'copy:buildDemo', // Copy all from: tmp -> demo
-//        'clean:temp'
+        'uglify:demo',
+        'rev:demo',
+        'usemin'
     ]);
 
     /*

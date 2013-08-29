@@ -21,10 +21,11 @@
     <meta http-equiv="cache-control" content="no-cache"/>
     <meta http-equiv="expires" content="-1"/>
     <meta http-equiv="pragma" content="no-cache"/>
+    <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/styles/main.css"/>
-    <!-- <link rel="stylesheet" href="/styles/main.css?v=<%= config.hash('./.tmp/styles/main.css') %>"/> -->
+    <!-- endbuild -->
     <link rel="icon" type="image/png" href="/img/favicon.png">
 
     <!-- ClickJacking Defense begin (https://www.owasp.org/index.php/Clickjacking_Defense_Cheat_Sheet) -->
@@ -68,18 +69,19 @@
 
 <div ng-view></div>
 
-<!-- External libraries -->
+<!-- External google CDN's -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.5.0/ui-bootstrap-tpls.min.js"></script>
 <script src="components/jquery/jquery.js"></script>
-<script src="components/jquery-ui/jquery-ui.js"></script>
 <script src="components/angular/angular.js"></script>
 <script src="components/angular-resource/angular-resource.js"></script>
 <script src="components/angular-cookies/angular-cookies.js"></script>
 <script src="components/angular-sanitize/angular-sanitize.js"></script>
-<script src="components/angular-ui-bootstrap-bower/ui-bootstrap.js"></script>
-<script src="components/spin/dist/spin.min.js"></script>
-<script src="components/underscore/underscore.min.js"></script>
 
 <!-- build:js scripts/scripts.js -->
+<script src="components/jquery-ui/jquery-ui.min.js"></script>
+<script src="components/underscore/underscore-min.js"></script>
+<script src="components/spin.js/dist/spin.min.js"></script>
+<!-- <script src="components/angular-ui-bootstrap-bower/ui-bootstrap.min.js"></script> -->
 <script src="app/app.js"></script>
 <% if (config.environment == 'local') { %>
     <script src="core/config/local.js"></script>
@@ -96,7 +98,6 @@
 <% } %>
 <script src="app/login/login.js"></script>
 <script src="app/market/market.js"></script>
-<!-- Need to make these bower components -->
 <script src="core/auth/auth.js"></script>
 <script src="core/browser-detect/browser-detect.js"></script>
 <script src="core/marketplace/marketplace.js"></script>
