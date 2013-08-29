@@ -44,6 +44,22 @@ angular.module('roomba.app',
                 state: {
                     title: 'State',
                     weight: 9
+                },
+                acres: {
+                    title: 'Acres',
+                    weight: 9
+                },
+                comps: {
+                    title: 'Call For Offers',
+                    weight: 9
+                },
+                callForOffers: {
+                    title: 'Call For Offers',
+                    weight: 9
+                },
+                callForOffers: {
+                    title: 'Call For Offers',
+                    weight: 9
                 }
             },
             resources: {
@@ -266,26 +282,83 @@ angular.module('roomba.app',
                             }
                         }, $_api.config);
 
-                    self.resources = {};
+                    console.log(self.resources);
 
                     for (var _resource in collection.resources) {
                         if (collection.resources.hasOwnProperty(_resource)) {
+
                             (function (resource) {
                                 var _defer = $q.defer(),
                                     resourcePath = collection.resources[resource].path;
 
-                                $http.get($_api.path + Item.path + self.id + '/resources' + resourcePath, config).then(function (response) {
-                                    self.$spinner = false;
-                                    var _resources = {};
-                                    _resources[resource] = response.data;
-                                    _defer.resolve(_resources);
-                                }, function (response) {
-                                    self.$spinner = false;
-                                    _defer.reject(response);
-                                });
-
+                                if (self.resources[_resource]) {
+                                    $http.get($_api.path + Item.path + self.id + '/resources' + resourcePath, config).then(function (response) {
+                                        self.$spinner = false;
+                                        var _resources = {};
+                                        _resources[resource] = response.data;
+                                        _defer.resolve(_resources);
+                                    }, function (response) {
+                                        self.$spinner = false;
+                                        _defer.reject(response);
+                                    });
+                                }
                                 promises.push(_defer.promise);
                             })(_resource);
+                        }
+                    }
+
+                    return $q.all(promises);
+                };
+
+                Item.prototype.$saveResources = function (resources) {
+                    var self = this,
+                        promises = [],
+                        config = angular.extend({
+                            transformRequest: function (data) {
+                                self.$spinner = true;
+                                return data;
+                            }
+                        }, $_api.config);
+
+                    // NO ONE WILL EVER UNDERSTAND THIS
+                    // DON'T EVEN TRY
+                    for (var _resource in collection.resources) {
+                        if (collection.resources.hasOwnProperty(_resource)) {
+                            var _resourcePath = collection.resources[_resource].path;
+
+                            for (var i = 0; i < resources[_resource].length; i++) {
+                                var _resourceInstance = resources[_resource][i];
+                                var _defer = $q.defer();
+                                var body = JSON.stringify(_resourceInstance);
+
+                                if (!_resourceInstance.id) {
+                                    (function (defer, resourceKey) {
+                                        $http.post($_api.path + _resourcePath, body, config).then(function (response) {
+                                            self.$spinner = false;
+                                            var _id = response.data.id;
+                                            self.resources[resourceKey].push(_id);
+                                            defer.resolve(response.data.id);
+                                        }, function (response) {
+                                            self.$spinner = false;
+                                            defer.reject();
+                                        });
+
+                                        promises.push(_defer.promise);
+                                    })(_defer, _resource);
+                                } else {
+                                    (function (defer) {
+                                        $http.put($_api.path + _resourcePath + _resourceInstance.id, body, config).then(function (response) {
+                                            self.$spinner = false;
+                                            defer.resolve();
+                                        }, function (response) {
+                                            self.$spinner = false;
+                                            defer.reject();
+                                        });
+
+                                        promises.push(_defer.promise);
+                                    })(_defer);
+                                }
+                            }
                         }
                     }
 
@@ -300,11 +373,11 @@ angular.module('roomba.app',
                                 self.$spinner = true;
                                 return data;
                             }
-                        }),
+                        }, $_api.config),
                         body = JSON.stringify(self);
 
                     if (self.id) {
-                        $http.put($_api.path + Item.path + '/' + self.id, body, config)
+                        $http.put($_api.path + Item.path + self.id, body, config)
                             .then(function (response) {
                                 self.$spinner = false;
                                 defer.resolve(response);
@@ -313,7 +386,7 @@ angular.module('roomba.app',
                                 defer.reject(response);
                             });
                     } else {
-                        $http.post($_api.path + Item.path + '/', body, config)
+                        $http.post($_api.path + Item.path, body, config)
                             .then(function (response) {
                                 self.$spinner = false;
                                 self.id = response.data.id;
@@ -331,7 +404,8 @@ angular.module('roomba.app',
 
             return ItemFactory;
         }])
-    .config(['$routeProvider', '$locationProvider', '$httpProvider',
+    .
+    config(['$routeProvider', '$locationProvider', '$httpProvider',
         function ($routeProvider, $locationProvider, $httpProvider) {
             $httpProvider.defaults.useXDomain = true;
             $httpProvider.defaults.withCredentials = true;

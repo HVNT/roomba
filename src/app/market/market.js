@@ -141,7 +141,6 @@ angular.module('roomba.app')
         }])
     .controller('DetailsCtrl', ['$scope', '$routeParams',
         function ($scope, $routeParams) {
-
             $scope.notPublished = function (item) {
                 return !_.contains(item.tags, 'published');
             };
@@ -151,8 +150,14 @@ angular.module('roomba.app')
             };
 
 
-            $scope.saveItem = function () {
+            $scope.saveItem = function (item) {
+                console.log(item);
+                var _item = item;
 
+                _item.$saveResources($scope.activeItemResources).then(function (results) {
+                    console.log(_item);
+                    _item.$save();
+                });
             };
 
 
@@ -168,7 +173,7 @@ angular.module('roomba.app')
                 if (resource === {}) {
                     console.log("empty!");
                 } else {
-                    $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource }));
+                    $scope.activeItemResources[resourceKey] ? $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource })) : null;
                     $scope.newResource = {};
                 }
                 // POST to resources/resourceKey, get back ID
