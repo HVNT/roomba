@@ -75,7 +75,6 @@ angular.module('roomba.app')
                 if ($scope.activeItem) {
                     $scope.activeItemResources = {};
                     $scope.activeItem.$getResources().then(function (results) {
-                        console.log(results);
                         for (var i = results.length - 1; i >= 0; i--) {
                             for (var _resource in results[i]) {
                                 if (results[i].hasOwnProperty(_resource)) {
@@ -154,7 +153,6 @@ angular.module('roomba.app')
             };
 
             $scope.copySubfieldFromRaw = function (item, fieldKey, subfieldKey) {
-                console.log(fieldKey, subfieldKey);
                 item.edited[fieldKey][subfieldKey] = item.raw[fieldKey][subfieldKey].value;
                 item.raw[fieldKey][subfieldKey].copied = true;
             };
@@ -226,8 +224,6 @@ angular.module('roomba.app')
                 item.edited[modelKey] = _.reject(item.edited[modelKey], function (val) {
                     return angular.equals(val, model);
                 });
-
-                console.log(item);
             };
 
             $scope.copyModelFromRaw = function (item, modelKey, rawModel) {
@@ -243,7 +239,6 @@ angular.module('roomba.app')
                 item.edited[modelKey].push(_editedModel);
 
                 rawModel.copied = true;
-                console.log(item);
             };
 
             $scope.showRaw = function () {
