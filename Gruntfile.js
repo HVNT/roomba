@@ -190,12 +190,12 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: '<%= yeoman.app %>',
+                    cwd: './',
                     dest: '<%= yeoman.dist %>/demo',
                     src: [
-                        '*.{ico,txt}',
-                        'img/{,*/}*.{gif,webp}',
-                        'styles/fonts/*'
+                        '<%= yeoman.app %>/*.{ico,txt}',
+                        '<%= yeoman.app %>/img/{,*/}*.{gif,webp}',
+                        '<%= yeoman.app %>/styles/fonts/*'
                     ]
                 }]
             },
@@ -278,7 +278,7 @@ module.exports = function (grunt) {
         },
         concat: {
             demo: {
-                src: [
+                'src': [
                     '<%= yeoman.stage %>/app/**/*.js',
                     '<%= yeoman.stage %>/core/**/*.js',
                     '<%= yeoman.stage %>/components/**/*.js',
@@ -290,11 +290,19 @@ module.exports = function (grunt) {
             mock: {
                 src: [
                     '<%= yeoman.dist %>/demo/scripts/scripts.js',
-                    '<%= yeoman.app %>/componenets/angular-mocks/angular-mocks.js',
+                    '<%= yeoman.app %>/components/angular-mocks/angular-mocks.js',
                     '<%= yeoman.app %>/app/mock.js'
                 ],
                 dest: '<%= yeoman.dist %>/demo/scripts/scripts.js'
             }
+//            demo2: {
+//                src: [
+//                    './tmp/scripts/scripts.min.js',
+//                    './tmp/components/angular-mocks/angular-mocks.js',
+//                    './tmp/app/mock.js'
+//                ],
+//                dest: './tmp/scripts/scripts.demo.js'
+//            }
         },
 
         /*
@@ -610,6 +618,9 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
+            options: {
+                mangle: false
+            },
             demo: {
                 files: {
                     '<%= yeoman.dist %>/demo/scripts/scripts.js': [
@@ -687,7 +698,7 @@ module.exports = function (grunt) {
         'copy:demo',
 //        'cdnify:demo',
         'ngmin:demo',
-//        'uglify:demo',
+        'uglify:demo',
         'concat:mock',
         'rev:demo',
         'usemin'
