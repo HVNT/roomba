@@ -190,12 +190,12 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: './',
+                    cwd: '<%= yeoman.app %>',
                     dest: '<%= yeoman.dist %>/demo',
                     src: [
-                        '<%= yeoman.app %>/*.{ico,txt}',
-                        '<%= yeoman.app %>/img/{,*/}*.{gif,webp}',
-                        '<%= yeoman.app %>/styles/fonts/*'
+                        '*.{ico,txt}',
+                        'img/{,*/}*.{gif,webp}',
+                        'styles/fonts/*'
                     ]
                 }]
             },
@@ -278,7 +278,7 @@ module.exports = function (grunt) {
         },
         concat: {
             demo: {
-                'src': [
+                src: [
                     '<%= yeoman.stage %>/app/**/*.js',
                     '<%= yeoman.stage %>/core/**/*.js',
                     '<%= yeoman.stage %>/components/**/*.js',
@@ -286,15 +286,15 @@ module.exports = function (grunt) {
                     '!<%= yeoman.stage %>/app/**/*.e2e.js'
                 ],
                 dest: '<%= yeoman.dist %>/demo/scripts/scripts.js'
+            },
+            mock: {
+                src: [
+                    '<%= yeoman.dist %>/demo/scripts/scripts.js',
+                    '<%= yeoman.app %>/componenets/angular-mocks/angular-mocks.js',
+                    '<%= yeoman.app %>/app/mock.js'
+                ],
+                dest: '<%= yeoman.dist %>/demo/scripts/scripts.js'
             }
-//            demo2: {
-//                src: [
-//                    './tmp/scripts/scripts.min.js',
-//                    './tmp/components/angular-mocks/angular-mocks.js',
-//                    './tmp/app/mock.js'
-//                ],
-//                dest: './tmp/scripts/scripts.demo.js'
-//            }
         },
 
         /*
@@ -685,9 +685,10 @@ module.exports = function (grunt) {
         'htmlmin:stage',
         'htmlmin:demo',
         'copy:demo',
-        'cdnify:demo',
+//        'cdnify:demo',
         'ngmin:demo',
 //        'uglify:demo',
+        'concat:mock',
         'rev:demo',
         'usemin'
     ]);

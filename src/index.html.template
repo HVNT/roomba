@@ -70,25 +70,36 @@
 <div ng-view></div>
 
 <!-- External google CDN's -->
+<!--
 <script src="/components/jquery/jquery.js"></script>
 <script src="/components/angular/angular.js"></script>
 <script src="/components/angular-resource/angular-resource.js"></script>
 <script src="/components/angular-cookies/angular-cookies.js"></script>
 <script src="/components/angular-sanitize/angular-sanitize.js"></script>
+-->
 
 <!-- build:js scripts/scripts.js -->
-<script src="/components/angular-mocks/angular-mocks.js"></script>
+<script src="/components/angular/angular.js"></script>
+<script src="/components/angular-resource/angular-resource.js"></script>
+<script src="/components/angular-cookies/angular-cookies.js"></script>
+<script src="/components/angular-sanitize/angular-sanitize.js"></script>
+
 <% if (config.environment == 'local') { %>
+    <script src="/components/angular-mocks/angular-mocks.js"></script>
     <script src="/core/config/local.js"></script>
 <% } else if (config.environment == 'localDev') { %>
     <script src="/core/config/local-dev.js"></script>
 <% } else if (config.environment == 'demo') { %>
+    <!-- <script src="/components/angular-mocks/angular-mocks.js"></script> -->
     <script src="/core/config/local.js"></script>
 <% } else if (config.environment == 'dev') { %>
     <script src="/core/config/dev.js"></script>
 <% } else if (config.environment == 'prod') { %>
     <script src="/core/config/prod.js"></script>
 <% } %>
+
+<script src="/components/jquery/jquery.js"></script>
+
 <script src="/components/angular-ui-bootstrap-bower/ui-bootstrap-tpls-0.1.0.js"></script>
 <script src="/components/jquery-ui/jquery-ui.min.js"></script>
 <script src="/components/underscore/underscore-min.js"></script>
@@ -107,7 +118,7 @@
 <% } else if (config.environment == 'localDev') { %>
     <script src="/app/bootstrap.js"></script>
 <% } else if (config.environment == 'demo') { %>
-    <script src="/app/mock.js"></script>
+    <!-- <script src="/app/mock.js"></script> -->
 <% } else if (config.environment == 'dev') { %>
     <script src="/app/bootstrap.js"></script>
 <% } else if (config.environment == 'prod') { %>

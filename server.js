@@ -6,7 +6,8 @@ fs = require('fs');
 
 dir = "" + __dirname + "/.tmp";
 
-port = (_ref = (_ref1 = process.env.PORT) != null ? _ref1 : process.argv.splice(2)[0]) != null ? _ref : 3005;
+port = (_ref = (_ref1 = process.env.PORT) != null ? _ref1 : process.argv.splice(2)[0]) != null ? _ref : 9000;
+//port = (_ref = (_ref1 = process.env.PORT) != null ? _ref1 : process.argv.splice(2)[0]) != null ? _ref : 3005;
 
 app = express();
 
