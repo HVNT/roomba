@@ -12,7 +12,7 @@ angular.module('roomba.app')
     .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.when('/login', {
-                templateUrl: '/app/login/desktop/views/login.html?' + Date.now(),
+                templateUrl: '/app/login/views/login.html?' + Date.now(),
                 controller: 'LoginController',
                 resolve: {
                     checkUser: function ($rootScope, $location) {
@@ -25,12 +25,12 @@ angular.module('roomba.app')
             });
 
             $routeProvider.when('/login/forgot-password', {
-                templateUrl: "/app/login/desktop/views/forgot-password.html?v=" + Date.now(),
+                templateUrl: "/app/login/views/forgot-password.html?v=" + Date.now(),
                 controller: 'ForgotPasswordController'
             });
 
             $routeProvider.when('/login/reset-password', {
-                templateUrl: "/app/login/desktop/views/reset-password.html?v=" + Date.now(),
+                templateUrl: "/app/login/views/reset-password.html?v=" + Date.now(),
                 controller: 'ResetPasswordController',
                 resolve: {
                     checkToken: function ($location) {

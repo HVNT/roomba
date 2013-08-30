@@ -12,16 +12,13 @@ angular.module('roomba.app')
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
                     resolve: {
-                        collection: function (Market, $route, $q, $timeout, Models, $location) {
-                            var defer = $q.defer();
+                        collection: function (Market, $route, $q, Models) {
+                            var defer = $q.defer(),
+                                _Item = Models[$route.current.params.collection];
 
-                            Market.initialize(Models[$route.current.params.collection])
-                                .then(function (items) {
-                                    if ($location.search().id) {
-                                        Market.setActive($location.search().id);
-                                    }
-                                    defer.resolve();
-                                });
+                            _Item.query().then(function (response) {
+                                defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
+                            });
 
                             return defer.promise;
                         },
@@ -36,17 +33,13 @@ angular.module('roomba.app')
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
                     resolve: {
-                        collection: function (Market, $route, $q, $timeout, Models, $location) {
-                            var defer = $q.defer();
+                        collection: function (Market, $route, $q, Models) {
+                            var defer = $q.defer(),
+                                _Item = Models[$route.current.params.collection];
 
-                            console.log("doing this");
-                            Market.initialize(Models[$route.current.params.collection], $route.current.params.tag)
-                                .then(function (items) {
-                                    if ($location.search().id) {
-                                        Market.setActive($location.search().id);
-                                    }
-                                    defer.resolve();
-                                });
+                            _Item.query($route.current.params.tag).then(function (response) {
+                                defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
+                            });
 
                             return defer.promise;
                         },
@@ -70,15 +63,42 @@ angular.module('roomba.app')
             $scope.items = Market.getItems();
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
+            $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
             $scope.collection = Model.collection;
             $scope.srcListingDetails = '/app/market/partials/listing-details.html?v=' + Date.now();
 
-            $scope.$on('$locationChangeSuccess', function (e, newLocation, oldLocation) {
-                $scope.activeItem = Market.setActive($location.search().id);
-                $scope.activeItem.$getResources();
+            function setActiveItem(id) {
+                $scope.activeItem = Market.setActive(id);
 
+                if ($scope.activeItem) {
+                    $scope.activeItemResources = {};
+                    $scope.activeItem.$getResources().then(function (results) {
+                        for (var i = results.length - 1; i >= 0; i--) {
+                            for (var _resource in results[i]) {
+                                if (results[i].hasOwnProperty(_resource)) {
+                                    $scope.activeItemResources[_resource] = [];
+                                    angular.copy(results[i][_resource], $scope.activeItemResources[_resource])
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            if ($location.search().id) {
+                setActiveItem ($location.search().id);
+            }
+
+            $scope.$on('$locationChangeSuccess', function (e, newLocation, oldLocation) {
+                if ($location.search().id) {
+                    setActiveItem ($location.search().id);
+                }
             });
+
+            $scope.isNull = function (prop) {
+                return prop == null;
+            }
         }])
     .controller('MarketListCtrl', ['$scope', '$location',
         function($scope, $location) {
@@ -122,14 +142,53 @@ angular.module('roomba.app')
         }])
     .controller('DetailsCtrl', ['$scope', '$routeParams',
         function ($scope, $routeParams) {
-
             $scope.notPublished = function (item) {
                 return !_.contains(item.tags, 'published');
-            }
+            };
 
-            $scope.copyFromRaw = function (activeItem, field) {
-                activeItem.edited[field] = activeItem.raw[field].value;
-            }
+            $scope.copyFromRaw = function (item, field) {
+                item.edited[field] = item.raw[field].value;
+            };
+
+
+            $scope.saveItem = function (item) {
+                item.$saveResources($scope.activeItemResources).then(function (results) {
+                    item.$save();
+                });
+            };
+
+
+            $scope.displayRaw = function (resource, field) {
+
+            };
+        }])
+    .controller('ResourceCtrl', ['$scope',
+        function($scope) {
+            $scope.newResource = {};
+
+
+            $scope.addResource = function (resourceKey, resource) {
+                if (resource === {}) {
+                    console.log("empty!");
+                } else {
+                    $scope.activeItemResources[resourceKey] ? $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource })) : null;
+                    $scope.newResource = {};
+                }
+                // POST to resources/resourceKey, get back ID
+                // Push ID to activeItem.resources[resourceKey]
+            };
+
+            $scope.removeResource = function (resourceKey, id) {
+                // Remove id from resource
+                $scope.activeItem.resources[resourceKey] = _.reject($scope.activeItem.resources[resourceKey], function (val) {
+                    return val === id;
+                });
+                $scope.activeItemResources[resourceKey] = _.reject($scope.activeItemResources[resourceKey], function (val) {
+                    return val.id === id;
+                });
+
+
+            };
         }])
     .factory('Models', ['Item', '$collections',
         function (Item, $collections) {

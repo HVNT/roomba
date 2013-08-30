@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 market-list" ng-controller="MarketListCtrl">
+        <div class="col-lg-3 market-list" ng-controller="MarketListCtrl">
             <div class="row">
                 <div class="col-lg-12 header-actions">
                     <div class="btn-group">
@@ -69,11 +69,9 @@
                         <!--<div class="col-lg-1 col-sm-1 col-1"><input type="checkbox"/></div>-->
                         <!--<div class="col-lg-1 col-sm-1 col-1"><i class="icon-star"></i></div>-->
                         <!--<div class="col-lg-1 col-sm-1 col-1"><i class="icon-ban-circle"></i></div>-->
-                        <div class="col-lg-4 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
+                        <div class="col-lg-12 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
                             {{item.title}}
                         </div>
-                        <div class="col-lg-4 col-sm-6 col-6">{{item.broker}}</div>
-                        <div class="col-lg-4 col-sm-6 col-6">{{item.state}}</div>
                         <!--<div class="col-lg-3 col-sm-3 col-3">-->
                         <!--<div class="progress">-->
                         <!--<div class="progress-bar" style="width: 60%;"></div>-->
@@ -84,60 +82,99 @@
             </div>
         </div>
 
-        <div class="col-lg-6 market-details" ng-controller="DetailsCtrl">
+        <div class="col-lg-7 market-details" ng-controller="DetailsCtrl">
             <div class="row">
                 <div class="col-lg-12 header-actions">
                     <div class="btn-group">
-                        <button class="btn btn-success" ng-class="{'disabled': !activeItem  }">Publish</button>
+                        <button class="btn btn-success" ng-class="{'disabled': !activeItem}">Publish</button>
                         <button class="btn btn-danger"
                                 ng-class="{'disabled': (!activeItem || notPublished(activeItem)) }">Unpublish
                         </button>
                     </div>
 
                     <div class="btn-group pull-right">
-                        <button class="btn" ng-class="{'disabled': !activeItem}">Save</button>
+                        <button class="btn" ng-click="saveItem(activeItem)" ng-class="{'disabled': !activeItem}">Save</button>
                     </div>
                 </div>
             </div>
 
-            <div class="scroll-container row" ng-show="activeItem">
+            <div class="scroll-container row" ng-show="activeItem" spinner="activeItem.$spinner" spinner-size="large">
                 <div class="scroll-wrap">
-                    <div class="col-lg-12">
-                        <div class="page-header"><h3>{{ activeItem.title }}</h3></div>
-                        <form class="form-horizontal">
-                            <div class="form-group" ng-repeat="(field, value) in collection.fields">
-                                <label class="col-lg-2 control-label">
-                                    {{ value.title }}
-                                </label>
-                                <button class="btn col-lg-5" ng-click="copyFromRaw(activeItem, field)" ng-class="{'btn-success': activeItem.raw[field].status == 0}">
-                                    {{activeItem.raw[field].value}}
-                                    <i class="icon-chevron-right"></i>
-                                </button>
-                                <div class="col-lg-5">
-                                    <input type="text" class="form-control" ng-model="activeItem.edited[field]"/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="page-header"><h4>{{ activeItem.title }}</h4></div>
+
+                            <form class="form-horizontal">
+                                <div class="form-group" ng-repeat="field in collection.fields">
+                                    <label class="col-lg-2 control-label">
+                                        {{ field.title }}
+                                    </label>
+
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control"
+                                               ng-hide="activeItem.raw[field.key].showRaw"
+                                               ng-model="activeItem.edited[field.key]"/>
+                                        <input type="text" class="form-control"
+                                               ng-show="activeItem.raw[field.key].showRaw"
+                                               ng-model="activeItem.raw[field.key].value"/>
+                                    </div>
+                                    <button class="btn col-lg-1" ng-click="copyFromRaw(activeItem, field.key)"
+                                            ng-hide="isNull(activeItem.raw[field.key].status)"
+                                            ng-mouseover="activeItem.raw[field.key].showRaw = true"
+                                            ng-mouseleave="activeItem.raw[field.key].showRaw = false">
+                                        Raw
+                                    </button>
                                 </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="model-group" ng-repeat="(resourceKey, resource) in collection.resources"
+                                 ng-controller="ResourceCtrl">
+                                <h4>{{ resource.title }}</h4>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th class="table-icon-action table-icon-success"
+                                            ng-click="addResource(resourceKey, newResource)">
+
+                                            <i class="icon-plus-sign"></i>
+                                        </th>
+                                        <th ng-repeat="(resourceFieldKey, resourceField) in resource.fields">
+                                            <input type="text" ng-model="newResource[resourceFieldKey]"
+                                                   placeholder="{{resourceField.title}}"/>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="itemResource in activeItemResources[resourceKey]">
+                                        <td class="table-icon-action table-icon-error"
+                                            ng-click="removeResource(resourceKey, itemResource.id)">
+                                            <i class="icon-remove-sign"></i>
+                                        </td>
+                                        <td ng-repeat="(resourceFieldKey, resourceField) in resource.fields">
+                                            <input ng-hide="itemResource.raw[resourceFieldKey].showRaw" type="text"
+                                                   ng-model="itemResource.edited[resourceFieldKey]"/>
+                                            <input class="input-overlay status-{{itemResource.raw[resourceFieldKey].status}}"
+                                                   ng-show="itemResource.raw[resourceFieldKey].showRaw" readonly
+                                                   type="text" ng-model="itemResource.raw[resourceFieldKey].value"/>
+
+                                            <div class="table-input-action"
+                                                 ng-hide="isNull(itemResource.raw[resourceFieldKey].status)"
+                                                 ng-mouseover="itemResource.raw[resourceFieldKey].showRaw = true"
+                                                 ng-mouseleave="itemResource.raw[resourceFieldKey].showRaw = false"
+                                                 ng-click="copyFromRaw(itemResource, resourceFieldKey)">Raw
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!--<div ng-show="activeItem" ng-include="srcListingDetails"></div>-->
-
-            <!--<div class="row" ng-show="activeItem">-->
-            <!--<div class="col-lg-12 footer-actions">-->
-            <!--<div class="btn-group">-->
-            <!--<button class="btn btn-success" ng-class="{'disabled': !activeItem  }">Publish</button>-->
-            <!--<button class="btn btn-danger"-->
-            <!--ng-class="{'disabled': (!activeItem || notPublished(activeItem)) }">Unpublish-->
-            <!--</button>-->
-            <!--</div>-->
-
-            <!--<div class="btn-group pull-right">-->
-            <!--<button class="btn" ng-class="{'disabled': !activeItem}">Save</button>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
         </div>
     </div>
 </div>

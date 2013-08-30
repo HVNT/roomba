@@ -34,7 +34,6 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                 _collection = $collections[collectionKey];
             self.id = idCounter.toString();
             self.description = 'This item is pretty sweet.  This is the description';
-            self.title = "";
             self.raw = {};
             self.edited = {};
 
@@ -64,10 +63,14 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                     self.edited[key] = key;
                 }
 
-                self.title = _collection.title + " " + idCounter;
-                self.tags = [selectRandom(collections[collectionKey].tags)];
             });
 
+            self.tags = [selectRandom(collections[collectionKey].tags)];
+            self.raw.title = {
+                value: _collection.title + " " + idCounter,
+                status: 0
+            };
+            self.edited.title = _collection.title + " " + idCounter;
             idCounter += 1;
         };
 
@@ -117,10 +120,10 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             }
 
             var collectionPath = new RegExp('\/api\/' + value.path.replace('/', '') + '(\/?)$'),
-                tagPath = new RegExp('\/api\/' + value.path + '\/[0-9]+|[a-z]+(\/?)$'),
-                detailsPath = new RegExp('\/api\/' + value.path + '\/[a-z]+\/[0-9]+(\/?)$'),
-                postPath = new RegExp('\/api\/' + value.path + '\/$'),
-                resourcesPath = new RegExp('\/api\/' + value.path + '\/[a-z]+\/[0-9]+\/resources\/[0-9]+|[a-z]+(\/?)$');
+                tagPath = new RegExp('\/api\/' + value.path.replace('/', '') + '\/[0-9]+|[a-z]+(\/?)$'),
+                detailsPath = new RegExp('\/api\/' + value.path.replace('/', '') + '\/[a-z]+\/[0-9]+(\/?)$'),
+                postPath = new RegExp('\/api\/' + value.path.replace('/', '') + '\/$'),
+                resourcesPath = new RegExp('\/api\/' + value.path.replace('/', '') + '\/[a-z]+\/[0-9]+\/resources\/[0-9]+|[a-z]+(\/?)$');
 
             var contacts = [
                     {
@@ -161,22 +164,50 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                         raw: {
                             name: {
                                 value: 'Adamm Kitain',
-                                status: 0
+                                status: 1
                             },
                             phone: {
                                 value: '',
-                                status: 0
+                                status: 1
                             },
                             email: {
                                 value: 'akitain@gmail',
-                                status: 0
+                                status: 1
                             },
                             broker: {
                                 value: 'BB',
-                                status: 0
+                                status: 2
                             }
                         },
                         id: 'contact1',
+                        tags: []
+                    },
+                    {
+                        edited: {
+                            name: 'Hunter Brennick',
+                            phone: '404-123-7531',
+                            email: 'hb@gmail.com',
+                            broker: 'BB'
+                        },
+                        raw: {
+                            name: {
+                                value: null,
+                                status: null
+                            },
+                            phone: {
+                                value: null,
+                                status: null
+                            },
+                            email: {
+                                value: null,
+                                status: null
+                            },
+                            broker: {
+                                value: null,
+                                status: null
+                            }
+                        },
+                        id: 'contact2',
                         tags: []
                     }
                 ],
@@ -202,6 +233,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                             url: {
                                 value: 'http://placehold.it/200x200',
                                 status: 0
+
                             }
                         },
                         id: 'image1',
@@ -218,7 +250,7 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
             $httpBackend.whenGET(resourcesPath).respond(
                 function (method, url, data, headers) {
                     var itemId = url.split("/")[3],
-                        resourceType = url.split("/")[6];
+                        resourceType = url.split("/")[5];
 
                     switch (resourceType) {
                         case 'images':
