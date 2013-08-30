@@ -12,13 +12,13 @@ angular.module('roomba.app')
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
                     resolve: {
-                        collection: function (Market, $route, $q, $timeout, Models, $location) {
-                            var defer = $q.defer();
+                        collection: function (Market, $route, $q, Models) {
+                            var defer = $q.defer(),
+                                _Item = Models[$route.current.params.collection];
 
-                            Market.initialize(Models[$route.current.params.collection])
-                                .then(function (items) {
-                                    defer.resolve();
-                                });
+                            _Item.query().then(function (response) {
+                                defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
+                            });
 
                             return defer.promise;
                         },
@@ -33,12 +33,13 @@ angular.module('roomba.app')
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
                     resolve: {
-                        collection: function (Market, $route, $q, $timeout, Models, $location) {
-                            var defer = $q.defer();
-                            Market.initialize(Models[$route.current.params.collection], $route.current.params.tag)
-                                .then(function (items) {
-                                    defer.resolve();
-                                });
+                        collection: function (Market, $route, $q, Models) {
+                            var defer = $q.defer(),
+                                _Item = Models[$route.current.params.collection];
+
+                            _Item.query($route.current.params.tag).then(function (response) {
+                                defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
+                            });
 
                             return defer.promise;
                         },
@@ -165,6 +166,7 @@ angular.module('roomba.app')
         function($scope) {
             $scope.newResource = {};
 
+
             $scope.addResource = function (resourceKey, resource) {
                 if (resource === {}) {
                     console.log("empty!");
@@ -178,10 +180,14 @@ angular.module('roomba.app')
 
             $scope.removeResource = function (resourceKey, id) {
                 // Remove id from resource
-                $scope.activeItem[resourceKey] = _.without($scope.activeItem[resourceKey], id);
+                $scope.activeItem.resources[resourceKey] = _.reject($scope.activeItem.resources[resourceKey], function (val) {
+                    return val === id;
+                });
                 $scope.activeItemResources[resourceKey] = _.reject($scope.activeItemResources[resourceKey], function (val) {
                     return val.id === id;
                 });
+
+
             };
         }])
     .factory('Models', ['Item', '$collections',

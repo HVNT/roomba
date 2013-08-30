@@ -25,7 +25,16 @@ angular.module('roomba.app',
             tags: ['raw', 'staged', 'published'],
             path: '/listings/',
             dimensions: {
-                discreet: ['broker', 'state'],
+                discreet: {
+                    broker: {
+                        title: 'Broker',
+                        weight: 10
+                    },
+                    state: {
+                        title: 'State',
+                        weight: 5
+                    }
+                },
                 range: []
             },
             fields: [
@@ -122,11 +131,7 @@ angular.module('roomba.app',
 
                 var Item = function (data, defaults) {
                     var _defaults = defaults || {
-                            isVisible: true,
-                            dimensions: {
-                                discreet: {},
-                                range: {}
-                            }
+                            isVisible: true
                         },
                         opts = angular.extend({}, _defaults, data),
                         self = this;
@@ -141,62 +146,45 @@ angular.module('roomba.app',
 
                     if (collection) {
                         angular.forEach(collection.fields, function (value, key) {
-                            self[value.key] = self[value.key] || (value.placeholder || "");
+                            // Initialize raw fields based off config
+                            self.raw[value.key] = self.raw[value.key] || {
+                                value: null,
+                                status: null
+                            };
+
+                            // Initialize edited fields based off config, falling back to placeholders
+                            self.edited[value.key] = self.edited[value.key] || (value.placeholder || null);
                         });
 
-                        angular.forEach(collection.dimensions.discreet, function (val) {
-                            if (self.edited) {
-                                self.dimensions.discreet[val] = self.edited[val];
-                            }
+                        angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
+                            // Initialize on root level for dimensional filtering
+                            self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
                         });
 
-                        angular.forEach(collection.dimensions.range, function (val) {
-                            if (self.edited) {
-                                self.dimensions.range[val] = self.edited[val];
-                            }
+                        angular.forEach(collection.dimensions.range, function (attr, attrID) {
+                            // Initialize on root level for dimensional filtering
+                            self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
                         });
                     }
                 };
 
                 Item.collection = collection;
 
+                Item.dimensions = collection.dimensions;
+
                 Item.path = collection.path;
 
-                Item.dimensions = {};
-
-                for (var i = 0; i < collection.dimensions.discreet.length; i++) {
-                    var _discreet = collection.dimensions.discreet[i];
-
-                    Item.dimensions.discreet[_discreet] = {
-                        key: _discreet,
-                        title: _.find(collection.fields, function (val) {
-                            return val.key === _discreet;
-                        }).title
-                    }
-                }
-
-                for (var i = 0; i < collection.dimensions.range.length; i++) {
-                    var _range = collection.dimensions.range[i];
-
-                    Item.dimensions.range[_range] = {
-                        key: _range,
-                        title: _.find(collection.fields, function (val) {
-                            return val.key === _range;
-                        }).title
-                    }
-                }
-
-
-                Item.query = function () {
+                Item.query = function (tag) {
                     // if collection is undefined, just query
                     var defer = $q.defer(),
                         config = angular.extend({
                             transformRequest: function (data) {
                                 return data;
                             }
-                        }, $_api.config);
+                        }, $_api.config),
+                        path = tag ? $_api.path + Item.path + tag : $_api.path + Item.path;
 
-                    $http.get($_api.path + Item.path, config).then(function (response) {
+                    $http.get(path, config).then(function (response) {
                         defer.resolve(response);
                     }, function (response) {
                         defer.reject(response);
