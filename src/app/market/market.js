@@ -8,6 +8,7 @@ angular.module('roomba.app')
                 })
                 .when('/market/:collection',
                 {
+//                    templateUrl: '/app/market/views/market.html',
                     templateUrl: '/app/market/views/market.html?v=' + Date.now(),
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
@@ -32,6 +33,7 @@ angular.module('roomba.app')
                 })
                 .when('/market/:collection/:tag',
                 {
+//                    templateUrl: '/app/market/views/market.html',
                     templateUrl: '/app/market/views/market.html?v=' + Date.now(),
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
@@ -72,6 +74,7 @@ angular.module('roomba.app')
             $scope.activeItem = Market.getActive();
             $scope.collectionID = $routeParams.collection;
             $scope.collection = Model.collection;
+//            $scope.srcListingDetails = '/app/market/partials/listing-details.html';
             $scope.srcListingDetails = '/app/market/partials/listing-details.html?v=' + Date.now();
 
             $scope.$on('$locationChangeSuccess', function (e, newLocation, oldLocation) {

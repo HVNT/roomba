@@ -141,8 +141,8 @@ module.exports = function (grunt) {
             },
             prod: {
                 options: {
-                    debugInfo: false,
-                    outputStyle: 'compressed'
+                    debugInfo: false
+//                    outputStyle: 'compressed'
                 }
             },
             dev: {
@@ -182,7 +182,7 @@ module.exports = function (grunt) {
                     expand: true,
                     dot: true,
                     cwd: '<%= yeoman.app %>',
-                    dest: '<%= yeoman.dist %>/dev',
+                    dest: '<%= yeoman.stage %>',
                     src: ['**']
                 }]
             },
@@ -193,11 +193,9 @@ module.exports = function (grunt) {
                     cwd: './',
                     dest: '<%= yeoman.dist %>/demo',
                     src: [
-//                        '<%= yeoman.stage %>/**/*.js',
                         '<%= yeoman.app %>/*.{ico,txt}',
                         '<%= yeoman.app %>/img/{,*/}*.{gif,webp}',
-                        '<%= yeoman.app %>/styles/fonts/*',
-                        '<%= yeoman.app %>/components/angular-ui-bootstrap-bower/ui-bootstrap.min.js'
+                        '<%= yeoman.app %>/styles/fonts/*'
                     ]
                 }]
             },
@@ -280,24 +278,23 @@ module.exports = function (grunt) {
         },
         concat: {
             demo: {
-                files: {
-                    '<%= yeoman.dist %>/demo/scripts/scripts.js': [
-//                        '<%= yeoman.stage %>/scripts/{,*/}*.js',
-                        '<%= yeoman.app %>/app/**/*.js',
-                        '<%= yeoman.app %>/core/**/*.js',
-                        '!<%= yeoman.app %>/app/**/*.unit.js',
-                        '!<%= yeoman.app %>/app/**/*.e2e.js'
-                    ]
-                }
-            },
-            demo2: {
-                src: [
-                    './tmp/scripts/scripts.min.js',
-                    './tmp/components/angular-mocks/angular-mocks.js',
-                    './tmp/app/mock.js'
+                'src': [
+                    '<%= yeoman.stage %>/app/**/*.js',
+                    '<%= yeoman.stage %>/core/**/*.js',
+                    '<%= yeoman.stage %>/components/**/*.js',
+                    '!<%= yeoman.stage %>/app/**/*.unit.js',
+                    '!<%= yeoman.stage %>/app/**/*.e2e.js'
                 ],
-                dest: './tmp/scripts/scripts.demo.js'
+                dest: '<%= yeoman.dist %>/demo/scripts/scripts.js'
             }
+//            demo2: {
+//                src: [
+//                    './tmp/scripts/scripts.min.js',
+//                    './tmp/components/angular-mocks/angular-mocks.js',
+//                    './tmp/app/mock.js'
+//                ],
+//                dest: './tmp/scripts/scripts.demo.js'
+//            }
         },
 
         /*
@@ -508,7 +505,7 @@ module.exports = function (grunt) {
             html: '<%= yeoman.stage %>/index.html',
             options: {
                 dest:
-                    '<%= yeoman.dist %>'
+                    '<%= yeoman.dist %>/demo'
 //                    '<%= yeoman.dist %>/dev',
 //                    '<%= yeoman.dist %>/prod'
 
@@ -547,8 +544,9 @@ module.exports = function (grunt) {
             demo: {
                 files: {
                     '<%= yeoman.dist %>/demo/styles/main.css': [
-                        '.tmp/styles/{,*/}*.css',
-                        '<%= yeoman.app %>/styles/{,*/}*.css'
+                        '<%= yeoman.dist %>/demo/styles/main.css'
+//                        '.tmp/styles/{,*/}*.css'
+//                        '<%= yeoman.app %>/styles/{,*/}*.css'
                     ]
                 }
             }
@@ -675,12 +673,13 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('buildDemo', [
         'clean:demo',
-//        'jshint',
 //        'test',
-        'concat:demo',
+        'copy:local',
         'compass:prod',
         'template:demo',
         'useminPrepare',
+        'concat:build/demo/scripts/scripts.js',
+        'concat:build/demo/styles/main.css',
         'imagemin:demo',
         'cssmin:demo',
         'htmlmin:stage',
@@ -688,7 +687,7 @@ module.exports = function (grunt) {
         'copy:demo',
         'cdnify:demo',
         'ngmin:demo',
-        'uglify:demo',
+//        'uglify:demo',
         'rev:demo',
         'usemin'
     ]);
