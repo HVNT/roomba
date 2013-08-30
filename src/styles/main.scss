@@ -13,332 +13,391 @@
 
 $bgColor: $grayLighter;
 
-%input-edit {
-  display: inline-block;
-  width: 100%;
-  margin-bottom: 0 !important;
-  border: none;
-  background: $grayLight;
-  font-size: 12px;
-  font-weight: bold;
-  color: $white;
-  padding-left: 15px;
-  padding-right: 40px;
-  //height: 40px;
-  @include box-shadow(none !important);
-  @include box-sizing(border-box !important);
-  z-index: 1;
-
-  &:focus {
-    background: $white !important;
-    font-weight: normal;
-  }
-
-  &:hover:not(:focus) {
-    background: lighten($grayLight, 10%);
-  }
-}
-
-.loading-background {
-  position: absolute; left: 0px; top: 0px; bottom:0px; right: 0px; background: $light-gray; z-index: 5;
-}
-
-.loading-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  height: 200px;
-  margin-left: -200px;
-  margin-top: -100px;
-  text-align: center;
-
-  h4 {
-    text-transform: uppercase;
-    font-weight: normal;
-    font-size: 24px;
-    color: $gray;
-  }
-
-  p {
-    margin-top: 10px;
-    font-size: 14px;
-    color: lighten($gray, 10%);
-  }
-
-  .loading-icon {
-    text-shadow: #666 0 -1px 0;
-    color: $gray;
-  }
-
-  .failure-icon {
-    text-shadow: darken($red, 25%) 0 -1px 0;
-    color: $red;
-    margin-bottom: 1em;
-  }
-}
-
-.origami-left {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: url(/img/origami_left.png) top left no-repeat;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-.origami-right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: url(/img/origami_right.png) top right no-repeat;
-  width: 817px;
-  height: 547px;
-  z-index: -1;
-}
-
-
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none;
-}
-
-/* Scroll Bar */
-::-webkit-scrollbar, ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
-  @include border-radius(5px);
-}
-
-::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
-  background-color: darken($grayLight, 20%);
-  @include border-radius(5px);
-  @include box-shadow(rgba(0, 0, 0, 0.05) -1px 0 7px inset);
-}
-
-::-webkit-scrollbar-track-piece, ::-webkit-scrollbar-track-piece {
-  background-color: transparent;
-}
-
-::-webkit-scrollbar-corner, ::-webkit-scrollbar-corner {
-  display: none;
-}
-
-body {
-  min-height: 100%;
-  margin: 0;
-  background-color: $bgColor;
-}
-
-header {
-  padding: 0 20px;
-  .navbar {
-    margin-bottom: 0;
-    padding-right: 0;
-    .navbar-brand {
-      padding: 10px;
-    }
-  }
-}
-
-.roomba-wrap {
-  & > .row {
-    margin: 0;
-  }
-
-  .listing-list-item {
-    cursor: pointer;
-    padding: 10px 0;
-
-    &:hover {
-      background-color: darken($bgColor, 5%);
-    }
-
+@mixin icon-invert($iconColor) {
+  &:hover {
     i {
-      color: $grayLight;
-      cursor: pointer;
+      color: white;
+    }
+    background: $iconColor;
+  }
+  &:active {
+    background: darken($iconColor, 10%);
+  }
+  i {
+    color: $iconColor;
+  }
+}
 
-      &:hover {
-        color: darken($grayLight, 5%);
-      }
+  %input-edit {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 0 !important;
+    border: none;
+    background: $grayLight;
+    font-size: 12px;
+    font-weight: bold;
+    color: $white;
+    padding-left: 15px;
+    padding-right: 40px;
+    //height: 40px;
+    @include box-shadow(none !important);
+    @include box-sizing(border-box !important);
+    z-index: 1;
+
+    &:focus {
+      background: $white !important;
+      font-weight: normal;
     }
 
-    .list-item-title {
-      &:hover {
-        text-decoration: underline;
-        font-weight: bold;
-      }
+    &:hover:not(:focus) {
+      background: lighten($grayLight, 10%);
     }
 
-    .progress {
-      margin-bottom: 0;
+  }
+
+  .loading-background {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    background: $light-gray;
+    z-index: 5;
+  }
+
+  .loading-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 200px;
+    margin-left: -200px;
+    margin-top: -100px;
+    text-align: center;
+
+    h4 {
+      text-transform: uppercase;
+      font-weight: normal;
+      font-size: 24px;
+      color: $gray;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: lighten($gray, 10%);
+    }
+
+    .loading-icon {
+      text-shadow: #666 0 -1px 0;
+      color: $gray;
+    }
+
+    .failure-icon {
+      text-shadow: darken($red, 25%) 0 -1px 0;
+      color: $red;
+      margin-bottom: 1em;
     }
   }
 
-  .filter-actions {
-    position: relative;
-  }
-
-  $headerColor: $grayLight;
-  .header-actions {
-    position: relative;
-    @include gradient-vertical(lighten($headerColor, 2%), darken($headerColor, 2%));
-    margin-bottom: 15px;
-    padding: 15px 25px;
-    @include box-shadow(#{0 1px $white, inset 0 1px rgba(0,0,0,0.3)});
-  }
-
-  .footer-actions {
-    position: relative;
-    margin-top: 15px;
-    padding: 15px 25px;
-  }
-}
-
-.market-filter {
-}
-
-.market-list {
-}
-
-.market-details {
-  input {
-    @extend %input-edit;
-  }
-}
-
-.scroll-container {
-  position: relative;
-
-  .row {
-    margin: 0;
-  }
-
-  .scroll-wrap {
+  .origami-left {
     position: absolute;
     top: 0;
-    bottom: 0;
-    width: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    padding: 10px;
-  }
-}
-
-.model-group {
-
-  .input-preview {
-    position: absolute;
     left: 0;
+    background: url(/img/origami_left.png) top left no-repeat;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
   }
 
-  .table-icon-action {
-    cursor: pointer;
-    font-size: 16px;
-    background: transparent;
-    text-align: center;
-    width: 35px;
-
-    &:hover {
-      background: rgba(0,0,0,0.1);
-    }
-
-    &.table-icon-success {
-      &:hover {
-        i {
-          color: white;
-        }
-        background: $green;
-      }
-      &:active {
-        background: darken($green, 10%);
-      }
-      i {
-        color: $green;
-      }
-    }
-
-    &.table-icon-error {
-      &:hover {
-        i {
-          color: white;
-        }
-        background: $red;
-      }
-
-      &:active {
-        background: darken($red, 10%);
-      }
-      i {
-        color: $red;
-      }
-    }
-
-  }
-
-  .input-overlay {
-    color: $green;
-  }
-
-  .table-input-action {
-    font-size: 10px;
+  .origami-right {
     position: absolute;
+    top: 0;
     right: 0;
-    padding: 5px;
-    top: 5px;
-    color: white;
-    cursor: pointer;
-    @include border-radius(4px);
-    @include tpBtnBg($blue);
+    background: url(/img/origami_right.png) top right no-repeat;
+    width: 817px;
+    height: 547px;
+    z-index: -1;
+  }
 
+  [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none;
+  }
 
-    &.status-0 {
-      display: none;
-    }
+/* Scroll Bar */
+  ::-webkit-scrollbar, ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    @include border-radius(5px);
+  }
 
-    &.status-1 {
-      @include tpBtnBg($green);
-    }
+  ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
+    background-color: darken($grayLight, 20%);
+    @include border-radius(5px);
+    @include box-shadow(rgba(0, 0, 0, 0.05) -1px 0 7px inset);
+  }
 
-    &.status-2 {
-      @include tpBtnBg($orange);
+  ::-webkit-scrollbar-track-piece, ::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-corner, ::-webkit-scrollbar-corner {
+    display: none;
+  }
+
+  body {
+    min-height: 100%;
+    margin: 0;
+    background-color: $bgColor;
+  }
+
+  header {
+    padding: 0 20px;
+    .navbar {
+      margin-bottom: 0;
+      padding-right: 0;
+      .navbar-brand {
+        padding: 10px;
+      }
     }
   }
 
-  table {
-    padding: 15px;
+  .roomba-wrap {
+    & > .row {
+      margin: 0;
+    }
 
-    td {
+    .listing-list-item {
+      cursor: pointer;
+      padding: 10px 0;
+
+      &:hover {
+        background-color: darken($bgColor, 5%);
+      }
+
+      i {
+        color: $grayLight;
+        cursor: pointer;
+
+        &:hover {
+          color: darken($grayLight, 5%);
+        }
+      }
+
+      .list-item-title {
+        &:hover {
+          text-decoration: underline;
+          font-weight: bold;
+        }
+      }
+
+      .progress {
+        margin-bottom: 0;
+      }
+    }
+
+    .filter-actions {
       position: relative;
     }
 
-    .hover-display {
-      display: none;
+    $headerColor: $grayLight;
+    .header-actions {
+      position: relative;
+      @include gradient-vertical(lighten($headerColor, 2%), darken($headerColor, 2%));
+      margin-bottom: 15px;
+      padding: 15px 25px;
+      @include box-shadow(#{0 1px $white, inset 0 1px rgba(0,0,0,0.3)});
+    }
+
+    .footer-actions {
+      position: relative;
+      margin-top: 15px;
+      padding: 15px 25px;
+    }
+  }
+
+  .market-filter {
+  }
+
+  .market-list {
+  }
+
+  .market-details {
+    .fields-editor {
+      input {
+        &::-webkit-input-placeholder {
+          color: $white;
+          font-style: italic;
+          font-weight: 200;
+        }
+
+        &:-moz-placeholder { /* Firefox 18- */
+          font-style: italic;
+          color: $white;
+          font-weight: 200;
+        }
+
+        &::-moz-placeholder {  /* Firefox 19+ */
+          color: $white;
+          font-style: italic;
+          font-weight: 200;
+        }
+
+        &:-ms-input-placeholder {
+          color: $white;
+          font-style: italic;
+          font-weight: 200;
+        }
+      }
+    }
+
+    input {
+      @extend %input-edit;
+    }
+  }
+
+  .scroll-container {
+    position: relative;
+
+    .row {
+      margin: 0;
+    }
+
+    .scroll-wrap {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      padding: 10px;
+    }
+  }
+
+  .group-editor {
+    &.model-editor {
+      h4 {
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .input-preview {
       position: absolute;
       left: 0;
-      top: 0;
+    }
 
-      i {
-        color: red;
+    .table-icon-action {
+      cursor: pointer;
+      font-size: 16px;
+      background: transparent;
+      text-align: center;
+      width: 35px;
+
+      &.table-icon-success {
+        @include icon-invert($green);
+      }
+
+      &.table-icon-error {
+        @include icon-invert($red);
+      }
+
+      &.table-icon-info {
+        @include icon-invert($blue);
       }
     }
 
-    tr:hover {
+    .input-overlay {
+      color: $blue;
+    }
 
-      & > hover-display {
-        display: block;
+    .table-input-action {
+      font-size: 10px;
+      position: absolute;
+      right: 0;
+      padding: 5px;
+      top: 5px;
+      color: white;
+      cursor: pointer;
+      @include border-radius(4px);
+
+    }
+
+    table {
+      padding: 15px;
+
+      td {
+        position: relative;
+      }
+
+      .hover-display {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        i {
+          color: red;
+        }
+      }
+
+      tr:hover {
+
+        & > hover-display {
+          display: block;
+        }
+      }
+    }
+
+    input {
+      background: transparent;
+      color: $black;
+      width: 90%;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.1);
       }
     }
   }
 
-  input {
-    background: transparent;
-    color: $black;
-    width: 90%;
 
-    &:hover {
-      background: rgba(0,0,0,0.1);
-    }
-  }
+.status-btn-info {
+  @include tpBtnBg($blue);
 }
 
+.status-btn-success {
+  @include tpBtnBg($green);
+}
+
+.status-btn-error {
+  @include tpBtnBg($red);
+}
+
+
+.status-solid-info {
+  background: $blue;
+}
+
+.status-solid-success {
+  background: $green;
+}
+
+.status-solid-error {
+  background: $red;
+}
+
+
+.status-text-info {
+  color: $blue;
+}
+
+.status-text-success {
+  color: $green;
+}
+
+.status-text-error {
+  color: $red;
+}

@@ -17,6 +17,7 @@ angular.module('roomba.app')
                                 _Item = Models[$route.current.params.collection];
 
                             _Item.query().then(function (response) {
+                                console.log(response);
                                 defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
                             });
 
@@ -74,11 +75,12 @@ angular.module('roomba.app')
                 if ($scope.activeItem) {
                     $scope.activeItemResources = {};
                     $scope.activeItem.$getResources().then(function (results) {
+                        console.log(results);
                         for (var i = results.length - 1; i >= 0; i--) {
                             for (var _resource in results[i]) {
                                 if (results[i].hasOwnProperty(_resource)) {
                                     $scope.activeItemResources[_resource] = [];
-                                    angular.copy(results[i][_resource], $scope.activeItemResources[_resource])
+                                    angular.copy(results[i][_resource], $scope.activeItemResources[_resource]);
                                 }
                             }
                         }
@@ -146,10 +148,16 @@ angular.module('roomba.app')
                 return !_.contains(item.tags, 'published');
             };
 
-            $scope.copyFromRaw = function (item, field) {
-                item.edited[field] = item.raw[field].value;
+            $scope.copyFromRaw = function (item, fieldKey) {
+                item.edited[fieldKey] = item.raw[fieldKey].value;
+                item.raw[fieldKey].copied = true;
             };
 
+            $scope.copySubfieldFromRaw = function (item, fieldKey, subfieldKey) {
+                console.log(fieldKey, subfieldKey);
+                item.edited[fieldKey][subfieldKey] = item.raw[fieldKey][subfieldKey].value;
+                item.raw[fieldKey][subfieldKey].copied = true;
+            };
 
             $scope.saveItem = function (item) {
                 item.$saveResources($scope.activeItemResources).then(function (results) {
@@ -157,9 +165,23 @@ angular.module('roomba.app')
                 });
             };
 
-
             $scope.displayRaw = function (resource, field) {
 
+            };
+
+            $scope.getStatusBg = function (status, type) {
+                type = type || 'solid';
+
+                switch (status) {
+                    case 0:
+                        return 'status-' + type + '-info';
+                    case 1:
+                        return 'status-' + type + '-success';
+                    case 2:
+                        return 'status-' + type + '-success';
+                    default:
+                        return 'status-' + type + '-unknown';
+                }
             };
         }])
     .controller('ResourceCtrl', ['$scope',
@@ -188,6 +210,44 @@ angular.module('roomba.app')
                 });
 
 
+            };
+        }])
+    .controller('ModelCtrl', ['$scope',
+        function($scope) {
+            $scope.newModel = {};
+            $scope.modelView = {};
+
+
+            $scope.addModel = function (item, modelKey, model) {
+                item.edited[modelKey].push(model);
+            };
+
+            $scope.removeModel = function (item, modelKey, model) {
+                item.edited[modelKey] = _.reject(item.edited[modelKey], function (val) {
+                    return angular.equals(val, model);
+                });
+
+                console.log(item);
+            };
+
+            $scope.copyModelFromRaw = function (item, modelKey, rawModel) {
+                var _modelConfig = _.find($scope.collection.models, function (val) {
+                    return val.key === modelKey;
+                }),
+                    _editedModel = {};
+
+                angular.forEach(_modelConfig.fields, function(modelField){
+                    _editedModel[modelField.key] = rawModel[modelField.key].value || "";
+                });
+
+                item.edited[modelKey].push(_editedModel);
+
+                rawModel.copied = true;
+                console.log(item);
+            };
+
+            $scope.showRaw = function () {
+                $scope.modelView.showRaw = !$scope.modelView.showRaw;
             };
         }])
     .factory('Models', ['Item', '$collections',

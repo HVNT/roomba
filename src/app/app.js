@@ -59,6 +59,16 @@ angular.module('roomba.app',
                     key: 'state'
                 },
                 {
+                    title: 'Flyer',
+                    weight: 9,
+                    key: 'flyer'
+                },
+                {
+                    title: 'Status',
+                    weight: 9,
+                    key: 'status'
+                },
+                {
                     title: 'Acres',
                     weight: 9,
                     key: 'acres'
@@ -72,56 +82,105 @@ angular.module('roomba.app',
                     title: 'Call For Offers',
                     weight: 9,
                     key: 'callForOffers'
+                },
+                {
+                    title: 'Address',
+                    weight: 0,
+                    key: 'address',
+                    fields: [
+                        {
+                            title: 'Street 1',
+                            key: 'street1'
+                        },
+                        {
+                            title: 'Street 2',
+                            key: 'street2'
+                        },
+                        {
+                            title: 'City',
+                            key: 'city'
+                        },
+                        {
+                            title: 'State',
+                            key: 'state'
+                        },
+                        {
+                            title: 'Zip',
+                            key: 'zip'
+                        }
+                    ]
                 }
             ],
-            resources: {
-                contacts: {
-                    title: 'Contacts',
-                    path: '/contacts/',
-                    fields: {
-                        name: {
-                            title: 'Name'
-                        },
-                        email: {
-                            title: 'Email'
-                        },
-                        phone: {
-                            title: 'Phone'
-                        }
-                    }
-                },
-                images: {
-                    title: 'Images',
-                    path: '/images/',
-                    fields: {
-                        url: {
-                            title: 'URL'
-                        }
-                    }
-                }
-            },
-            models: {
-                unitMix: {
+            models: [
+                {
                     title: 'Unit Mix',
-                    fields: {
-                        type: {
+                    key: 'unitMix',
+                    fields: [
+                        {
+                            key: 'type',
                             title: 'Type'
                         },
-                        units: {
+                        {
+                            key: 'units',
                             title: 'Units'
                         },
-                        sqft: {
+                        {
+                            key: 'sqft',
                             title: 'Sq Ft'
                         },
-                        rent: {
-                            title: 'Rent'
+                        {
+                            key: 'Rent',
+                            title: 'rent'
                         },
-                        rentpsqft: {
-                            title: 'Rent / Sq Ft'
+                        {
+                            key: 'rentpsqft',
+                            title: 'Rent / Sqft'
                         }
-                    }
+                    ]
+                },
+                {
+                    title: 'Pages',
+                    key: 'pages',
+                    fields: [
+                        {
+                            key: 'url',
+                            title: 'URL'
+                        }
+                    ]
                 }
-            }
+            ],
+            resources: [
+                {
+                    title: 'Contacts',
+                    key: 'contacts',
+                    path: '/contacts/',
+                    fields: [
+                        {
+                            key: 'name',
+                            title: 'Name'
+                        },
+                        {
+                            key: 'email',
+                            title: 'Email'
+                        },
+                        {
+                            key: 'phone',
+                            title: 'Phone'
+                        }
+                    ]
+                },
+                {
+                    title: 'Images',
+                    path: '/images/',
+                    key: 'images',
+                    fields: [
+                        {
+                            key: 'url',
+                            title: 'URL'
+                        }
+                    ]
+                }
+            ]
         }
     })
     .factory('Item', ['$_api', '$q', '$http',
@@ -145,15 +204,59 @@ angular.module('roomba.app',
                     }
 
                     if (collection) {
-                        angular.forEach(collection.fields, function (value, key) {
-                            // Initialize raw fields based off config
-                            self.raw[value.key] = self.raw[value.key] || {
+                        angular.forEach(collection.fields, function (fieldConfig) {
+                            var rawDefault = {
                                 value: null,
                                 status: null
                             };
 
+                            self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || rawDefault;
+
                             // Initialize edited fields based off config, falling back to placeholders
-                            self.edited[value.key] = self.edited[value.key] || (value.placeholder || null);
+                            self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
+
+                            // Initialize raw fields based off config
+                            if (fieldConfig.fields) {
+                                var _rawField = self.raw[fieldConfig.key],
+                                    _editedField = self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || {};
+
+                                for (var i = 0; i < fieldConfig.fields.length; i++) {
+                                    var subFieldConfig = fieldConfig.fields[i];
+                                    _rawField[subFieldConfig.key] = _rawField[subFieldConfig.key] || rawDefault;
+                                    _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] || (fieldConfig.placeholder || null);
+                                }
+                            }
+                        });
+
+                        angular.forEach(collection.models, function (modelConfig) {
+                            // Initialize raw fields based off config
+                            self.raw[modelConfig.key] = self.raw[modelConfig.key] || [];
+                            self.edited[modelConfig.key] = self.edited[modelConfig.key] || [];
+
+                            // For each raw model instance
+                            for (var i = 0; i < self.raw[modelConfig.key].length; i++) {
+                                var modelInstance = self.raw[modelConfig.key][i];
+
+                                // instantiate fields based off config
+                                for (var j = 0; j < modelConfig.fields.length; j++) {
+                                    var modelFieldConfig = modelConfig.fields[j];
+                                    modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || {
+                                        value: null,
+                                        status: null
+                                    }
+                                }
+                            }
+
+                            // For each edited model instance
+                            for (var i = 0; i < self.edited[modelConfig.key].length; i++) {
+                                var modelInstance = self.edited[modelConfig.key][i];
+
+                                // instantiate fields based off config
+                                for (var j = 0; j < modelConfig.fields.length; j++) {
+                                    var modelFieldConfig = modelConfig.fields[j];
+                                    modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || (modelFieldConfig.placeholder || "");
+                                }
+                            }
                         });
 
                         angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
@@ -226,29 +329,26 @@ angular.module('roomba.app',
                             }
                         }, $_api.config);
 
-                    console.log(self.resources);
+                    for (var i = collection.resources.length - 1; i >= 0; i--) {
+                        var _resource = collection.resources[i];
 
-                    for (var _resource in collection.resources) {
-                        if (collection.resources.hasOwnProperty(_resource)) {
+                        (function (resourceKey) {
+                            var _defer = $q.defer(),
+                                resourcePath = _resource.path;
 
-                            (function (resource) {
-                                var _defer = $q.defer(),
-                                    resourcePath = collection.resources[resource].path;
-
-                                if (self.resources[_resource]) {
-                                    $http.get($_api.path + Item.path + self.id + '/resources' + resourcePath, config).then(function (response) {
-                                        self.$spinner = false;
-                                        var _resources = {};
-                                        _resources[resource] = response.data;
-                                        _defer.resolve(_resources);
-                                    }, function (response) {
-                                        self.$spinner = false;
-                                        _defer.reject(response);
-                                    });
-                                }
-                                promises.push(_defer.promise);
-                            })(_resource);
-                        }
+                            if (self.resources[resourceKey]) {
+                                $http.get($_api.path + Item.path + self.id + '/resources' + resourcePath, config).then(function (response) {
+                                    self.$spinner = false;
+                                    var _resources = {};
+                                    _resources[resourceKey] = response.data;
+                                    _defer.resolve(_resources);
+                                }, function (response) {
+                                    self.$spinner = false;
+                                    _defer.reject(response);
+                                });
+                            }
+                            promises.push(_defer.promise);
+                        })(_resource.key);
                     }
 
                     return $q.all(promises);
@@ -264,44 +364,41 @@ angular.module('roomba.app',
                             }
                         }, $_api.config);
 
-                    // NO ONE WILL EVER UNDERSTAND THIS
-                    // DON'T EVEN TRY
-                    for (var _resource in collection.resources) {
-                        if (collection.resources.hasOwnProperty(_resource)) {
-                            var _resourcePath = collection.resources[_resource].path;
+                    for (var i = 0; i < collection.resources.length; i++) {
+                        var _resource = collection.resources[i],
+                            _resourcePath = _resource.path;
 
-                            for (var i = 0; i < resources[_resource].length; i++) {
-                                var _resourceInstance = resources[_resource][i];
-                                var _defer = $q.defer();
-                                var body = JSON.stringify(_resourceInstance);
+                        for (var i = 0; i < resources[_resource.key].length; i++) {
+                            var _resourceInstance = resources[_resource.key][i];
+                            var _defer = $q.defer();
+                            var body = angular.toJson(_resourceInstance);
 
-                                if (!_resourceInstance.id) {
-                                    (function (defer, resourceKey) {
-                                        $http.post($_api.path + _resourcePath, body, config).then(function (response) {
-                                            self.$spinner = false;
-                                            var _id = response.data.id;
-                                            self.resources[resourceKey].push(_id);
-                                            defer.resolve(response.data.id);
-                                        }, function (response) {
-                                            self.$spinner = false;
-                                            defer.reject();
-                                        });
+                            if (!_resourceInstance.id) {
+                                (function (defer, resourceKey) {
+                                    $http.post($_api.path + _resourcePath, body, config).then(function (response) {
+                                        self.$spinner = false;
+                                        var _id = response.data.id;
+                                        self.resources[resourceKey].push(_id);
+                                        defer.resolve(response.data.id);
+                                    }, function (response) {
+                                        self.$spinner = false;
+                                        defer.reject();
+                                    });
 
-                                        promises.push(_defer.promise);
-                                    })(_defer, _resource);
-                                } else {
-                                    (function (defer) {
-                                        $http.put($_api.path + _resourcePath + _resourceInstance.id, body, config).then(function (response) {
-                                            self.$spinner = false;
-                                            defer.resolve();
-                                        }, function (response) {
-                                            self.$spinner = false;
-                                            defer.reject();
-                                        });
+                                    promises.push(_defer.promise);
+                                })(_defer, _resource.key);
+                            } else {
+                                (function (defer) {
+                                    $http.put($_api.path + _resourcePath + _resourceInstance.id, body, config).then(function (response) {
+                                        self.$spinner = false;
+                                        defer.resolve();
+                                    }, function (response) {
+                                        self.$spinner = false;
+                                        defer.reject();
+                                    });
 
-                                        promises.push(_defer.promise);
-                                    })(_defer);
-                                }
+                                    promises.push(_defer.promise);
+                                })(_defer);
                             }
                         }
                     }
@@ -318,7 +415,7 @@ angular.module('roomba.app',
                                 return data;
                             }
                         }, $_api.config),
-                        body = JSON.stringify(self);
+                        body = angular.toJson(self);
 
                     if (self.id) {
                         $http.put($_api.path + Item.path + self.id, body, config)
@@ -343,6 +440,7 @@ angular.module('roomba.app',
 
                     return defer.promise;
                 };
+
                 return Item;
             }
 

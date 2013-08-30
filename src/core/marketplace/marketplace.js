@@ -77,6 +77,8 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 }
 //                this.dimensions.initialize();
                 this.apply();
+                console.log(this.items);
+                console.log(this.dimensions);
                 return this.items;
             };
 
@@ -188,9 +190,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 for (var attrID in dimensions.discreet) {
                     if (dimensions.discreet.hasOwnProperty(attrID)) {
                         var _attr = dimensions.discreet[attrID],
-                            _discreet = angular.extend({
-                                title: _attr.title
-                            }, discreetDefaults);
+                            _discreet = angular.extend(_attr, discreetDefaults);
 
                         self.discreet[attrID] = {};
                         angular.copy(_discreet, self.discreet[attrID]);
@@ -200,9 +200,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 for (var attrID in dimensions.range) {
                     if (dimensions.range.hasOwnProperty(attrID)) {
                         var _attr = dimensions.range[attrID],
-                            _range = angular.extend({
-                                title: _attr.title
-                            }, rangeDefaults);
+                            _range = angular.extend(_attr, rangeDefaults);
 
                         self.range[attrID] = {};
                         angular.copy(_range, self.range[attrID]);
