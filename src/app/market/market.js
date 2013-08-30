@@ -145,18 +145,14 @@ angular.module('roomba.app')
                 return !_.contains(item.tags, 'published');
             };
 
-            $scope.copyFromRaw = function (activeItem, field) {
-                activeItem.edited[field] = activeItem.raw[field].value;
+            $scope.copyFromRaw = function (item, field) {
+                item.edited[field] = item.raw[field].value;
             };
 
 
             $scope.saveItem = function (item) {
-                console.log(item);
-                var _item = item;
-
-                _item.$saveResources($scope.activeItemResources).then(function (results) {
-                    console.log(_item);
-                    _item.$save();
+                item.$saveResources($scope.activeItemResources).then(function (results) {
+                    item.$save();
                 });
             };
 

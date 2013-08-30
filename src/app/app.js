@@ -28,40 +28,43 @@ angular.module('roomba.app',
                 discreet: ['broker', 'state'],
                 range: []
             },
-            fields: {
-                title: {
+            fields: [
+                {
                     title: 'Title',
-                    weight: 5000
+                    weight: 5000,
+                    key: 'title'
                 },
-                description: {
+                {
                     title: 'Description',
-                    weight: 8
+                    weight: 8,
+                    key: 'description'
                 },
-                broker: {
+                {
                     title: 'Broker',
-                    weight: 10
+                    weight: 10,
+                    key: 'broker'
                 },
-                state: {
+                {
                     title: 'State',
-                    weight: 9
+                    weight: 9,
+                    key: 'state'
                 },
-                acres: {
+                {
                     title: 'Acres',
-                    weight: 9
+                    weight: 9,
+                    key: 'acres'
                 },
-                comps: {
-                    title: 'Call For Offers',
-                    weight: 9
+                {
+                    title: 'Comps',
+                    weight: 9,
+                    key: 'comps'
                 },
-                callForOffers: {
+                {
                     title: 'Call For Offers',
-                    weight: 9
-                },
-                callForOffers: {
-                    title: 'Call For Offers',
-                    weight: 9
+                    weight: 9,
+                    key: 'callForOffers'
                 }
-            },
+            ],
             resources: {
                 contacts: {
                     title: 'Contacts',
@@ -89,78 +92,6 @@ angular.module('roomba.app',
                 }
             },
             models: {
-                unitMix: {
-                    title: 'Unit Mix',
-                    fields: {
-                        type: {
-                            title: 'Type'
-                        },
-                        units: {
-                            title: 'Units'
-                        },
-                        sqft: {
-                            title: 'Sq Ft'
-                        },
-                        rent: {
-                            title: 'Rent'
-                        },
-                        rentpsqft: {
-                            title: 'Rent / Sq Ft'
-                        }
-                    }
-                }
-            }
-        },
-        articles: {
-            title: 'Articles',
-            tags: ['raw', 'staged', 'published'],
-            path: '/articles/',
-            dimensions: {
-                discreet: ['state'],
-                range: []
-            },
-            fields: {
-                title: {
-                    title: 'Title',
-                    weight: 5000
-                },
-                description: {
-                    title: 'Description',
-                    weight: 8
-                },
-                state: {
-                    title: 'State',
-                    weight: 9
-                }
-            },
-            resources: {
-                contacts: {
-                    title: 'Contacts',
-                    path: '/contacts/',
-                    fields: {
-                        name: {
-                            title: 'Name'
-                        },
-                        email: {
-                            title: 'Email'
-                        },
-                        phone: {
-                            title: 'Phone'
-                        }
-                    }
-                },
-                images: {
-                    title: 'Images',
-                    path: '/images/',
-                    fields: {
-                        url: {
-                            title: 'URL'
-                        }
-                    }
-                }
-            },
-            models: {
-
                 unitMix: {
                     title: 'Unit Mix',
                     fields: {
@@ -210,7 +141,7 @@ angular.module('roomba.app',
 
                     if (collection) {
                         angular.forEach(collection.fields, function (value, key) {
-                            self[key] = self[key] || (value.placeholder || "");
+                            self[value.key] = self[value.key] || (value.placeholder || "");
                         });
 
                         angular.forEach(collection.dimensions.discreet, function (val) {
@@ -230,6 +161,31 @@ angular.module('roomba.app',
                 Item.collection = collection;
 
                 Item.path = collection.path;
+
+                Item.dimensions = {};
+
+                for (var i = 0; i < collection.dimensions.discreet.length; i++) {
+                    var _discreet = collection.dimensions.discreet[i];
+
+                    Item.dimensions.discreet[_discreet] = {
+                        key: _discreet,
+                        title: _.find(collection.fields, function (val) {
+                            return val.key === _discreet;
+                        }).title
+                    }
+                }
+
+                for (var i = 0; i < collection.dimensions.range.length; i++) {
+                    var _range = collection.dimensions.range[i];
+
+                    Item.dimensions.range[_range] = {
+                        key: _range,
+                        title: _.find(collection.fields, function (val) {
+                            return val.key === _range;
+                        }).title
+                    }
+                }
+
 
                 Item.query = function () {
                     // if collection is undefined, just query

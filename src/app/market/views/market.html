@@ -105,24 +105,23 @@
                             <div class="page-header"><h4>{{ activeItem.title }}</h4></div>
 
                             <form class="form-horizontal">
-                                <div class="form-group" ng-repeat="(field, value) in collection.fields">
+                                <div class="form-group" ng-repeat="field in collection.fields">
                                     <label class="col-lg-2 control-label">
-                                        {{ value.title }}
+                                        {{ field.title }}
                                     </label>
 
                                     <div class="col-lg-9">
                                         <input type="text" class="form-control"
-                                               ng-hide="activeItem.raw[field].showRaw"
-                                               ng-model="activeItem.edited[field]"/>
+                                               ng-hide="activeItem.raw[field.key].showRaw"
+                                               ng-model="activeItem.edited[field.key]"/>
                                         <input type="text" class="form-control"
-                                               ng-show="activeItem.raw[field].showRaw"
-                                               ng-model="activeItem.raw[field].value"/>
+                                               ng-show="activeItem.raw[field.key].showRaw"
+                                               ng-model="activeItem.raw[field.key].value"/>
                                     </div>
-                                    <button class="btn col-lg-1" ng-click="copyFromRaw(activeItem, field)"
-                                            ng-hide="isNull(activeItem.raw[field].status)"
-                                            ng-mouseover="activeItem.raw[field].showRaw = true"
-                                            ng-mouseleave="activeItem.raw[field].showRaw = false"
-                                            ng-click="copyFromRaw(itemResource, resourceFieldKey)">
+                                    <button class="btn col-lg-1" ng-click="copyFromRaw(activeItem, field.key)"
+                                            ng-hide="isNull(activeItem.raw[field.key].status)"
+                                            ng-mouseover="activeItem.raw[field.key].showRaw = true"
+                                            ng-mouseleave="activeItem.raw[field.key].showRaw = false">
                                         Raw
                                     </button>
                                 </div>

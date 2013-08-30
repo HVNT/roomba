@@ -49,16 +49,14 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 // Apply any tags to the path
                 if (arguments.length > 1) {
                     var tags = Array.prototype.slice.call(arguments).slice(1);
-                    Model.path = Model.collection.path;
                     angular.forEach(tags, function (value) {
                         Model.path += value;
                     });
-
                 }
 
                 if (_.isEmpty(items) || activePath !== Model.path) {
                     items = {};
-                    dimensions = new Dimensions(Model.collection);
+                    dimensions = new Dimensions(Model);
                     Model.query().then(
                         function (response) {
                             var _models = response.data;
@@ -73,12 +71,8 @@ angular.module('rescour.marketplace', ['rescour.config'])
 
                                         // Map them dimensions
                                         angular.forEach(items[model.id].dimensions.discreet, function (attrValue, attrID) {
-                                            if (Model.collection.fields.hasOwnProperty(attrID)) {
-                                                var _discreetVal = items[model.id].dimensions.discreet[attrID] = items[model.id].dimensions.discreet[attrID] || 'Unknown';
-                                                dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
-                                            } else {
-                                                throw Error("Field " + attrID + " is not defined in collection");
-                                            }
+                                            var _discreetVal = items[model.id].dimensions.discreet[attrID] = items[model.id].dimensions.discreet[attrID] || 'Unknown';
+                                            dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
                                         });
                                         idPosition+=1;
                                     } catch (e) {
@@ -188,7 +182,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
             }
 
             // Dimensions Constructor
-            function Dimensions(collection) {
+            function Dimensions(Model) {
                 var defaults = angular.extend({
                     title: "",
                     discreet: {},
@@ -197,55 +191,31 @@ angular.module('rescour.marketplace', ['rescour.config'])
                     idMap: []
                 });
 
-                angular.forEach(collection.dimensions.discreet, function (value, key) {
-                    if (collection.fields.hasOwnProperty(value)) {
-                        defaults.discreet[value] = collection.fields[value];
-                    } else {
-                        throw Error(value + " is not defined in collection")
-                    }
-                });
+                angular.forEach(Model.dimensions.discreet, function(value, key){
 
-                angular.forEach(collection.dimensions.range, function (value, key) {
-                    if (collection.fields.hasOwnProperty(value)) {
-                        defaults.range[value] = collection.fields[value];
-                    } else {
-                        throw Error(value + " is not defined in collection")
-                    }
                 });
-
-                var discreetDefaults = {
-                        values: {},
-                        selected: 0,
-                        visibleIds: []
-                    },
-                    rangeDefaults = {
-                        ids: [],
-                        na: [],
-                        high: null,
-                        low: null
-                    },
-                    self = this;
 
                 angular.copy(defaults, this);
-
-                angular.forEach(this.discreet, function (value, key) {
-                    var _discreet = angular.extend({}, discreetDefaults, value);
-                    angular.copy(_discreet, self.discreet[key]);
-                });
-
-                angular.forEach(this.range, function (value, key) {
-                    var _range = angular.extend({}, rangeDefaults, value);
-                    angular.copy(_range, self.range[key]);
-                });
             }
 
             Dimensions.prototype.pushDiscreetId = function (attrID, idPosition, value) {
-                // Only add if dimension already exists
-                if (_.has(this.discreet, attrID)) {
-                    var _discreet = this.discreet[attrID];
+                var discreetDefaults = {
+                    values: {},
+                    selected: 0,
+                    visibleIds: []
+                };
+
+                if (!this.discreet.hasOwnProperty(attrID)) {
+                    this.discreet[attrID] = {};
+                    angular.copy(discreetDefaults, this.discreet[attrID]);
+                }
+
+                var _discreet = this.discreet[attrID];
+
+                if (_discreet) {
                     value = value || "Unknown";
 
-                    if (_.has(_discreet.values, value)) {
+                    if (_discreet.values.hasOwnProperty(value)) {
                         if (_discreet.values[value].ids.length < this.idMap.length / 32) {
                             _discreet.values[value].ids.push(0);
                         }
@@ -259,6 +229,8 @@ angular.module('rescour.marketplace', ['rescour.config'])
                         _discreet.values[value].ids = setBit(idPosition, _discreet.values[value].ids);
                     }
                 }
+
+
             };
 
             Dimensions.prototype.pushRangeId = function (attrID, itemID, value) {
