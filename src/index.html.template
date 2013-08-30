@@ -70,48 +70,48 @@
 <div ng-view></div>
 
 <!-- External google CDN's -->
-<script src="components/jquery/jquery.js"></script>
-<script src="components/angular/angular.js"></script>
-<script src="components/angular-resource/angular-resource.js"></script>
-<script src="components/angular-cookies/angular-cookies.js"></script>
-<script src="components/angular-sanitize/angular-sanitize.js"></script>
+<script src="/components/jquery/jquery.js"></script>
+<script src="/components/angular/angular.js"></script>
+<script src="/components/angular-resource/angular-resource.js"></script>
+<script src="/components/angular-cookies/angular-cookies.js"></script>
+<script src="/components/angular-sanitize/angular-sanitize.js"></script>
 
 <!-- build:js scripts/scripts.js -->
-<script src="components/angular-mocks/angular-mocks.js"></script>
+<script src="/components/angular-mocks/angular-mocks.js"></script>
 <% if (config.environment == 'local') { %>
-    <script src="core/config/local.js"></script>
+    <script src="/core/config/local.js"></script>
 <% } else if (config.environment == 'localDev') { %>
-    <script src="core/config/local-dev.js"></script>
+    <script src="/core/config/local-dev.js"></script>
 <% } else if (config.environment == 'demo') { %>
-    <script src="core/config/local.js"></script>
+    <script src="/core/config/local.js"></script>
 <% } else if (config.environment == 'dev') { %>
-    <script src="core/config/dev.js"></script>
+    <script src="/core/config/dev.js"></script>
 <% } else if (config.environment == 'prod') { %>
-    <script src="core/config/prod.js"></script>
+    <script src="/core/config/prod.js"></script>
 <% } %>
-<script src="components/angular-ui-bootstrap-bower/ui-bootstrap-tpls-0.1.0.js"></script>
-<script src="components/jquery-ui/jquery-ui.min.js"></script>
-<script src="components/underscore/underscore-min.js"></script>
-<script src="components/spin.js/dist/spin.min.js"></script>
-<script src="core/auth/auth.js"></script>
-<script src="core/browser-detect/browser-detect.js"></script>
-<script src="core/marketplace/marketplace.js"></script>
-<script src="core/spinner/spinner.js"></script>
-<script src="core/user/user.js"></script>
-<script src="core/utility/utility.js"></script>
-<script src="app/app.js"></script>
-<script src="app/login/login.js"></script>
-<script src="app/market/market.js"></script>
+<script src="/components/angular-ui-bootstrap-bower/ui-bootstrap-tpls-0.1.0.js"></script>
+<script src="/components/jquery-ui/jquery-ui.min.js"></script>
+<script src="/components/underscore/underscore-min.js"></script>
+<script src="/components/spin.js/dist/spin.min.js"></script>
+<script src="/core/auth/auth.js"></script>
+<script src="/core/browser-detect/browser-detect.js"></script>
+<script src="/core/marketplace/marketplace.js"></script>
+<script src="/core/spinner/spinner.js"></script>
+<script src="/core/user/user.js"></script>
+<script src="/core/utility/utility.js"></script>
+<script src="/app/app.js"></script>
+<script src="/app/login/login.js"></script>
+<script src="/app/market/market.js"></script>
 <% if (config.environment == 'local') { %>
-    <script src="app/mock.js"></script>
+    <script src="/app/mock.js"></script>
 <% } else if (config.environment == 'localDev') { %>
-    <script src="app/bootstrap.js"></script>
+    <script src="/app/bootstrap.js"></script>
 <% } else if (config.environment == 'demo') { %>
-    <script src="app/mock.js"></script>
+    <script src="/app/mock.js"></script>
 <% } else if (config.environment == 'dev') { %>
-    <script src="app/bootstrap.js"></script>
+    <script src="/app/bootstrap.js"></script>
 <% } else if (config.environment == 'prod') { %>
-    <script src="app/bootstrap.js"></script>
+    <script src="/app/bootstrap.js"></script>
 <% } %>
 <!-- endbuild -->
 

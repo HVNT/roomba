@@ -475,7 +475,7 @@ module.exports = function (grunt) {
             livereload: {
                 options: {
                     port: 9000,
-                    bases: path.resolve('./.tmp'),
+                    bases: path.resolve('/.tmp'),
                     debug: true,
                     monitor: {},
                     server: path.resolve('./server')
