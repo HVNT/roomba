@@ -176,8 +176,8 @@ header {
 .market-details {
   .details-header {
     margin: 0 0 15px 15px;
-
-    h3 {
+    text-align: center;
+    h4, h3 {
       @include header-button($blue);
     }
   }
@@ -235,6 +235,7 @@ header {
     font-size: 16px;
     background: transparent;
     text-align: center;
+    vertical-align: middle;
     width: 35px;
 
     &.table-icon-success {
@@ -331,15 +332,15 @@ header {
 }
 
 .status-text-info {
-  color: $blue;
+  color: $blue !important;
 }
 
 .status-text-success {
-  color: $green;
+  color: $green !important;
 }
 
 .status-text-error, .status-text-2 {
-  color: $red;
+  color: $red !important;
 }
 
 .bold {

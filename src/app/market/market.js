@@ -90,6 +90,7 @@ angular.module('roomba.app')
                 }
             }
 
+
             if ($location.search().id) {
                 setActiveItem($location.search().id);
             }
@@ -100,9 +101,32 @@ angular.module('roomba.app')
                 }
             });
 
-            $scope.checkRawField = function (field) {
-                return (field.status == null || field.value === "" || field.value == null);
-            }
+            $scope.getStatusBg = function (status, type) {
+                type = type || 'solid';
+
+                switch (status) {
+                    case 0:
+                        return 'status-' + type + '-info';
+                    case 1:
+                        return 'status-' + type + '-info';
+                    case 2:
+                        return 'status-' + type + '-error';
+                    default:
+                        return 'status-' + type + '-unknown';
+                }
+            };
+
+            $scope.classRawField = function (field) {
+                if (field.copied) {
+                    return 'status-btn-success'
+                } else {
+                    return $scope.getStatusBg(field.status, 'btn')
+                }
+            };
+
+            $scope.isRawNull = function (field) {
+                return field ? (field.status == null || field.value === "" || field.value == null) : true;
+            };
 
             $scope.setSearchCriteria = function (field) {
                 $scope.activeSearch = {};
@@ -209,20 +233,6 @@ angular.module('roomba.app')
 
             };
 
-            $scope.getStatusBg = function (status, type) {
-                type = type || 'solid';
-
-                switch (status) {
-                    case 0:
-                        return 'status-' + type + '-info';
-                    case 1:
-                        return 'status-' + type + '-success';
-                    case 2:
-                        return 'status-' + type + '-success';
-                    default:
-                        return 'status-' + type + '-unknown';
-                }
-            };
         }])
     .controller('ResourceCtrl', ['$scope',
         function ($scope) {

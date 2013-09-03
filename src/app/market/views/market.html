@@ -116,7 +116,7 @@
 <!--Begin Fields-->
 <div class="row">
     <div class="details-header">
-        <h3 class="hint--right" data-hint="Copy all Raw" ng-click="copyAllRaw(activeItem, activeItemResources)">
+        <h3 class="hint--bottom" data-hint="Copy all Raw" ng-click="copyAllRaw(activeItem, activeItemResources)">
             {{
             activeItem.title }}</h3>
     </div>
@@ -134,7 +134,7 @@
                         <input type="text" class="form-control"
                                ng-hide="activeItem.raw[field.key].showRaw"
                                ng-model="activeItem.edited[field.key]"/>
-                        <input type="text" class="form-control"
+                        <input type="text" class="form-control status-text-{{ activeItem.raw[field.key].status }}"
                                ng-show="activeItem.raw[field.key].showRaw"
                                ng-model="activeItem.raw[field.key].value"/>
 
@@ -142,8 +142,8 @@
 
                     <button class="btn col-lg-1 hint--left hint--bounce"
                             ng-click="copyFromRaw(activeItem, field.key)"
-                            ng-class="activeItem.raw[field.key].copied && 'status-btn-success' || 'status-btn-info'"
-                            ng-hide="checkRawField(activeItem.raw[field.key])"
+                            ng-class="classRawField(activeItem.raw[field.key])"
+                            ng-hide="isRawNull(activeItem.raw[field.key])"
                             ng-mouseover="activeItem.raw[field.key].showRaw = true"
                             ng-mouseleave="activeItem.raw[field.key].showRaw = false"
                             data-hint="Copy">
@@ -161,15 +161,15 @@
                                ng-hide="activeItem.raw[field.key][subfield.key].showRaw"
                                ng-model="activeItem.edited[field.key][subfield.key]"
                                placeholder="{{ subfield.title }}"/>
-                        <input type="text" class="form-control"
+                        <input type="text" class="form-control status-text-{{ activeItem.raw[field.key][subfield.key].status }}"
                                ng-show="activeItem.raw[field.key][subfield.key].showRaw"
                                placeholder="{{ subfield.title }}"
                                ng-model="activeItem.raw[field.key][subfield.key].value"/>
                     </div>
                     <button class="btn col-lg-1 hint--left hint--bounce"
-                            ng-class="activeItem.raw[field.key][subfield.key].copied && 'status-btn-success' || 'status-btn-info'"
+                            ng-class="classRawField(activeItem.raw[field.key][subfield.key])"
                             ng-click="copySubfieldFromRaw(activeItem, field.key, subfield.key)"
-                            ng-hide="checkRawField(activeItem.raw[field.key][subfield.key])"
+                            ng-hide="isRawNull(activeItem.raw[field.key][subfield.key])"
                             ng-mouseover="activeItem.raw[field.key][subfield.key].showRaw = true"
                             ng-mouseleave="activeItem.raw[field.key][subfield.key].showRaw = false"
                             data-hint="Copy">
@@ -220,15 +220,15 @@
                         </div>
 
                         <div class="cell-view" ng-show="itemResource.raw[resourceField.key].showRaw">
-                            <input class="input-overlay status-{{itemResource.raw[resourceField.key].status}}"
+                            <input class="input-overlay status-text-{{itemResource.raw[resourceField.key].status}}"
                                    type="text" ng-model="itemResource.raw[resourceField.key].value"/>
                             <img ui-if="resourceConfig.key == 'images' && resourceField.key == 'url'"
                                  ng-src="{{ itemResource.raw[resourceField.key].value }}" alt=""/>
                         </div>
 
-                        <div class="table-input-action hint--top hint--bounce getStatusBg(itemResource.raw[resourceField.key].status, 'text')"
-                             ng-class="itemResource.raw[resourceField.key].copied && 'status-btn-success' || 'status-btn-info'"
-                             ng-hide="checkRawField(itemResource.raw[resourceField.key])"
+                        <div class="table-input-action hint--top hint--bounce"
+                             ng-class="classRawField(itemResource.raw[resourceField.key])"
+                             ng-hide="isRawNull(itemResource.raw[resourceField.key])"
                              ng-mouseover="itemResource.raw[resourceField.key].showRaw = true"
                              ng-mouseleave="itemResource.raw[resourceField.key].showRaw = false"
                              ng-click="copyFromRaw(itemResource, resourceField.key)"
@@ -253,7 +253,7 @@
              ng-repeat="modelConfig in collection.models | orderBy: '-weight'"
              ng-controller="ModelCtrl">
             <h4 ng-click="showRaw()"
-                class="hint--right" data-hint="Click for {{ (modelView.showRaw && 'Edited' || 'Raw') }}">
+                class="hint--right" data-hint="Show {{ (modelView.showRaw && 'Edited' || 'Raw') }}">
                 <span ng-show="modelView.showRaw">Raw</span>
                 {{ modelConfig.title }}
             </h4>
