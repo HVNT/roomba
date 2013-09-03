@@ -105,68 +105,69 @@
 
         <!--Begin Fields-->
         <div class="row">
-            <div class="col-lg-12">
-                <div class="page-header"><h4>{{ activeItem.title }}</h4></div>
+            <div class="details-header">
+                <h3 class="hint--right" data-hint="Copy all Raw" ng-click="copyAllRaw(activeItem, activeItemResources)">
+                    {{
+                    activeItem.title }}</h3>
+            </div>
+            <form class="form-horizontal fields-editor">
+                <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'">
 
-                <form class="form-horizontal fields-editor">
-                    <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'">
+                    <label class="col-lg-2 control-label">
+                        {{ field.title }}
+                    </label>
 
-                        <label class="col-lg-2 control-label">
-                            {{ field.title }}
-                        </label>
-
-                        <!--Regular fields-->
-                        <div class="col-lg-10" ng-hide="field.fields">
-                            <div class="row">
-                                <div class="col-lg-11">
-                                    <input type="text" class="form-control"
-                                           ng-hide="activeItem.raw[field.key].showRaw"
-                                           ng-model="activeItem.edited[field.key]"/>
-                                    <input type="text" class="form-control"
-                                           ng-show="activeItem.raw[field.key].showRaw"
-                                           ng-model="activeItem.raw[field.key].value"/>
-                                </div>
-                                <button class="btn col-lg-1 hint--left hint--bounce"
-                                        ng-click="copyFromRaw(activeItem, field.key)"
-                                        ng-class="activeItem.raw[field.key].copied && 'status-btn-success' || 'status-btn-info'"
-                                        ng-hide="checkRawField(activeItem.raw[field.key])"
-                                        ng-mouseover="activeItem.raw[field.key].showRaw = true"
-                                        ng-mouseleave="activeItem.raw[field.key].showRaw = false"
-                                        data-hint="Copy">
-                                    <i ng-hide="activeItem.raw[field.key].copied" class="icon-inbox"></i>
-                                    <i ng-show="activeItem.raw[field.key].copied" class="icon-check-sign"></i>
-                                </button>
+                    <!--Regular fields-->
+                    <div class="col-lg-10" ng-hide="field.fields">
+                        <div class="row">
+                            <div class="col-lg-11">
+                                <input type="text" class="form-control"
+                                       ng-hide="activeItem.raw[field.key].showRaw"
+                                       ng-model="activeItem.edited[field.key]"/>
+                                <input type="text" class="form-control"
+                                       ng-show="activeItem.raw[field.key].showRaw"
+                                       ng-model="activeItem.raw[field.key].value"/>
                             </div>
-                        </div>
-
-                        <!--Address and other subfield-->
-                        <div class="col-lg-10" ui-if="field.fields">
-                            <div class="form-group" ng-repeat="subfield in field.fields">
-                                <div class="col-lg-11">
-                                    <input type="text" class="form-control"
-                                           ng-hide="activeItem.raw[field.key][subfield.key].showRaw"
-                                           ng-model="activeItem.edited[field.key][subfield.key]"
-                                           placeholder="{{ subfield.title }}"/>
-                                    <input type="text" class="form-control"
-                                           ng-show="activeItem.raw[field.key][subfield.key].showRaw"
-                                           placeholder="{{ subfield.title }}"
-                                           ng-model="activeItem.raw[field.key][subfield.key].value"/>
-                                </div>
-                                <button class="btn col-lg-1 hint--left hint--bounce"
-                                        ng-class="activeItem.raw[field.key][subfield.key].copied && 'status-btn-success' || 'status-btn-info'"
-                                        ng-click="copySubfieldFromRaw(activeItem, field.key, subfield.key)"
-                                        ng-hide="checkRawField(activeItem.raw[field.key][subfield.key])"
-                                        ng-mouseover="activeItem.raw[field.key][subfield.key].showRaw = true"
-                                        ng-mouseleave="activeItem.raw[field.key][subfield.key].showRaw = false"
-                                        data-hint="Copy">
-                                    <i ng-hide="activeItem.raw[field.key][subfield.key].copied" class="icon-inbox"></i>
-                                    <i ng-show="activeItem.raw[field.key][subfield.key].copied" class="icon-check-sign"></i>
-                                </button>
-                            </div>
+                            <button class="btn col-lg-1 hint--left hint--bounce"
+                                    ng-click="copyFromRaw(activeItem, field.key)"
+                                    ng-class="activeItem.raw[field.key].copied && 'status-btn-success' || 'status-btn-info'"
+                                    ng-hide="checkRawField(activeItem.raw[field.key])"
+                                    ng-mouseover="activeItem.raw[field.key].showRaw = true"
+                                    ng-mouseleave="activeItem.raw[field.key].showRaw = false"
+                                    data-hint="Copy">
+                                <i ng-hide="activeItem.raw[field.key].copied" class="icon-inbox"></i>
+                                <i ng-show="activeItem.raw[field.key].copied" class="icon-check-sign"></i>
+                            </button>
                         </div>
                     </div>
-                </form>
-            </div>
+
+                    <!--Address and other subfield-->
+                    <div class="col-lg-10" ui-if="field.fields">
+                        <div class="form-group" ng-repeat="subfield in field.fields">
+                            <div class="col-lg-11">
+                                <input type="text" class="form-control"
+                                       ng-hide="activeItem.raw[field.key][subfield.key].showRaw"
+                                       ng-model="activeItem.edited[field.key][subfield.key]"
+                                       placeholder="{{ subfield.title }}"/>
+                                <input type="text" class="form-control"
+                                       ng-show="activeItem.raw[field.key][subfield.key].showRaw"
+                                       placeholder="{{ subfield.title }}"
+                                       ng-model="activeItem.raw[field.key][subfield.key].value"/>
+                            </div>
+                            <button class="btn col-lg-1 hint--left hint--bounce"
+                                    ng-class="activeItem.raw[field.key][subfield.key].copied && 'status-btn-success' || 'status-btn-info'"
+                                    ng-click="copySubfieldFromRaw(activeItem, field.key, subfield.key)"
+                                    ng-hide="checkRawField(activeItem.raw[field.key][subfield.key])"
+                                    ng-mouseover="activeItem.raw[field.key][subfield.key].showRaw = true"
+                                    ng-mouseleave="activeItem.raw[field.key][subfield.key].showRaw = false"
+                                    data-hint="Copy">
+                                <i ng-hide="activeItem.raw[field.key][subfield.key].copied" class="icon-inbox"></i>
+                                <i ng-show="activeItem.raw[field.key][subfield.key].copied" class="icon-check-sign"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
         <!--End Fields-->
 
@@ -187,7 +188,8 @@
                             </th>
                             <th ng-repeat="resourceField in resourceConfig.fields">
                                 <input type="text" ng-model="newResource[resourceField.key]"
-                                       placeholder="{{resourceField.title}}" focus-first-on="ResourceAdded" ui-keypress="{'enter': 'addResource(resourceConfig.key, newResource)'}" />
+                                       placeholder="{{resourceField.title}}" focus-first-on="ResourceAdded"
+                                       ui-keypress="{'enter': 'addResource(resourceConfig.key, newResource)'}"/>
                             </th>
                         </tr>
                         </thead>
@@ -198,11 +200,19 @@
                                 <i class="icon-remove-sign"></i>
                             </td>
                             <td ng-repeat="resourceField in resourceConfig.fields">
-                                <input ng-hide="itemResource.raw[resourceField.key].showRaw" type="text"
-                                       ng-model="itemResource.edited[resourceField.key]"/>
-                                <input class="input-overlay status-{{itemResource.raw[resourceField.key].status}}"
-                                       ng-show="itemResource.raw[resourceField.key].showRaw" readonly
-                                       type="text" ng-model="itemResource.raw[resourceField.key].value"/>
+
+                                <div class="cell-view" ng-hide="itemResource.raw[resourceField.key].showRaw">
+                                    <input type="text" ng-model="itemResource.edited[resourceField.key]"/>
+                                    <img ui-if="resourceConfig.key == 'images' && resourceField.key == 'url'"
+                                         ng-src="{{ itemResource.edited[resourceField.key] }}" alt=""/>
+                                </div>
+
+                                <div class="cell-view" ng-show="itemResource.raw[resourceField.key].showRaw">
+                                    <input class="input-overlay status-{{itemResource.raw[resourceField.key].status}}"
+                                           type="text" ng-model="itemResource.raw[resourceField.key].value"/>
+                                    <img ui-if="resourceConfig.key == 'images' && resourceField.key == 'url'"
+                                         ng-src="{{ itemResource.raw[resourceField.key].value }}" alt=""/>
+                                </div>
 
                                 <div class="table-input-action hint--top hint--bounce getStatusBg(itemResource.raw[resourceField.key].status, 'text')"
                                      ng-class="itemResource.raw[resourceField.key].copied && 'status-btn-success' || 'status-btn-info'"
@@ -245,7 +255,8 @@
                             </th>
                             <th ng-repeat="modelFieldConfig in modelConfig.fields">
                                 <input focus-first-on="ModelAdded" type="text" ng-model="newModel[modelFieldConfig.key]"
-                                       placeholder="{{modelFieldConfig.title}}" ui-keypress="{'enter': 'addModel(activeItem, modelConfig.key, newModel)'}"/>
+                                       placeholder="{{modelFieldConfig.title}}"
+                                       ui-keypress="{'enter': 'addModel(activeItem, modelConfig.key, newModel)'}"/>
                             </th>
                         </tr>
                         </thead>
