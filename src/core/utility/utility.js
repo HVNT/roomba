@@ -468,4 +468,51 @@ angular.module('rescour.utility', [])
                     element.css({'height': calcElementHeight(element)});
                 }
             };
+        }])
+    .directive('inputDropdown', ['$document',
+        function ($document) {
+            return {
+                restrict: 'C',
+                link: function (scope, element, attrs) {
+                    var ddBtn = element.find('.input-dropdown-btn');
+                    var ddMenu = element.find('.input-dropdown-menu');
+
+                    scope.$on('destroyDropdowns', close);
+
+                    function open(e) {
+                        if (e) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                        }
+
+                        console.log("hi");
+                        scope.$broadcast('destroyDropdowns');
+                        scope.$broadcast('destroyTooltips');
+
+                        if (!scope.isOpen) {
+                            scope.$apply(function () {
+                                ddMenu.show();
+                                scope.isOpen = true;
+                                $document.bind('click', close);
+                                ddBtn.unbind('click', open);
+                            });
+                        } else {
+                            close();
+                        }
+                    }
+
+                    function close(e) {
+                        scope.$apply(function () {
+                            if (scope.isOpen) {
+                                ddMenu.hide();
+                                scope.isOpen = false;
+                                $document.unbind('click', close);
+                                ddBtn.bind('click', open);
+                            }
+                        });
+                    }
+
+                    ddBtn.bind('click', open);
+                }
+            };
         }]);

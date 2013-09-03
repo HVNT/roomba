@@ -55,6 +55,11 @@ angular.module('roomba.app',
                     key: 'broker'
                 },
                 {
+                    title: '# Units',
+                    weight: 10,
+                    key: 'numUnits'
+                },
+                {
                     title: 'State',
                     weight: 9,
                     key: 'state'
@@ -287,6 +292,8 @@ angular.module('roomba.app',
                             }
                         }, $_api.config),
                         path = tag ? $_api.path + Item.path + tag : $_api.path + Item.path;
+
+                    path += "/?limit=5000";
 
                     $http.get(path, config).then(function (response) {
                         defer.resolve(response);

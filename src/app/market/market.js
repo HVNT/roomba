@@ -62,12 +62,15 @@ angular.module('roomba.app')
     .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model',
         function ($scope, Market, $routeParams, $location, Model) {
             $scope.items = Market.getItems();
+            console.log($scope.items.length);
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
             $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
             $scope.collection = Model.collection;
             $scope.srcListingDetails = '/app/market/partials/listing-details.html?v=' + Date.now();
+            $scope.searchBy = {};
+            $scope.activeSearch = {title: 'Any', key: '$'};
 
             function setActiveItem(id) {
                 $scope.activeItem = Market.setActive(id);
@@ -99,6 +102,11 @@ angular.module('roomba.app')
 
             $scope.checkRawField = function (field) {
                 return (field.status == null || field.value === "" || field.value == null);
+            }
+
+            $scope.setSearchCriteria = function (field) {
+                $scope.activeSearch = {};
+                $scope.activeSearch = field ? field : {title: 'Any', key: '$'};
             }
         }])
     .controller('MarketListCtrl', ['$scope', '$location',

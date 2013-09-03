@@ -10,6 +10,7 @@
 @import "ribbon_nav";
 @import "thotpod_btn";
 @import "login";
+@import "input";
 
 $bgColor: $grayLighter;
 
@@ -44,77 +45,6 @@ $bgColor: $grayLighter;
   }
 }
 
-%input-edit {
-  display: inline-block;
-  width: 100%;
-  margin-bottom: 0 !important;
-  border: none;
-  background: $grayLight;
-  font-size: 12px;
-  font-weight: bold;
-  color: $white;
-  padding-left: 15px;
-  padding-right: 40px;
-  //height: 40px;
-  @include box-shadow(none !important);
-  @include box-sizing(border-box !important);
-  z-index: 1;
-
-  &:focus {
-    background: $white !important;
-    font-weight: normal;
-  }
-
-  &:hover:not(:focus) {
-    background: lighten($grayLight, 10%);
-  }
-
-}
-
-.loading-background {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  bottom: 0px;
-  right: 0px;
-  background: $grayLighter;
-  z-index: 5;
-}
-
-.loading-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  height: 200px;
-  margin-left: -200px;
-  margin-top: -100px;
-  text-align: center;
-
-  h4 {
-    text-transform: uppercase;
-    font-weight: normal;
-    font-size: 24px;
-    color: $gray;
-  }
-
-  p {
-    margin-top: 10px;
-    font-size: 14px;
-    color: lighten($gray, 10%);
-  }
-
-  .loading-icon {
-    text-shadow: #666 0 -1px 0;
-    color: $gray;
-  }
-
-  .failure-icon {
-    text-shadow: darken($red, 25%) 0 -1px 0;
-    color: $red;
-    margin-bottom: 1em;
-  }
-}
 
 .origami-left {
   position: absolute;
@@ -177,13 +107,43 @@ header {
       padding: 10px;
     }
   }
+  .header-search {
+    display: inline-block;
+    position: relative;
+    padding: 6px;
+    margin-left: 20px;
+    @include input-dropdown();
+
+    input {
+      @include flat-input(12px, 10px, 30px);
+      @include placeholder-style($white, 400, normal, 3px);
+
+      & + i {
+        color: white;
+        position: absolute;
+        top: 17px;
+        left: 15px;
+      }
+    }
+  }
 }
 
 .roomba-wrap {
   & > .row {
     margin: 0;
   }
+  .header-actions {
+    position: relative;
+    margin-bottom: 15px;
+    padding: 15px 25px;
+    background: $grayDark;
+  }
+}
 
+.market-filter {
+}
+
+.market-list {
   .listing-list-item {
     cursor: pointer;
     padding: 10px 0;
@@ -204,7 +164,6 @@ header {
     .list-item-title {
       &:hover {
         text-decoration: underline;
-        font-weight: bold;
       }
     }
 
@@ -212,29 +171,6 @@ header {
       margin-bottom: 0;
     }
   }
-
-  .filter-actions {
-    position: relative;
-  }
-
-  $headerColor: $grayLight;
-  .header-actions {
-    position: relative;
-    margin-bottom: 15px;
-    padding: 15px 25px;
-  }
-
-  .footer-actions {
-    position: relative;
-    margin-top: 15px;
-    padding: 15px 25px;
-  }
-}
-
-.market-filter {
-}
-
-.market-list {
 }
 
 .market-details {
@@ -246,32 +182,9 @@ header {
     }
   }
 
-
   .fields-editor {
     input {
-      &::-webkit-input-placeholder {
-        color: $white;
-        font-style: italic;
-        font-weight: 200;
-      }
-
-      &:-moz-placeholder { /* Firefox 18- */
-        font-style: italic;
-        color: $white;
-        font-weight: 200;
-      }
-
-      &::-moz-placeholder {  /* Firefox 19+ */
-        color: $white;
-        font-style: italic;
-        font-weight: 200;
-      }
-
-      &:-ms-input-placeholder {
-        color: $white;
-        font-style: italic;
-        font-weight: 200;
-      }
+      @include placeholder-style($white, 200, italic);
     }
   }
 
@@ -308,6 +221,7 @@ header {
   .cell-view {
     img {
       margin: 15px;
+      display: block;
     }
   }
 
@@ -392,7 +306,6 @@ header {
   }
 }
 
-
 .status-btn-info {
   @include tpBtnBg($blue);
 }
@@ -404,7 +317,6 @@ header {
 .status-btn-error {
   @include tpBtnBg($red);
 }
-
 
 .status-solid-info {
   background: $blue;
@@ -418,7 +330,6 @@ header {
   background: $red;
 }
 
-
 .status-text-info {
   color: $blue;
 }
@@ -427,6 +338,10 @@ header {
   color: $green;
 }
 
-.status-text-error {
+.status-text-error, .status-text-2 {
   color: $red;
+}
+
+.bold {
+  font-weight: bold;
 }
