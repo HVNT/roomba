@@ -9,6 +9,7 @@ require(
                     'components/angular-ui-bootstrap-bower/ui-bootstrap',
                     'components/jquery-ui/jquery-ui',
                     'components/jquery/jquery',
+                    'components/angular-ui/build/angular-ui',
                     'core/auth/auth',
                     'core/user/user',
                     'core/utility/utility',
@@ -25,6 +26,9 @@ require(
                     'core/config/local-dev'
                 <% } %>
                 ]
+            },
+            'components/angular-ui/build/angular-ui': {
+                deps: ['components/jquery/jquery', 'components/angular/angular']
             },
             'components/jquery-ui/jquery-ui': {
                 deps: ['components/jquery/jquery']
@@ -55,6 +59,7 @@ require(
         'require',
         'components/jquery-ui/jquery-ui',
         'components/angular-ui-bootstrap-bower/ui-bootstrap',
+        'components/angular-ui/build/angular-ui',
         'components/angular/angular',
         'app/market/market',
         'app/login/login'

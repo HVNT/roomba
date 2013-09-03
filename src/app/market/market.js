@@ -88,21 +88,21 @@ angular.module('roomba.app')
             }
 
             if ($location.search().id) {
-                setActiveItem ($location.search().id);
+                setActiveItem($location.search().id);
             }
 
             $scope.$on('$locationChangeSuccess', function (e, newLocation, oldLocation) {
                 if ($location.search().id) {
-                    setActiveItem ($location.search().id);
+                    setActiveItem($location.search().id);
                 }
             });
 
-            $scope.isNull = function (prop) {
-                return prop == null;
+            $scope.checkRawField = function (field) {
+                return (field.status == null || field.value === "" || field.value == null);
             }
         }])
     .controller('MarketListCtrl', ['$scope', '$location',
-        function($scope, $location) {
+        function ($scope, $location) {
             $scope.openDetails = function (id) {
                 $location.search('id', id);
             };
@@ -183,56 +183,59 @@ angular.module('roomba.app')
             };
         }])
     .controller('ResourceCtrl', ['$scope',
-        function($scope) {
+        function ($scope) {
             $scope.newResource = {};
-
+            $scope.resourceView = {};
 
             $scope.addResource = function (resourceKey, resource) {
-                if (resource === {}) {
+                if (_.isEmpty(resource)) {
                     console.log("empty!");
                 } else {
                     $scope.activeItemResources[resourceKey] ? $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource })) : null;
                     $scope.newResource = {};
+                    $scope.$broadcast('ResourceAdded');
                 }
-                // POST to resources/resourceKey, get back ID
-                // Push ID to activeItem.resources[resourceKey]
+
             };
 
-            $scope.removeResource = function (resourceKey, id) {
+            $scope.removeResource = function (resourceKey, itemResource) {
+                console.log(itemResource, $scope.activeItemResources[resourceKey]);
                 // Remove id from resource
                 $scope.activeItem.resources[resourceKey] = _.reject($scope.activeItem.resources[resourceKey], function (val) {
-                    return val === id;
+                    return val === itemResource.id;
                 });
                 $scope.activeItemResources[resourceKey] = _.reject($scope.activeItemResources[resourceKey], function (val) {
-                    return val.id === id;
+                    return val.$$hashKey === itemResource.$$hashKey;
                 });
-
 
             };
         }])
     .controller('ModelCtrl', ['$scope',
-        function($scope) {
+        function ($scope) {
             $scope.newModel = {};
             $scope.modelView = {};
 
-
             $scope.addModel = function (item, modelKey, model) {
-                item.edited[modelKey].push(model);
+                if (!_.isEmpty(model)) {
+                    item.edited[modelKey].push(model);
+                    $scope.newModel = {};
+                    $scope.$broadcast('ModelAdded');
+                }
             };
 
             $scope.removeModel = function (item, modelKey, model) {
                 item.edited[modelKey] = _.reject(item.edited[modelKey], function (val) {
-                    return angular.equals(val, model);
+                    return val.$$hashKey === model.$$hashKey;
                 });
             };
 
             $scope.copyModelFromRaw = function (item, modelKey, rawModel) {
                 var _modelConfig = _.find($scope.collection.models, function (val) {
-                    return val.key === modelKey;
-                }),
+                        return val.key === modelKey;
+                    }),
                     _editedModel = {};
 
-                angular.forEach(_modelConfig.fields, function(modelField){
+                angular.forEach(_modelConfig.fields, function (modelField) {
                     _editedModel[modelField.key] = rawModel[modelField.key].value || "";
                 });
 
@@ -254,5 +257,16 @@ angular.module('roomba.app')
             });
 
             return models;
-        }]);
+        }])
+    .directive('focusFirstOn', function () {
+        return {
+            link: function (scope, element, attrs) {
+                scope.$on(attrs.focusFirstOn, function () {
+                    if (scope.$index === 0) {
+                        element[0].focus();
+                    }
+                })
+            }
+        };
+    });
 

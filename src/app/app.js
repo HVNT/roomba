@@ -17,7 +17,8 @@ angular.module('roomba.app',
             'rescour.user',
             'rescour.utility',
             'rescour.marketplace',
-            'thotpod.spinner'
+            'thotpod.spinner',
+            'ui'
         ])
     .value('$collections', {
         listings: {
@@ -129,8 +130,8 @@ angular.module('roomba.app',
                             title: 'Sq Ft'
                         },
                         {
-                            key: 'Rent',
-                            title: 'rent'
+                            key: 'rent',
+                            title: 'Rent'
                         },
                         {
                             key: 'rentpsqft',
