@@ -143,7 +143,7 @@ angular.module('roomba.app')
         }])
     .controller('DetailsCtrl', ['$scope', '$routeParams',
         function ($scope, $routeParams) {
-            function copyRaw (obj) {
+            function copyRaw(obj) {
                 angular.forEach(obj.raw, function (rawValue, key) {
                     if (rawValue.hasOwnProperty('status') && rawValue.hasOwnProperty('value')) {
                         if (!obj.edited[key] && rawValue.value != null) {
@@ -151,7 +151,11 @@ angular.module('roomba.app')
                         }
                     } else {
                         angular.forEach(rawValue, function (rawSubValue, subKey) {
-                            if (!obj.edited[key][subKey] && rawSubValue.value != null) {
+                            if (rawSubValue.hasOwnProperty('edited') && rawSubValue.hasOwnProperty('raw')) {
+                                if (!rawValue.edited[key] && rawValue.value != null) {
+                                    $scope.copyFromRaw(obj, key);
+                                }
+                            } else if (!obj.edited[key][subKey] && rawSubValue.value != null) {
                                 $scope.copySubfieldFromRaw(obj, key, subKey);
                             }
                         });
@@ -168,8 +172,8 @@ angular.module('roomba.app')
                     copyRaw(item);
                 }
 
-                angular.forEach(itemResources, function(subresources, key){
-                    angular.forEach(subresources, function(subresource, key){
+                angular.forEach(itemResources, function (subresources, key) {
+                    angular.forEach(subresources, function (subresource, key) {
                         if (subresource.hasOwnProperty('raw') && subresource.hasOwnProperty('edited')) {
                             copyRaw(subresource);
                         }

@@ -28,6 +28,22 @@ $bgColor: $grayLighter;
   }
 }
 
+@mixin header-button($headerColor) {
+  display: inline-block;
+  cursor: pointer;
+  padding: 10px;
+  border: 2px solid $headerColor;
+  color: $headerColor;
+  margin-top: 0;
+  @include border-radius(4px);
+
+  &:hover {
+    cursor: pointer;
+    background: $headerColor;
+    color: $white;
+  }
+}
+
 %input-edit {
   display: inline-block;
   width: 100%;
@@ -149,7 +165,7 @@ body {
   min-height: 100%;
   margin: 0;
   background-color: $bgColor;
-  font-family: 'museo-sans';
+  font-family: 'Open Sans' !important;
 }
 
 header {
@@ -204,10 +220,8 @@ header {
   $headerColor: $grayLight;
   .header-actions {
     position: relative;
-    @include gradient-vertical(lighten($headerColor, 2%), darken($headerColor, 2%));
     margin-bottom: 15px;
     padding: 15px 25px;
-    @include box-shadow(#{0 1px $white, inset 0 1px rgba(0,0,0,0.3)});
   }
 
   .footer-actions {
@@ -224,18 +238,11 @@ header {
 }
 
 .market-details {
-  details-header {
-    margin: 20px 0;
+  .details-header {
+    margin: 0 0 15px 15px;
 
     h3 {
-      display: inline-block;
-      cursor: pointer;
-      padding: 10px;
-      background: blue;
-
-      &:hover {
-        text-decoration: underline;
-      }
+      @include header-button($blue);
     }
   }
 
@@ -294,11 +301,7 @@ header {
 .group-editor {
   &.model-editor {
     h4 {
-      cursor: pointer;
-
-      &:hover {
-        text-decoration: underline;
-      }
+      @include header-button($blue);
     }
   }
 
