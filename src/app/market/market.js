@@ -69,7 +69,9 @@ angular.module('roomba.app')
             $scope.collectionID = $routeParams.collection;
             $scope.collection = Model.collection;
             $scope.srcListingDetails = '/app/market/partials/listing-details.html?v=' + Date.now();
-            $scope.searchBy = {};
+            $scope.searchBy = {
+                $: ""
+            };
             $scope.activeSearch = {title: 'Any', key: '$'};
             $scope.tags = {
                 raw: false,
@@ -125,7 +127,7 @@ angular.module('roomba.app')
                     case 0:
                         return 'status-' + type + '-info';
                     case 1:
-                        return 'status-' + type + '-info';
+                        return 'status-' + type + '-success';
                     case 2:
                         return 'status-' + type + '-error';
                     default:
@@ -150,6 +152,7 @@ angular.module('roomba.app')
             $scope.setSearchCriteria = function (field) {
                 $scope.activeSearch = {};
                 $scope.activeSearch = field ? field : {title: 'Any', key: '$'};
+                $scope.searchBy[$scope.activeSearch.key] = "";
             }
         }])
     .controller('MarketListCtrl', ['$scope', '$location',

@@ -106,7 +106,7 @@
         </div>
     </div>
     <div class="scroll-container">
-        <div class="scroll-wrap" chunk="items | limitVisible | orderBy:sortBy | filter:searchBy" chunk-size="100">
+        <div class="scroll-wrap" chunk="items | limitVisible | orderBy:sortBy | filter:searchBy[activeSearch.key]" chunk-size="100">
             <div class="row listing-list-item" ng-repeat="item in chunk">
                 <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox"/></div>
                 <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
@@ -160,7 +160,6 @@
                         <input type="text" class="form-control status-text-{{ activeItem.raw[field.key].status }}"
                                ng-show="activeItem.raw[field.key].showRaw"
                                ng-model="activeItem.raw[field.key].value"/>
-
                     </div>
 
                     <button class="btn col-lg-1 hint--left hint--bounce"
