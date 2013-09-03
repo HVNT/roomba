@@ -71,6 +71,19 @@ angular.module('roomba.app')
             $scope.srcListingDetails = '/app/market/partials/listing-details.html?v=' + Date.now();
             $scope.searchBy = {};
             $scope.activeSearch = {title: 'Any', key: '$'};
+            $scope.tags = {
+                raw: false,
+                published: false,
+                staged: false,
+                all: false
+            };
+            $scope.marketView = {
+                collapseFilters: true
+            };
+
+            $scope.activeTag = $routeParams.tag || 'all';
+
+            $scope.tags[$scope.activeTag] = true;
 
             function setActiveItem(id) {
                 $scope.activeItem = Market.setActive(id);
@@ -90,6 +103,10 @@ angular.module('roomba.app')
                 }
             }
 
+            $scope.changeTag = function (tag) {
+                tag = (tag === 'all') ? '' : tag;
+                $location.path('/market/' + $routeParams.collection + '/' + tag);
+            };
 
             if ($location.search().id) {
                 setActiveItem($location.search().id);
@@ -117,10 +134,12 @@ angular.module('roomba.app')
             };
 
             $scope.classRawField = function (field) {
-                if (field.copied) {
-                    return 'status-btn-success'
-                } else {
-                    return $scope.getStatusBg(field.status, 'btn')
+                if (field) {
+                    if (field.copied) {
+                        return 'status-btn-success'
+                    } else {
+                        return $scope.getStatusBg(field.status, 'btn')
+                    }
                 }
             };
 
@@ -155,23 +174,13 @@ angular.module('roomba.app')
         }])
     .controller('MarketFilterCtrl', ['$scope', 'Market', '$routeParams', '$location',
         function ($scope, Market, $routeParams, $location) {
-            $scope.tags = {
-                raw: false,
-                published: false,
-                staged: false
-            };
 
-            $scope.activeTag = $routeParams.tag;
 
-            $scope.tags[$scope.activeTag] = true;
 
             $scope.toggleDiscreet = function (discreet, value) {
                 Market.apply(discreet, value);
             };
 
-            $scope.changeTag = function (tag) {
-                $location.path('/market/' + $routeParams.collection + '/' + tag);
-            };
         }])
     .controller('DetailsCtrl', ['$scope', '$routeParams',
         function ($scope, $routeParams) {

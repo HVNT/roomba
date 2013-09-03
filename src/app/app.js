@@ -23,7 +23,7 @@ angular.module('roomba.app',
     .value('$collections', {
         listings: {
             title: 'Listings',
-            tags: ['raw', 'staged', 'published'],
+            tags: ['raw', 'edited', 'published'],
             path: '/listings/',
             dimensions: {
                 discreet: {

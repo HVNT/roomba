@@ -107,23 +107,24 @@ header {
       padding: 10px;
     }
   }
-  .header-search {
-    display: inline-block;
-    position: relative;
-    padding: 6px;
-    margin-left: 20px;
-    @include input-dropdown();
+}
 
-    input {
-      @include flat-input(12px, 10px, 30px);
-      @include placeholder-style($white, 400, normal, 3px);
+.header-search {
+  display: inline-block;
+  position: relative;
+  padding: 6px;
+  margin-bottom: 20px;
+  @include input-dropdown();
 
-      & + i {
-        color: white;
-        position: absolute;
-        top: 17px;
-        left: 15px;
-      }
+  input {
+    @include flat-input(12px, 10px, 30px);
+    @include placeholder-style($white, 400, normal, 3px);
+
+    & + i {
+      color: white;
+      position: absolute;
+      top: 17px;
+      left: 15px;
     }
   }
 }

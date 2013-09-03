@@ -5,44 +5,64 @@
             <li class="active"><a href="/market/listings">Listings</a></li>
             <li></li>
         </ul>
-        <div class="header-search col-lg-2">
-            <input type="text" placeholder="Search by {{ activeSearch.title }}" ng-model="searchBy[activeSearch.key]"/>
-            <i class="icon-search"></i>
+        <!--<div class="header-search col-lg-2">-->
+            <!--<input type="text" placeholder="Search by {{ activeSearch.title }}" ng-model="searchBy[activeSearch.key]"/>-->
+            <!--<i class="icon-search"></i>-->
 
-            <div class="input-dropdown-btn" dropdown-toggle><i class="icon-caret-down"></i></div>
-            <ul class="input-dropdown-menu">
-                <li ng-click="setSearchCriteria()">Any</li>
-                <li ng-class="{'active': field.key == activeSearch.key}"
-                    ng-repeat="field in collection.fields | orderBy: '-weight'"
-                    ng-click="setSearchCriteria(field)">
-                    <a href="javascript:">{{field.title}}</a>
-                </li>
+            <!--<div class="input-dropdown-btn" dropdown-toggle><i class="icon-caret-down"></i></div>-->
+            <!--<ul class="input-dropdown-menu">-->
+                <!--<li ng-click="setSearchCriteria()">Any</li>-->
+                <!--<li ng-class="{'active': field.key == activeSearch.key}"-->
+                    <!--ng-repeat="field in collection.fields | orderBy: '-weight'"-->
+                    <!--ng-click="setSearchCriteria(field)">-->
+                    <!--<a href="javascript:">{{field.title}}</a>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-inverse dropdown-toggle hint--left hint--bounce" data-hint="Tags">
+                <i class="icon-tags"></i>
+            </button>
+            <ul class="dropdown-menu">
+                <li ng-class="{'active': isActive}" ng-repeat="(tag, isActive) in tags"><a
+                        href="javascript:" ng-click="changeTag(tag)">{{ tag }}</a></li>
             </ul>
         </div>
     </div>
-
 </header>
 
 <div class="roomba-wrap">
 <div class="row">
-<div class="col-lg-2 market-filter" ng-controller="MarketFilterCtrl">
+<div ui-if="!marketView.collapseFilters" class="col-lg-2 market-filter" ng-controller="MarketFilterCtrl">
     <div class="row">
         <div class="col-lg-12 header-actions">
             <div class="btn-group">
-                <button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-                    {{ activeTag }} <span class="caret"></span>
+                <button type="button" class="btn btn-danger dropdown-toggle hint--right hint--info hint--bounce" ng-click="marketView.collapseFilters = true" data-hint="Collapse">
+                    <i class="icon-remove"></i>
                 </button>
-                <ul class="dropdown-menu">
-                    <li ng-class="{'active': isActive}" ng-repeat="(tag, isActive) in tags"><a
-                            href="javascript:" ng-click="changeTag(tag)">{{ tag }}</a></li>
-                </ul>
             </div>
-            <button type="button" class="btn btn-success">+</button>
         </div>
     </div>
     <div class="row scroll-container">
         <div class="scroll-wrap">
+            <div class="header-search col-lg-12">
+                <input type="text" placeholder="Search by {{ activeSearch.title }}" ng-model="searchBy[activeSearch.key]"/>
+                <i class="icon-search"></i>
+
+                <div class="input-dropdown-btn" dropdown-toggle><i class="icon-caret-down"></i></div>
+                <ul class="input-dropdown-menu">
+                    <li ng-click="setSearchCriteria()"><a href="javascript:">Any</a></li>
+                    <li ng-class="{'active': field.key == activeSearch.key}"
+                        ng-repeat="field in collection.fields | orderBy: '-weight'"
+                        ng-click="setSearchCriteria(field)">
+                        <a href="javascript:">{{field.title}}</a>
+                    </li>
+                </ul>
+            </div>
+
             <div class="col-lg-12">
+
                 <ul ng-repeat="discreet in dimensions.discreet" class="ribbon-nav">
                     <li class="header">{{discreet.title}}</li>
                     <li ng-repeat="value in discreet.values"
@@ -54,11 +74,16 @@
         </div>
     </div>
 </div>
-<div class="col-lg-3 market-list" ng-controller="MarketListCtrl">
+<div ng-class="(marketView.collapseFilters && 'col-lg-6' || 'col-lg-4')" class="market-list" ng-controller="MarketListCtrl">
     <div class="row">
         <div class="col-lg-12 header-actions">
             <div class="btn-group">
-                <button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+                <button type="button" ui-if="marketView.collapseFilters" class="btn btn-info hint--bottom hint--info hint--bounce" ng-click="marketView.collapseFilters = false" data-hint="Expand Search">
+                    <i class="icon-search"></i>
+                </button>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-inverse dropdown-toggle hint--top hint--info hint--bounce" data-hint="Sort">
                     <i class="icon-sort"></i>
                 </button>
                 <ul class="dropdown-menu">
@@ -68,13 +93,13 @@
                 </ul>
             </div>
             <div class="btn-group pull-right">
-                <button class="btn hint--bottom" data-hint="Publish Selected">
+                <button class="btn hint--top hint--info hint--bounce" data-hint="Publish Selected">
                     <i class="icon-cloud-upload"></i>
                 </button>
-                <button class="btn btn-success hint--bottom" data-hint="Save Selected">
+                <button class="btn btn-success hint--bottom hint--info hint--bounce" data-hint="Save Selected">
                     <i class="icon-save"></i>
                 </button>
-                <button class="btn btn-error hint--bottom" data-hint="Unpublish Selected">
+                <button class="btn btn-danger hint--top hint--info hint--bounce" data-hint="Un Publish Selected">
                     <i class="icon-cloud"></i>
                 </button>
             </div>
@@ -83,23 +108,21 @@
     <div class="scroll-container">
         <div class="scroll-wrap" chunk="items | limitVisible | orderBy:sortBy | filter:searchBy" chunk-size="100">
             <div class="row listing-list-item" ng-repeat="item in chunk">
-                <!--<div class="col-lg-1 col-sm-1 col-1"><input type="checkbox"/></div>-->
-                <!--<div class="col-lg-1 col-sm-1 col-1"><i class="icon-star"></i></div>-->
-                <!--<div class="col-lg-1 col-sm-1 col-1"><i class="icon-ban-circle"></i></div>-->
-                <div class="col-lg-12 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
+                <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox"/></div>
+                <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
                     {{item.title}}
                 </div>
-                <!--<div class="col-lg-3 col-sm-3 col-3">-->
-                <!--<div class="progress">-->
-                <!--<div class="progress-bar" style="width: 60%;"></div>-->
-                <!--</div>-->
-                <!--</div>-->
+                <div class="col-lg-2 col-sm-3 col-3">
+                    <div class="progress progress-striped">
+                        <div class="progress-bar" style="width: 60%;"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="col-lg-7 market-details" ng-controller="DetailsCtrl">
+<div class="col-lg-6 market-details" ng-controller="DetailsCtrl">
 <div class="row">
     <div class="col-lg-12 header-actions">
         <div class="btn-group pull-right">
@@ -161,7 +184,8 @@
                                ng-hide="activeItem.raw[field.key][subfield.key].showRaw"
                                ng-model="activeItem.edited[field.key][subfield.key]"
                                placeholder="{{ subfield.title }}"/>
-                        <input type="text" class="form-control status-text-{{ activeItem.raw[field.key][subfield.key].status }}"
+                        <input type="text"
+                               class="form-control status-text-{{ activeItem.raw[field.key][subfield.key].status }}"
                                ng-show="activeItem.raw[field.key][subfield.key].showRaw"
                                placeholder="{{ subfield.title }}"
                                ng-model="activeItem.raw[field.key][subfield.key].value"/>

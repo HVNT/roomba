@@ -147,7 +147,6 @@ angular.module('rescour.utility', [])
                     currentSlice,
                     chunkSize = parseInt(attrs.chunkSize, 10) || 10;
 
-
                 function initChunk() {
                     scope.visibleItems = scope.$eval(attrs.chunk);
                     // If a filter is provided, apply filter to set and return
@@ -442,17 +441,18 @@ angular.module('rescour.utility', [])
             }
         };
     }])
-    .directive('scrollContainer', ['$window', '$document',
-        function ($window, $document) {
+    .directive('scrollContainer', ['$window', '$document', '$timeout',
+        function ($window, $document, $timeout) {
             return {
                 restrict: 'C',
                 link: function (scope, element, attrs) {
-                    function calcElementHeight (e) {
+                    function calcElementHeight(e) {
                         // find siblings
                         var _siblings = $(e).siblings(),
                             _siblingsHeight = 0,
                             _windowHeight = $window.innerHeight,
-                            _headerHeight = $document.find('header')[0].clientHeight;;
+                            _headerHeight = $document.find('header')[0].clientHeight;
+                        ;
 
                         for (var i = 0; i < _siblings.length; i++) {
                             _siblingsHeight += $(_siblings[i]).height();
@@ -465,7 +465,9 @@ angular.module('rescour.utility', [])
                         element.css({'height': calcElementHeight(element)});
                     }, 300));
 
-                    element.css({'height': calcElementHeight(element)});
+                    $timeout(function () {
+                        element.css({'height': calcElementHeight(element)});
+                    }, 0);
                 }
             };
         }])
