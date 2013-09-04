@@ -360,4 +360,3 @@ angular.module('roomba.app')
             }
         };
     });
-
