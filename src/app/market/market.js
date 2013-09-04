@@ -156,10 +156,23 @@ angular.module('roomba.app')
             };
 
             $scope.publishSelected = function () {
-                console.log(_.filter($scope.items, function (val) {
-                    return val.isSelected;
-                }));
+                for (var i = $scope.items.length - 1; i >= 0; i--) {
+                    var _item = $scope.items[i];
+                    if (_item.isSelected) {
+                        _item.$publish();
+                    }
+                }
             };
+
+            $scope.saveSelected = function () {
+                for (var i = $scope.items.length - 1; i >= 0; i--) {
+                    var _item = $scope.items[i];
+                    if (_item.isSelected) {
+                        _item.$save();
+                        console.log(_item);
+                    }
+                }
+            }
         }])
     .controller('MarketListCtrl', ['$scope', '$location',
         function ($scope, $location) {

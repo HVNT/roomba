@@ -130,6 +130,8 @@ header {
 }
 
 .roomba-wrap {
+  -webkit-backface-visibility: hidden;
+
   & > .row {
     margin: 0;
   }
@@ -146,7 +148,7 @@ header {
 
 $marketListBg: #333;
 .market-list {
-  background: lighten($marketListBg, 20%);
+  background: lighten($marketListBg, 25%);
   color: white;
   .listing-list-item {
     cursor: pointer;

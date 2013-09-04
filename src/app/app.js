@@ -454,6 +454,7 @@ angular.module('roomba.app',
                     path += "/?limit=5000";
 
                     $http.get(path, config).then(function (response) {
+                        console.log(path);
                         defer.resolve(response);
                     }, function (response) {
                         defer.reject(response);
@@ -573,6 +574,50 @@ angular.module('roomba.app',
                 };
 
                 Item.prototype.$save = function () {
+                    console.log(this);
+                    if (!_.contains(this.tags, 'published')) {
+                        this.tags = ['edited', 'published'];
+                    } else {
+                        this.tags = ['edited'];
+                    }
+
+                    var self = this,
+                        defer = $q.defer(),
+                        config = angular.extend({
+                            transformRequest: function (data) {
+                                self.$spinner = true;
+                                return data;
+                            }
+                        }, $_api.config),
+                        body = angular.toJson(self);
+
+                    if (self.id) {
+                        $http.put($_api.path + Item.path + self.id, body, config)
+                            .then(function (response) {
+                                self.$spinner = false;
+                                defer.resolve(response);
+                            }, function (response) {
+                                self.$spinner = false;
+                                defer.reject(response);
+                            });
+                    } else {
+                        $http.post($_api.path + Item.path, body, config)
+                            .then(function (response) {
+                                self.$spinner = false;
+                                self.id = response.data.id;
+                                defer.resolve(response);
+                            }, function (response) {
+                                self.$spinner = false;
+                                defer.reject(response);
+                            });
+                    }
+
+                    return defer.promise;
+                };
+
+                Item.prototype.$publish = function () {
+                    this.tags = ['published'];
+
                     var self = this,
                         defer = $q.defer(),
                         config = angular.extend({

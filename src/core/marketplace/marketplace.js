@@ -27,16 +27,19 @@ angular.module('rescour.marketplace', ['rescour.config'])
                 if (angular.isObject(id)) {
                     prevActive = activeItem;
                     activeItem = id;
-                } else {
+                    activeItem.isActive = true;
+                } else if (this.items[id]) {
                     prevActive = activeItem;
                     activeItem = this.items[id];
+                    activeItem.isActive = true;
+                } else {
+                    activeItem = null;
                 }
 
                 if (prevActive) {
                     prevActive.isActive = false;
                 }
 
-                activeItem.isActive = true;
                 return activeItem;
             };
 
