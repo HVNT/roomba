@@ -31,12 +31,17 @@ angular.module('roomba.app',
                         title: 'Broker',
                         weight: 10
                     },
+                    propertyStatus: {
+                        title: 'Property Status',
+                        weight: 5
+                    },
                     state: {
                         title: 'State',
+                        nested: 'address',
                         weight: 5
                     }
                 },
-                range: []
+                range: {}
             },
             fields: [
                 {
@@ -80,14 +85,14 @@ angular.module('roomba.app',
                     key: 'acres'
                 },
                 {
-                    title: 'Comps',
-                    weight: 9,
-                    key: 'comps'
-                },
-                {
                     title: 'Call For Offers',
                     weight: 9,
                     key: 'callForOffers'
+                },
+                {
+                    title: 'propertyStatus',
+                    weight: 9,
+                    key: 'propertyStatus'
                 },
                 {
                     title: 'Address',
@@ -147,10 +152,42 @@ angular.module('roomba.app',
                 {
                     title: 'Pages',
                     key: 'pages',
+                    weight: 5000,
                     fields: [
                         {
                             key: 'url',
                             title: 'URL'
+                        }
+                    ]
+                },
+                {
+                    title: 'Comps',
+                    weight: 9,
+                    key: 'comps',
+                    fields: [
+                        {
+                            key: 'link',
+                            title: 'Link'
+                        },
+                        {
+                            key: 'title',
+                            title: 'Title'
+                        },
+                        {
+                            key: 'buyer',
+                            title: 'Buyer'
+                        },
+                        {
+                            key: 'seller',
+                            title: 'Seller'
+                        },
+                        {
+                            key: 'price',
+                            title: 'Price'
+                        },
+                        {
+                            key: 'body',
+                            title: 'Body'
                         }
                     ]
                 }
@@ -189,8 +226,69 @@ angular.module('roomba.app',
             ]
         }
     })
-    .factory('Item', ['$_api', '$q', '$http',
-        function ($_api, $q, $http) {
+    .value('States', {
+        "AL": "Alabama",
+        "AK": "Alaska",
+        "AS": "American Samoa",
+        "AZ": "Arizona",
+        "AR": "Arkansas",
+        "CA": "California",
+        "CO": "Colorado",
+        "CT": "Connecticut",
+        "DE": "Delaware",
+        "DC": "District Of Columbia",
+        "FM": "Federated States Of Micronesia",
+        "FL": "Florida",
+        "GA": "Georgia",
+        "GU": "Guam",
+        "HI": "Hawaii",
+        "ID": "Idaho",
+        "IL": "Illinois",
+        "IN": "Indiana",
+        "IA": "Iowa",
+        "KS": "Kansas",
+        "KY": "Kentucky",
+        "LA": "Louisiana",
+        "ME": "Maine",
+        "MH": "Marshall Islands",
+        "MD": "Maryland",
+        "MA": "Massachusetts",
+        "MI": "Michigan",
+        "MN": "Minnesota",
+        "MS": "Mississippi",
+        "MO": "Missouri",
+        "MT": "Montana",
+        "NE": "Nebraska",
+        "NV": "Nevada",
+        "NH": "New Hampshire",
+        "NJ": "New Jersey",
+        "NM": "New Mexico",
+        "NY": "New York",
+        "NC": "North Carolina",
+        "ND": "North Dakota",
+        "MP": "Northern Mariana Islands",
+        "OH": "Ohio",
+        "OK": "Oklahoma",
+        "OR": "Oregon",
+        "PW": "Palau",
+        "PA": "Pennsylvania",
+        "PR": "Puerto Rico",
+        "RI": "Rhode Island",
+        "SC": "South Carolina",
+        "SD": "South Dakota",
+        "TN": "Tennessee",
+        "TX": "Texas",
+        "UT": "Utah",
+        "VT": "Vermont",
+        "VI": "Virgin Islands",
+        "VA": "Virginia",
+        "WA": "Washington",
+        "WV": "West Virginia",
+        "WI": "Wisconsin",
+        "WY": "Wyoming"
+    })
+    .factory('Item', ['$_api', '$q', '$http', 'States',
+        function ($_api, $q, $http, States) {
 
             function ItemFactory(collection) {
 
@@ -208,6 +306,8 @@ angular.module('roomba.app',
                     } else {
                         this.title = this.edited.title;
                     }
+
+                    self.checkStateAbbreviation();
 
                     if (collection) {
                         angular.forEach(collection.fields, function (fieldConfig) {
@@ -267,7 +367,24 @@ angular.module('roomba.app',
 
                         angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
                             // Initialize on root level for dimensional filtering
-                            self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
+                            if (!attr.nested) {
+                                if (self.raw.hasOwnProperty(attrID)) {
+                                    self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
+                                } else {
+                                    throw new Error (attrID + " is not defined in $collection");
+                                }
+                            } else {
+                                if (self.raw.hasOwnProperty(attr.nested)) {
+                                    if (self.raw[attr.nested].hasOwnProperty(attrID)) {
+                                        self[attrID] = self.edited[attr.nested][attrID] || (self.raw[attr.nested][attrID].value || (attr.placeholder || ""));
+                                    } else {
+                                        throw new Error (attr.nested + " has no property " + attrID);
+                                    }
+                                } else {
+                                    throw new Error (attr.nested + " is not defined in $collection");
+                                }
+                            }
+
                         });
 
                         angular.forEach(collection.dimensions.range, function (attr, attrID) {
@@ -449,13 +566,104 @@ angular.module('roomba.app',
                     return defer.promise;
                 };
 
+                Item.prototype.calcFillPercent = function () {
+                    var self = this,
+                        _edited = self.edited,
+                        _raw = self.raw,
+                        hasEdited = false,
+                        fieldCounter = {
+                            total: 0,
+                            filled: 0
+                        };
+
+                    // Check edited first
+                    angular.forEach(_edited, function (editedField) {
+                        if (angular.isArray(editedField)) {
+                            angular.forEach(editedField, function (editedModel) {
+                                angular.forEach(editedModel, function (editedModelField) {
+                                    if (editedModelField) {
+                                        hasEdited = true;
+                                        fieldCounter.filled++;
+                                    }
+                                    fieldCounter.total++;
+                                });
+                            });
+                        } else if (angular.isObject(editedField)) {
+                            // Address field or embedded object
+                            angular.forEach(editedField, function (editedSubField) {
+                                if (editedSubField) {
+                                    hasEdited = true;
+                                    fieldCounter.filled++;
+                                }
+                                fieldCounter.total++;
+                            });
+                        } else {
+                            if (editedField) {
+                                hasEdited = true;
+                                fieldCounter.filled++;
+                            }
+                            fieldCounter.total++;
+                        }
+                    });
+
+                    // If no edited calculate based off raw data
+                    if (!hasEdited) {
+                        fieldCounter.total = 0;
+                        fieldCounter.filled = 0;
+
+                        angular.forEach(_raw, function (rawField, key) {
+                            if (rawField.hasOwnProperty('value') && rawField.hasOwnProperty('status')) {
+                                if (rawField.value) {
+                                    fieldCounter.filled++;
+                                }
+                                fieldCounter.total++;
+                            } else if (angular.isArray(rawField)) {
+                                angular.forEach(rawField, function (rawModel) {
+                                    angular.forEach(rawModel, function (rawModelField, key) {
+                                        if (rawModelField.value) {
+                                            fieldCounter.filled++;
+                                        }
+                                        fieldCounter.total++;
+                                    });
+                                });
+                            } else if (angular.isObject(rawField)) {
+                                angular.forEach(rawField, function (rawSubField, key) {
+                                    if (rawSubField.value) {
+                                        fieldCounter.filled++;
+                                    }
+                                    fieldCounter.total++;
+                                });
+                            } else {
+                                throw new Error("Raw field is not in recognized format");
+                            }
+                        });
+                    } else {
+                        self.progressClass = "progress-bar-success";
+
+                    }
+
+                    return parseInt((fieldCounter.filled / fieldCounter.total) * 100, 10) + "%";
+                };
+
+                Item.prototype.checkStateAbbreviation = function () {
+                    if (this.raw.address.state.value) {
+                        var state = (this.raw.address.state.value).replace(/\s+/g, '').toUpperCase();
+
+                            console.log(States[state], state);
+                        if (States.hasOwnProperty(state)) {
+                            this.raw.address.state.value = States[state];
+                        }
+                    }
+
+                    return this.raw.address.state.value;
+                };
+
                 return Item;
             }
 
             return ItemFactory;
         }])
-    .
-    config(['$routeProvider', '$locationProvider', '$httpProvider',
+    .config(['$routeProvider', '$locationProvider', '$httpProvider',
         function ($routeProvider, $locationProvider, $httpProvider) {
             $httpProvider.defaults.useXDomain = true;
             $httpProvider.defaults.withCredentials = true;

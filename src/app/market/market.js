@@ -72,11 +72,12 @@ angular.module('roomba.app')
             $scope.searchBy = {
                 $: ""
             };
+
             $scope.activeSearch = {title: 'Any', key: '$'};
             $scope.tags = {
                 raw: false,
                 published: false,
-                staged: false,
+                edited: false,
                 all: false
             };
             $scope.marketView = {
@@ -153,7 +154,13 @@ angular.module('roomba.app')
                 $scope.activeSearch = {};
                 $scope.activeSearch = field ? field : {title: 'Any', key: '$'};
                 $scope.searchBy[$scope.activeSearch.key] = "";
-            }
+            };
+
+            $scope.publishSelected = function () {
+                console.log(_.filter($scope.items, function (val) {
+                    return val.isSelected;
+                }));
+            };
         }])
     .controller('MarketListCtrl', ['$scope', '$location',
         function ($scope, $location) {
@@ -177,13 +184,9 @@ angular.module('roomba.app')
         }])
     .controller('MarketFilterCtrl', ['$scope', 'Market', '$routeParams', '$location',
         function ($scope, Market, $routeParams, $location) {
-
-
-
             $scope.toggleDiscreet = function (discreet, value) {
                 Market.apply(discreet, value);
             };
-
         }])
     .controller('DetailsCtrl', ['$scope', '$routeParams',
         function ($scope, $routeParams) {
