@@ -162,10 +162,19 @@
                                ng-hide="activeItem.raw[field.key].showRaw"
                                ng-model="activeItem.edited[field.key]"/>
 
+                        <input ng-switch-when="typeahead"
+                               type="text" class="form-control"
+                               ng-hide="activeItem.raw[field.key].showRaw"
+                               typeahead-editable="true"
+                               typeahead="option for option in field.typeahead | filter:$viewValue"
+                               ng-model="activeItem.edited[field.key]"/>
+
                         <input ng-switch-when="date"
                                type="text" class="form-control"
                                ng-hide="activeItem.raw[field.key].showRaw"
                                ng-model="activeItem.edited[field.key]" ui-date/>
+
+
 
                         <textarea cols="30" rows="10" ng-switch-when="textarea"
                                   class="form-control"
@@ -313,6 +322,13 @@
                         <input ng-switch-when="date" ui-date
                                focus-first-on="ModelAdded" type="text" ng-model="newModel[modelFieldConfig.key]"
                                placeholder="{{modelFieldConfig.title}}"
+                               ui-keypress="{'enter': 'addModel(activeItem, modelConfig.key, newModel)'}"/>
+
+                        <input ng-switch-when="typeahead"
+                               focus-first-on="ModelAdded" type="text" ng-model="newModel[modelFieldConfig.key]"
+                               placeholder="{{modelFieldConfig.title}}"
+                               typeahead-editable="true"
+                               typeahead="option for option in modelFieldConfig.typeahead | filter:$viewValue"
                                ui-keypress="{'enter': 'addModel(activeItem, modelConfig.key, newModel)'}"/>
                     </th>
                 </tr>

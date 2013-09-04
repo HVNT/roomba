@@ -193,6 +193,10 @@ header {
     textarea {
       @include flat-input(12px, 14px, 15px);
     }
+
+    .typeahead.dropdown-menu {
+      left: 15px !important;
+    }
   }
 
   input {
@@ -218,10 +222,16 @@ header {
   }
 }
 
+
 .group-editor {
+
+
   &.model-editor {
     h4 {
       @include header-button($blue);
+    }
+    .dropdown {
+      position: absolute;
     }
   }
 
@@ -307,10 +317,6 @@ header {
     &:hover {
       background: rgba(0, 0, 0, 0.1);
     }
-  }
-
-  img {
-
   }
 }
 

@@ -62,7 +62,6 @@ angular.module('roomba.app')
     .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model',
         function ($scope, Market, $routeParams, $location, Model) {
             $scope.items = Market.getItems();
-            console.log($scope.items.length);
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
             $scope.activeItemResources = {};
@@ -233,7 +232,6 @@ angular.module('roomba.app')
             };
 
             $scope.copyFromRaw = function (item, fieldKey) {
-                console.log("sup");
                 item.edited[fieldKey] = item.raw[fieldKey].value;
                 item.raw[fieldKey].copied = true;
             };
@@ -271,7 +269,6 @@ angular.module('roomba.app')
             };
 
             $scope.removeResource = function (resourceKey, itemResource) {
-                console.log(itemResource, $scope.activeItemResources[resourceKey]);
                 // Remove id from resource
                 $scope.activeItem.resources[resourceKey] = _.reject($scope.activeItem.resources[resourceKey], function (val) {
                     return val === itemResource.id;

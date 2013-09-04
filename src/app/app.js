@@ -95,7 +95,9 @@ angular.module('roomba.app',
                 {
                     title: 'Property Status',
                     weight: 9,
-                    key: 'propertyStatus'
+                    key: 'propertyStatus',
+                    type: 'typeahead',
+                    typeahead: ['Marketing', 'Under Contract']
                 },
                 {
                     title: 'Address',
@@ -133,7 +135,13 @@ angular.module('roomba.app',
                     fields: [
                         {
                             key: 'type',
-                            title: 'Type'
+                            title: 'Type',
+                            type: 'typeahead',
+                            typeahead: [
+                                '1 BR / 1 BA', '1 BR / 1.5 BA', '2 BR / 1 BA', '2 BR / 1.5 BA', '2 BR / 2 BA', '3 BR / 2 BA', '3 BR / 2.5 BA', '3 BR / 3 BA', '4 BR / 2 BA', '4 BR / 2.5 BA', '4 BR / 3 BA',
+                                '1 BR / 1 BA S', '1 BR / 1.5 BA S', '2 BR / 1 BA S', '2 BR / 1.5 BA S', '2 BR / 2 BA S', '3 BR / 2 BA S', '3 BR / 2.5 BA S', '3 BR / 3 BA S', '4 BR / 2 BA S', '4 BR / 2.5 BA S', '4 BR / 3 BA S',
+                                'AVERAGE', 'Studio'
+                            ]
                         },
                         {
                             key: 'units',
