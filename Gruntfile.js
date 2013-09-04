@@ -7,7 +7,7 @@
  */
 
 'use strict';
-var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
+//var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
 var path = require('path');
 var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
@@ -34,47 +34,61 @@ module.exports = function (grunt) {
         watch: {
             compass: {
                 files: ['<%= yeoman.app %>/styles/{,**/}*.{scss,sass}'],
-                tasks: ['compass']
+                tasks: ['compass'],
+                options: {
+                    livereload: true
+                }
             },
-            livereload: {
+//            livereload: {
+//                files: [
+//                    '<%= yeoman.app %>/{,**/}*.html',
+//                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/styles/{,*/}*.css',
+//                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/app/{,**/}*.js',
+//                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+//                ],
+//                tasks: ['livereload']
+//            },
+            all: {
                 files: [
                     '<%= yeoman.app %>/{,**/}*.html',
                     '{<%= yeoman.stage %>,<%= yeoman.app %>}/styles/{,*/}*.css',
                     '{<%= yeoman.stage %>,<%= yeoman.app %>}/app/{,**/}*.js',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
-                tasks: ['livereload']
-            }
-        },
-        connect: {
-            options: {
-                port: 9000,
-                // Change this to '0.0.0.0' to access the server from outside.
-                hostname: 'localhost'
-            },
-            livereload: {
                 options: {
-                    middleware: function (connect) {
-                        return [
-                            lrSnippet,
-                            mountFolder(connect, yeomanConfig.stage)
-                        ];
-                    }
-                }
-            },
-            test: {
-                options: {
-                    middleware: function (connect) {
-                        return [
-                            mountFolder(connect, yeomanConfig.stage)
-                        ];
-                    }
+                    livereload: true
                 }
             }
         },
+//        connect: {
+//            options: {
+//                port: 9000,
+//                // Change this to '0.0.0.0' to access the server from outside.
+//                hostname: 'localhost'
+//            },
+//            livereload: {
+//                options: {
+//                    middleware: function (connect) {
+//                        return [
+//                            lrSnippet,
+//                            mountFolder(connect, yeomanConfig.stage)
+//                        ];
+//                    }
+//                }
+//            },
+//            test: {
+//                options: {
+//                    middleware: function (connect) {
+//                        return [
+//                            mountFolder(connect, yeomanConfig.stage)
+//                        ];
+//                    }
+//                }
+//            }
+//        },
         open: {
             server: {
-                url: 'http://localhost:<%= connect.options.port %>'
+                url: 'http://localhost:<%= express.livereload.options.port %>'
             }
         },
         clean: {
@@ -393,60 +407,60 @@ module.exports = function (grunt) {
          RequireJS is still used for the 'dev' build.
          The main file is used only to establish the proper loading sequence.
          */
-        requirejs: {
-            dev: {
-                options: {
-                    baseUrl: './tmp/',
-                    findNestedDependencies: true,
-                    logLevel: 0,
-                    mainConfigFile: './tmp/main.js',
-                    name: 'main',
-                    // Exclude main from the final output to avoid the dependency on RequireJS at runtime.
-                    onBuildWrite: function (moduleName, path, contents) {
-                        var modulesToExclude = ['main'],
-                            shouldExcludeModule = modulesToExclude.indexOf(moduleName) >= 0;
-
-                        if (shouldExcludeModule) {
-                            return '';
-                        }
-
-                        return contents;
-                    },
-                    out: './tmp/scripts/scripts.dev.js',
-                    preserveLicenseComments: false,
-                    skipModuleInsertion: true,
-                    optimize: 'none'
-                }
-            },
-            prod: {
-                options: {
-                    baseUrl: './tmp/',
-                    findNestedDependencies: true,
-                    logLevel: 0,
-                    mainConfigFile: './tmp/main.js',
-                    name: 'main',
-                    // Exclude main from the final output to avoid the dependency on RequireJS at runtime.
-                    onBuildWrite: function (moduleName, path, contents) {
-                        var modulesToExclude = ['main'],
-                            shouldExcludeModule = modulesToExclude.indexOf(moduleName) >= 0;
-
-                        if (shouldExcludeModule) {
-                            return '';
-                        }
-
-                        return contents;
-                    },
-                    optimize: 'uglify',
-                    out: './tmp/scripts/scripts.min.js',
-                    preserveLicenseComments: false,
-                    skipModuleInsertion: true,
-                    uglify: {
-                        // Let uglifier replace variables to further reduce file size.
-                        no_mangle: true
-                    }
-                }
-            }
-        },
+//        requirejs: {
+//            dev: {
+//                options: {
+//                    baseUrl: './tmp/',
+//                    findNestedDependencies: true,
+//                    logLevel: 0,
+//                    mainConfigFile: './tmp/main.js',
+//                    name: 'main',
+//                    // Exclude main from the final output to avoid the dependency on RequireJS at runtime.
+//                    onBuildWrite: function (moduleName, path, contents) {
+//                        var modulesToExclude = ['main'],
+//                            shouldExcludeModule = modulesToExclude.indexOf(moduleName) >= 0;
+//
+//                        if (shouldExcludeModule) {
+//                            return '';
+//                        }
+//
+//                        return contents;
+//                    },
+//                    out: './tmp/scripts/scripts.dev.js',
+//                    preserveLicenseComments: false,
+//                    skipModuleInsertion: true,
+//                    optimize: 'none'
+//                }
+//            },
+//            prod: {
+//                options: {
+//                    baseUrl: './tmp/',
+//                    findNestedDependencies: true,
+//                    logLevel: 0,
+//                    mainConfigFile: './tmp/main.js',
+//                    name: 'main',
+//                    // Exclude main from the final output to avoid the dependency on RequireJS at runtime.
+//                    onBuildWrite: function (moduleName, path, contents) {
+//                        var modulesToExclude = ['main'],
+//                            shouldExcludeModule = modulesToExclude.indexOf(moduleName) >= 0;
+//
+//                        if (shouldExcludeModule) {
+//                            return '';
+//                        }
+//
+//                        return contents;
+//                    },
+//                    optimize: 'uglify',
+//                    out: './tmp/scripts/scripts.min.js',
+//                    preserveLicenseComments: false,
+//                    skipModuleInsertion: true,
+//                    uglify: {
+//                        // Let uglifier replace variables to further reduce file size.
+//                        no_mangle: true
+//                    }
+//                }
+//            }
+//        },
 
         /*
          Compile template files (.template) to HTML (.html).
@@ -499,67 +513,67 @@ module.exports = function (grunt) {
                     '.tmp/index.html': './src/index.html.template'
                 },
                 environment: 'prod'
-            },
-            shimDev: {
-                files: {
-                    './tmp/main.js': './src/main.js.template'
-                },
-                environment: 'dev'
-            },
-            shimLocalDev: {
-                files: {
-                    './tmp/main.js': './src/main.js.template'
-                },
-                environment: 'localDev'
-            },
-            shimDemo: {
-                files: {
-                    './tmp/main.js': './src/main.js.template'
-                },
-                environment: 'demo'
-            },
-            shimProd: {
-                files: {
-                    './tmp/main.js': './src/main.js.template'
-                },
-                environment: 'prod'
-            },
-            shimLocal: {
-                files: {
-                    './tmp/main.js': './src/main.js.template'
-                },
-                environment: 'local'
-            },
-            indexLocal: {
-                files: {
-                    './tmp/index.html': './src/index.html.template'
-                },
-                environment: 'local'
-            },
-            indexLocalDev: {
-                files: {
-                    './tmp/index.html': './src/index.html.template'
-                },
-                environment: 'localDev'
-            },
-            indexDev: {
-                files: {
-                    './tmp/index.html': './src/index.html.template'
-                },
-                environment: 'dev'
-            },
-            indexProd: {
-                files: {
-                    './tmp/index.html': './src/index.html.template'
-                },
-                environment: 'prod'
-            },
-            indexDemo: {
-                files: {
-                    './tmp/index.html': './src/index.html.template'
-                },
-                environment: 'demo'
             }
+//            shimDev: {
+//                files: {
+//                    './tmp/main.js': './src/main.js.template'
+//                },
+//                environment: 'dev'
+//            },
+//            shimLocalDev: {
+//                files: {
+//                    './tmp/main.js': './src/main.js.template'
+//                },
+//                environment: 'localDev'
+//            },
+//            shimDemo: {
+//                files: {
+//                    './tmp/main.js': './src/main.js.template'
+//                },
+//                environment: 'demo'
+//            },
+//            shimProd: {
+//                files: {
+//                    './tmp/main.js': './src/main.js.template'
+//                },
+//                environment: 'prod'
+//            },
+//            shimLocal: {
+//                files: {
+//                    './tmp/main.js': './src/main.js.template'
+//                },
+//                environment: 'local'
+//            },
+//            indexLocal: {
+//                files: {
+//                    './tmp/index.html': './src/index.html.template'
+//                },
+//                environment: 'local'
+//            },
+//            indexLocalDev: {
+//                files: {
+//                    './tmp/index.html': './src/index.html.template'
+//                },
+//                environment: 'localDev'
+//            },
+//            indexDev: {
+//                files: {
+//                    './tmp/index.html': './src/index.html.template'
+//                },
+//                environment: 'dev'
+//            },
+//            indexProd: {
+//                files: {
+//                    './tmp/index.html': './src/index.html.template'
+//                },
+//                environment: 'prod'
+//            },
+//            indexDemo: {
+//                files: {
+//                    './tmp/index.html': './src/index.html.template'
+//                },
+//                environment: 'demo'
+//            }
         },
         rev: {
             demo: {
@@ -597,10 +611,14 @@ module.exports = function (grunt) {
             livereload: {
                 options: {
                     port: 9000,
+                    hostname: '0.0.0.0',
+//                    bases: ['/.tmp'],
                     bases: path.resolve('/.tmp'),
                     debug: true,
                     monitor: {},
-                    server: path.resolve('./server')
+//                    server: ['./server'],
+                    server: path.resolve('./server'),
+                    livereload: true
                 }
             }
         },
@@ -852,7 +870,7 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.renameTask('regarde', 'watch');
+//    grunt.renameTask('regarde', 'watch');
 
     grunt.registerTask('test', [
         'clean:local',
@@ -872,7 +890,7 @@ module.exports = function (grunt) {
         'copy:local',
         'template:local',
         'clean:template',
-        'livereload-start',
+//        'livereload-start',
         'express',
         'open',
         'watch'

@@ -144,4 +144,3 @@ angular.module('roomba.app')
 
             return models;
         }]);
-
