@@ -23,7 +23,8 @@ $white:                 #fff !default;
 $blue:                  #049cdb !default;
 $blueLight:             #00a8db !default;
 $blueDark:              #0064cd !default;
-$green:                 #57AD68 !default;
+//$green:                 #57AD68 !default;
+$green:                 #8CB56B !default;
 $red:                   #9c3022 !default;
 $yellow:                #ffc40d !default;
 $orange:                #f66930 !default;
@@ -45,8 +46,8 @@ $linkColorHover:        darken($linkColor, 15%) !default;
 
 // Typography
 // -------------------------
-$sansFontFamily:        "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$serifFontFamily:       Georgia, "Times New Roman", Times, serif !default;
+$sansFontFamily:        "museo-sans", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$serifFontFamily:       "museo", Georgia, "Times New Roman", Times, serif !default;
 $monoFontFamily:        Monaco, Menlo, Consolas, "Courier New", monospace !default;
 
 $baseFontSize:          14px !default;
@@ -54,7 +55,7 @@ $baseFontFamily:        $sansFontFamily !default;
 $baseLineHeight:        20px !default;
 $altFontFamily:         $serifFontFamily !default;
 
-$headingsFontFamily:    "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif !default; // empty to use BS default, $baseFontFamily
+$headingsFontFamily:    "museo-sans", "Helvetica Neue", Helvetica, Arial, sans-serif !default; // empty to use BS default, $baseFontFamily
 $headingsFontWeight:    bold !default;    // instead of browser default, bold
 $headingsColor:         inherit !default; // empty to use BS default, $textColor
 

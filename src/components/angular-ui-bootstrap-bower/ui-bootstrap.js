@@ -1666,7 +1666,7 @@ angular.module('ui.bootstrap.typeahead', [])
         select:'&'
       },
       replace:true,
-      templateUrl:'template/typeahead/typeahead.html',
+      templateUrl:'/template/typeahead/typeahead.html',
       link:function (scope, element, attrs) {
 
         scope.isOpen = function () {

@@ -1,0 +1,224 @@
+
+%input-edit {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 0 !important;
+  border: none;
+  background: $grayLight;
+  font-size: 12px;
+  font-weight: bold;
+  color: $white;
+  padding-left: 15px;
+  padding-right: 40px;
+  //height: 40px;
+  @include box-shadow(none !important);
+  @include box-sizing(border-box !important);
+  z-index: 1;
+
+  &:focus {
+    background: $white !important;
+    font-weight: normal;
+  }
+
+  &:hover:not(:focus) {
+    background: lighten($grayLight, 10%);
+  }
+}
+
+@mixin flat-input($fontSize: 12px, $lineHeight: 14px, $inputOffset: $lineHeight*2) {
+  display: inline-block;
+  margin-bottom: 0 !important;
+  border: none;
+  background: $grayLight;
+  font-size: $fontSize;
+  font-weight: bold;
+  line-height: $lineHeight;
+  color: $white;
+  padding: $lineHeight $inputOffset;
+  z-index: 1;
+  width: 100%;
+  @include box-shadow(none !important);
+  @include box-sizing(border-box !important);
+  @include border-radius(4px);
+
+  &:focus {
+    background: $white !important;
+    font-weight: normal;
+    & ~ i {
+      color: $grayLight;
+    }
+  }
+
+  &:hover:not(:focus) {
+    background: lighten($grayLight, 10%);
+  }
+}
+
+@mixin input-dropdown () {
+  & > .input-dropdown-btn {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    @include border-radius(3px);
+    color: $white;
+    z-index: 3;
+
+    &, i {
+      cursor: pointer;
+    }
+
+    &:hover {
+      @include gradient-vertical($grayLighter, $grayLighter);
+
+      & > i {
+        color: $grayLight;
+      }
+    }
+
+    &:active {
+      @include box-shadow(inset 0px 1px 2px rgba(0, 0, 0, 0.2));
+      @include gradient-vertical(darken($grayLighter, 5%), darken($grayLighter, 5%));
+    }
+  }
+
+  &.open > .input-dropdown-menu {
+    display: block;
+  }
+
+  & > .input-dropdown-menu {
+    position: absolute;
+    display: block;
+    top: 100%;
+    background: $white;
+    width: 100%;
+    z-index: $zindexDropdown;
+    @include border-radius(2px);
+    @include box-shadows(0 0 2px rgba(0, 0, 0, 0.3), 0 3px 5px rgba(0, 0, 0, 0.2));
+    padding: 10px 0;
+    right: 0;
+    display: none;
+
+    .divider {
+      @include nav-divider($white, $grayLighter);
+    }
+
+    li {
+      padding: 5px 15px;
+      word-wrap: break-word;
+
+      a {
+        text-decoration: none;
+        color: $black;
+      }
+
+      i {
+        color: $gray;
+        font-size: 12px;
+        margin-right: 10px;
+
+      }
+
+      &.active {
+        background: $blue;
+
+        i {
+          font-weight: bold;
+          color: $white;
+        }
+        a {
+          font-weight: bold;
+          color: $white;
+        }
+      }
+
+      &:hover {
+        background: $blue;
+        cursor: pointer;
+
+        a, i {
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+@mixin placeholder-style ($fontColor: $grayDark, $fontWeight: normal, $fontStyle: normal, $extraPadding: 0) {
+
+  &::-webkit-input-placeholder {
+    color: $fontColor;
+    font-style: $fontStyle;
+    font-weight: $fontWeight;
+    padding: $extraPadding;
+  }
+
+  &:-moz-placeholder {
+    /* Firefox 18- */
+    font-style: $fontStyle;
+    color: $fontColor;
+    font-weight: $fontWeight;
+    padding: $extraPadding;
+  }
+
+  &::-moz-placeholder {
+    /* Firefox 19+ */
+    color: $fontColor;
+    font-style: $fontStyle;
+    font-weight: $fontWeight;
+    padding: $extraPadding;
+  }
+
+  &:-ms-input-placeholder {
+    color: $fontColor;
+    font-style: $fontStyle;
+    font-weight: $fontWeight;
+    padding: $extraPadding;
+  }
+}
+
+.loading-background {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  background: $grayLighter;
+  z-index: 5;
+}
+
+.loading-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 200px;
+  margin-left: -200px;
+  margin-top: -100px;
+  text-align: center;
+
+  h4 {
+    text-transform: uppercase;
+    font-weight: normal;
+    font-size: 24px;
+    color: $gray;
+  }
+
+  p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: lighten($gray, 10%);
+  }
+
+  .loading-icon {
+    text-shadow: #666 0 -1px 0;
+    color: $gray;
+  }
+
+  .failure-icon {
+    text-shadow: darken($red, 25%) 0 -1px 0;
+    color: $red;
+    margin-bottom: 1em;
+  }
+}

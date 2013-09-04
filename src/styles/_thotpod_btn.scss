@@ -1,6 +1,7 @@
 $btnBorderRadius: 5px;
 
 @mixin gloss($glossBr: $btnBorderRadius) {
+  //@include box-shadow(inset 0 1px 3px rgba(255, 255, 255, 0.3));
   &::after {
     content: "";
     width: 100%;
@@ -13,6 +14,13 @@ $btnBorderRadius: 5px;
     @include border-radius($glossBr);
     @include transition(opacity 0.1s ease);
   }
+
+  &:active {
+    &::after {
+      opacity: 0.3;
+      @include transition(all 0.1s ease);
+    }
+  }
 }
 
 @mixin tpBtnBg($color, $fontColor: $white) {
@@ -20,37 +28,22 @@ $btnBorderRadius: 5px;
   background: $color;
   border: 1px solid $color;
   text-shadow: 0 -1px 1px darken($color, 25%);
-  @include gloss();
-  @include box-shadow(#{0px 2px 1px darken($color,10%), inset 0 1px 3px rgba(255, 255, 255, 0.3)});
+  @include box-shadow(#{0px 3px 0px darken($color,15%), inset 0 1px 3px rgba(255, 255, 255, 0.3)});
+  @include transition(all 0.05s ease);
 
   &:hover:not(:active) {
     background: lighten($color, 5%);
     color: $fontColor;
+    @include transition(all 0.1s ease);
   }
 
   &:active {
     color: $fontColor;
     background: $color;
-    @include box-shadow(#{0px 1px 1px darken($color,10%), inset 0 2px 4px rgba(0,0,0,0.3)});
-
-    &::after {
-      opacity: 0.3;
-      @include transition(opacity 0.1s ease);
-    }
-  }
-}
-
-@mixin tpBtnAnimation($color) {
-  &:hover {
-    color: white;
-    text-decoration: none;
-    border-color: $color !important;
-    @include transition(all 0.1s ease);
-  }
-
-  &:active {
-    @include translate3d(0, 1px, 0);
-    @include transition(all 0.1s ease);
+    border: 1px solid transparent;
+    @include box-shadow(#{0px 1px 0px darken($color,15%), inset 0 1px 1px transparent});
+    @include translate(0, 2px);
+    @include transition(all 0.05s ease);
   }
 }
 
@@ -65,14 +58,7 @@ $btnBorderRadius: 5px;
   cursor: pointer;
   @include border-radius($btnBorderRadius);
   @include box-sizing(border-box);
-  @include transition(all 0.1s);
   @include tpBtnBg($color);
-  @include tpBtnAnimation($color);
-
-  i {
-    font-size: $baseFontSize - 2px;
-    padding-left: $baseFontSize;
-  }
 }
 
 
@@ -91,32 +77,30 @@ $btnBorderRadius: 5px;
 
   &.btn-primary {
     @include tpBtnBg($btnPrimaryBackground);
-    @include tpBtnAnimation($btnPrimaryBackground);
   }
 
   &.btn-warning {
     @include tpBtnBg($btnWarningBackground);
-    @include tpBtnAnimation($btnWarningBackground);
   }
   // Danger and error appear as red
   &.btn-danger {
     @include tpBtnBg($btnDangerBackground);
-    @include tpBtnAnimation($btnDangerBackground);
   }
   // Success appears as green
   &.btn-success {
     @include tpBtnBg($btnSuccessBackground);
-    @include tpBtnAnimation($btnSuccessBackground);
   }
   // Info appears as a neutral blue
   &.btn-info {
     @include tpBtnBg($btnInfoBackground);
-    @include tpBtnAnimation($btnInfoBackground);
   }
   // Inverse appears as dark gray
   &.btn-inverse {
     @include tpBtnBg($grayLight);
-    @include tpBtnAnimation($grayLight);
+  }
+
+  &.btn-glossy {
+    @include gloss();
   }
 
   .caret {

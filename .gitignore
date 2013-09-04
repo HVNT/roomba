@@ -8,3 +8,4 @@ app/components
 .editorconfig
 .gitattributes
 libpeerconnection.log
+dist

@@ -3,79 +3,48 @@
 @import "compass_twitter_bootstrap/mixins";
 @import "compass_twitter_bootstrap/variables";
 //@import "compass_twitter_bootstrap/scaffolding";
-@import "rescour_variables";
+//@import "rescour_variables";
 //@import "header";
-@import "footer";
+//@import "footer";
 @import "ngform";
 @import "ribbon_nav";
 @import "thotpod_btn";
-//@import "login/desktop/styles/login";
+@import "login";
+@import "input";
 
 $bgColor: $grayLighter;
 
-%input-edit {
+@mixin icon-invert($iconColor) {
+  &:hover {
+    i {
+      color: white;
+    }
+    background: $iconColor;
+  }
+  &:active {
+    background: darken($iconColor, 10%);
+  }
+  i {
+    color: $iconColor;
+  }
+}
+
+@mixin header-button($headerColor) {
   display: inline-block;
-  width: 100%;
-  margin-bottom: 0 !important;
-  border: none;
-  background: $grayLight;
-  font-size: 12px;
-  font-weight: bold;
-  color: $white;
-  padding-left: 15px;
-  padding-right: 40px;
-  //height: 40px;
-  @include box-shadow(none !important);
-  @include box-sizing(border-box !important);
-  z-index: 1;
+  cursor: pointer;
+  padding: 10px;
+  border: 2px solid $headerColor;
+  color: $headerColor;
+  margin-top: 0;
+  @include border-radius(4px);
 
-  &:focus {
-    background: $white !important;
-  }
-
-  &:hover:not(:focus) {
-    background: lighten($grayLight, 10%);
+  &:hover {
+    cursor: pointer;
+    background: $headerColor;
+    color: $white;
   }
 }
 
-.loading-background {
-  position: absolute; left: 0px; top: 0px; bottom:0px; right: 0px; background: $light-gray; z-index: 5;
-}
-
-.loading-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  height: 200px;
-  margin-left: -200px;
-  margin-top: -100px;
-  text-align: center;
-
-  h4 {
-    text-transform: uppercase;
-    font-weight: normal;
-    font-size: 24px;
-    color: $gray;
-  }
-
-  p {
-    margin-top: 10px;
-    font-size: 14px;
-    color: lighten($gray, 10%);
-  }
-
-  .loading-icon {
-    text-shadow: #666 0 -1px 0;
-    color: $gray;
-  }
-
-  .failure-icon {
-    text-shadow: darken($red, 25%) 0 -1px 0;
-    color: $red;
-    margin-bottom: 1em;
-  }
-}
 
 .origami-left {
   position: absolute;
@@ -96,7 +65,6 @@ $bgColor: $grayLighter;
   height: 547px;
   z-index: -1;
 }
-
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none;
@@ -127,6 +95,7 @@ body {
   min-height: 100%;
   margin: 0;
   background-color: $bgColor;
+  font-family: 'Open Sans' !important;
 }
 
 header {
@@ -140,17 +109,54 @@ header {
   }
 }
 
+.header-search {
+  display: inline-block;
+  position: relative;
+  padding: 6px;
+  margin-bottom: 20px;
+  @include input-dropdown();
+
+  input {
+    @include flat-input(12px, 10px, 30px);
+    @include placeholder-style($white, 400, normal, 3px);
+
+    & + i {
+      color: white;
+      position: absolute;
+      top: 17px;
+      left: 15px;
+    }
+  }
+}
+
 .roomba-wrap {
+  -webkit-backface-visibility: hidden;
+
   & > .row {
     margin: 0;
   }
+  .header-actions {
+    position: relative;
+    margin-bottom: 15px;
+    padding: 15px 25px;
+    background: $grayDark;
+  }
+}
 
+.market-filter {
+}
+
+$marketListBg: #333;
+.market-list {
+  background: lighten($marketListBg, 25%);
+  color: white;
   .listing-list-item {
     cursor: pointer;
     padding: 10px 0;
 
-    &:hover {
-      background-color: darken($bgColor, 5%);
+    &:hover,
+    &.active {
+      background-color: $marketListBg !important;
     }
 
     i {
@@ -165,7 +171,6 @@ header {
     .list-item-title {
       &:hover {
         text-decoration: underline;
-        font-weight: bold;
       }
     }
 
@@ -173,34 +178,30 @@ header {
       margin-bottom: 0;
     }
   }
-
-  .filter-actions {
-    position: relative;
-  }
-
-  $headerColor: $grayLight;
-  .header-actions {
-    position: relative;
-    @include gradient-vertical(lighten($headerColor, 2%), darken($headerColor, 2%));
-    margin-bottom: 15px;
-    padding: 15px 25px;
-    @include box-shadow(#{0 1px $white, inset 0 1px rgba(0,0,0,0.3)});
-  }
-
-  .footer-actions {
-    position: relative;
-    margin-top: 15px;
-    padding: 15px 25px;
-  }
-}
-
-.market-filter {
-}
-
-.market-list {
 }
 
 .market-details {
+  .details-header {
+    margin: 0 0 15px 15px;
+    text-align: center;
+    h4, h3 {
+      @include header-button($blue);
+    }
+  }
+
+  .fields-editor {
+    input {
+      @include placeholder-style($white, 200, italic);
+    }
+    textarea {
+      @include flat-input(12px, 14px, 15px);
+    }
+
+    .typeahead.dropdown-menu {
+      left: 15px !important;
+    }
+  }
+
   input {
     @extend %input-edit;
   }
@@ -225,3 +226,139 @@ header {
 }
 
 
+.group-editor {
+
+
+  &.model-editor {
+    h4.action {
+      @include header-button($blue);
+    }
+    .dropdown {
+      position: absolute;
+    }
+  }
+
+  .cell-view {
+    img {
+      margin: 15px;
+      display: block;
+    }
+  }
+
+  .input-preview {
+    position: absolute;
+    left: 0;
+  }
+
+  .table-icon-action {
+    cursor: pointer;
+    font-size: 16px;
+    background: transparent;
+    text-align: center;
+    vertical-align: middle;
+    width: 35px;
+
+    &.table-icon-success {
+      @include icon-invert($green);
+    }
+
+    &.table-icon-error {
+      @include icon-invert($red);
+    }
+
+    &.table-icon-info {
+      @include icon-invert($blue);
+    }
+  }
+
+  .input-overlay {
+    color: $blue;
+  }
+
+  .table-input-action {
+    font-size: 10px;
+    position: absolute;
+    right: 0;
+    padding: 5px;
+    top: 5px;
+    color: white;
+    cursor: pointer;
+    @include border-radius(4px);
+  }
+
+  table {
+    padding: 15px;
+
+    td {
+      position: relative;
+    }
+
+    .hover-display {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+
+      i {
+        color: red;
+      }
+    }
+
+    tr:hover {
+
+      & > hover-display {
+        display: block;
+      }
+    }
+  }
+
+  input {
+    background: transparent;
+    color: $black;
+    width: 90%;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+.status-btn-info {
+  @include tpBtnBg($blue);
+}
+
+.status-btn-success {
+  @include tpBtnBg($green);
+}
+
+.status-btn-error {
+  @include tpBtnBg($red);
+}
+
+.status-solid-info {
+  background: $blue;
+}
+
+.status-solid-success {
+  background: $green;
+}
+
+.status-solid-error {
+  background: $red;
+}
+
+.status-text-info {
+  color: $blue !important;
+}
+
+.status-text-success {
+  color: $green !important;
+}
+
+.status-text-error, .status-text-2 {
+  color: $red !important;
+}
+
+.bold {
+  font-weight: bold;
+}
