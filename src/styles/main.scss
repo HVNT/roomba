@@ -288,6 +288,7 @@ $marketListBg: #333;
 
   table {
     padding: 15px;
+    -webkit-backface-visibility: hidden;
 
     td {
       position: relative;

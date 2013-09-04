@@ -67,11 +67,6 @@ angular.module('roomba.app',
                     key: 'numUnits'
                 },
                 {
-                    title: 'State',
-                    weight: 9,
-                    key: 'state'
-                },
-                {
                     title: 'Flyer',
                     weight: 9,
                     key: 'flyer'
@@ -373,6 +368,8 @@ angular.module('roomba.app',
                                     _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] || (fieldConfig.placeholder || null);
                                 }
                             }
+
+                            console.log(fieldConfig);
                         });
 
                         angular.forEach(collection.models, function (modelConfig) {
