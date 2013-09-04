@@ -136,6 +136,7 @@ module.exports = function (grunt) {
                     src: [
                         'app/**/*',
                         'components/**/*',
+                        'app-config/**/*',
                         'core/**/*',
                         'img/**/*',
                         '*.html*'

@@ -91,15 +91,15 @@
 
 <% if (config.environment == 'local') { %>
     <script src="/components/angular-mocks/angular-mocks.js"></script>
-    <script src="/core/config/local.js"></script>
+    <script src="/app-config/local.js"></script>
 <% } else if (config.environment == 'localDev') { %>
-    <script src="/core/config/local-dev.js"></script>
+    <script src="/app-config/local-dev.js"></script>
 <% } else if (config.environment == 'demo') { %>
-    <script src="/core/config/local.js"></script>
+    <script src="/app-config/local.js"></script>
 <% } else if (config.environment == 'dev') { %>
-    <script src="/core/config/dev.js"></script>
+    <script src="/app-config/dev.js"></script>
 <% } else if (config.environment == 'prod') { %>
-    <script src="/core/config/prod.js"></script>
+    <script src="/app-config/prod.js"></script>
 <% } %>
 
 
@@ -109,8 +109,10 @@
 
 <% if (config.environment == 'local') { %>
     <script src="/app/mock.js"></script>
+    <script src="http://localhost:35729/livereload.js"></script>
 <% } else if (config.environment == 'localDev') { %>
     <script src="/app/bootstrap.js"></script>
+    <script src="http://localhost:35729/livereload.js"></script>
 <% } else if (config.environment == 'demo') { %>
 <% } else if (config.environment == 'dev') { %>
     <script src="/app/bootstrap.js"></script>
