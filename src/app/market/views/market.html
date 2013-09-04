@@ -101,15 +101,17 @@
     <div class="scroll-container">
         <div class="scroll-wrap" chunk="items | limitVisible | orderBy:sortBy | filter:searchBy[activeSearch.key]"
              chunk-size="100">
-            <div class="row listing-list-item" ng-repeat="item in chunk">
+            <div class="row listing-list-item" ng-class="{'active': item.isActive}"  ng-repeat="item in chunk">
                 <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox" ng-model="item.isSelected"/></div>
 
                 <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
                     {{item.title}}
+
                 </div>
                 <div class="col-lg-2 col-sm-3 col-3">
                     <div class="progress progress-striped">
-                        <div class="progress-bar {{ item.progressClass }}" ng-style="{width: item.calcFillPercent()}"></div>
+                        <div class="progress-bar {{ item.progressClass }}"
+                             ng-style="{width: item.calcFillPercent()}"></div>
                     </div>
                 </div>
             </div>
@@ -119,8 +121,16 @@
 <div class="col-lg-6 market-details" ng-controller="DetailsCtrl">
 <div class="row">
     <div class="col-lg-12 header-actions">
+        <div class="btn-group pull-left">
+            <a class="btn btn-inverse" target="_blank" ng-href="{{activeItem.raw.pages[0].url.value}}"
+
+                    ng-class="{'disabled': !activeItem}">
+                Open
+            </a>
+        </div>
         <div class="btn-group pull-right">
-            <button class="btn btn-success btn-glossy" ng-click="saveItem(activeItem)" ng-class="{'disabled': !activeItem}">
+            <button class="btn btn-success btn-glossy" ng-click="saveItem(activeItem)"
+                    ng-class="{'disabled': !activeItem}">
                 Save
             </button>
         </div>
@@ -134,10 +144,9 @@
 <div class="row">
     <div class="details-header">
         <h3 class="hint--bottom" data-hint="Copy all Raw" ng-click="copyAllRaw(activeItem, activeItemResources)">
-            {{
-            activeItem.title }}</h3>
+            {{ activeItem.title }}</h3>
     </div>
-    <form class="form-horizontal fields-editor">
+    <form class="form-horizontal fields-editor" ng-submit="saveItem(activeItem)">
         <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'">
 
             <label class="col-lg-2 control-label">
@@ -147,16 +156,29 @@
             <!--Regular fields-->
             <div class="col-lg-10" ui-if="!field.fields">
                 <div class="row">
-                    <div class="col-lg-10">
-                        <input type="text" class="form-control"
+                    <div class="col-lg-10" ng-switch="field.type">
+                        <input ng-switch-default
+                               type="text" class="form-control"
                                ng-hide="activeItem.raw[field.key].showRaw"
                                ng-model="activeItem.edited[field.key]"/>
+
+                        <input ng-switch-when="date"
+                               type="text" class="form-control"
+                               ng-hide="activeItem.raw[field.key].showRaw"
+                               ng-model="activeItem.edited[field.key]" ui-date/>
+
+                        <textarea cols="30" rows="10" ng-switch-when="textarea"
+                                  class="form-control"
+                                  ng-hide="activeItem.raw[field.key].showRaw"
+                                  ng-model="activeItem.edited[field.key]"></textarea>
+
+                        <!--Raw Data-->
                         <input type="text" class="form-control status-text-{{ activeItem.raw[field.key].status }}"
                                ng-show="activeItem.raw[field.key].showRaw"
                                ng-model="activeItem.raw[field.key].value"/>
                     </div>
 
-                    <button class="btn col-lg-1 hint--left hint--bounce"
+                    <div class="btn col-lg-1 hint--left hint--bounce"
                             ng-click="copyFromRaw(activeItem, field.key)"
                             ng-class="classRawField(activeItem.raw[field.key])"
                             ng-hide="isRawNull(activeItem.raw[field.key])"
@@ -165,7 +187,7 @@
                             data-hint="Copy">
                         <i ng-hide="activeItem.raw[field.key].copied" class="icon-inbox"></i>
                         <i ng-show="activeItem.raw[field.key].copied" class="icon-check-sign"></i>
-                    </button>
+                    </div>
                 </div>
             </div>
 
@@ -282,8 +304,14 @@
                         data-hint="Add {{ modelConfig.title }} ( &#9166; )">
                         <i class="icon-plus-sign"></i>
                     </th>
-                    <th ng-repeat="modelFieldConfig in modelConfig.fields">
-                        <input focus-first-on="ModelAdded" type="text" ng-model="newModel[modelFieldConfig.key]"
+                    <th ng-repeat="modelFieldConfig in modelConfig.fields" ng-switch="modelFieldConfig.type">
+                        <input ng-switch-default
+                               focus-first-on="ModelAdded" type="text" ng-model="newModel[modelFieldConfig.key]"
+                               placeholder="{{modelFieldConfig.title}}"
+                               ui-keypress="{'enter': 'addModel(activeItem, modelConfig.key, newModel)'}"/>
+
+                        <input ng-switch-when="date" ui-date
+                               focus-first-on="ModelAdded" type="text" ng-model="newModel[modelFieldConfig.key]"
                                placeholder="{{modelFieldConfig.title}}"
                                ui-keypress="{'enter': 'addModel(activeItem, modelConfig.key, newModel)'}"/>
                     </th>
@@ -299,8 +327,9 @@
                         ng-click="removeModel(activeItem, modelConfig.key, editedModel)">
                         <i class="icon-remove-sign"></i>
                     </td>
-                    <td ng-repeat="modelFieldConfig in modelConfig.fields">
-                        <input type="text" ng-model="editedModel[modelFieldConfig.key]"/>
+                    <td ng-repeat="modelFieldConfig in modelConfig.fields" ng-switch="modelFieldConfig.type">
+                        <input ng-switch-default type="text" ng-model="editedModel[modelFieldConfig.key]"/>
+                        <input ng-switch-when="date" ui-date type="text" ng-model="editedModel[modelFieldConfig.key]"/>
                     </td>
                 </tr>
 

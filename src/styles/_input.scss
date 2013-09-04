@@ -23,7 +23,6 @@
   &:hover:not(:focus) {
     background: lighten($grayLight, 10%);
   }
-
 }
 
 @mixin flat-input($fontSize: 12px, $lineHeight: 14px, $inputOffset: $lineHeight*2) {

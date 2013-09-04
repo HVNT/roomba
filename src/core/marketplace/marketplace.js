@@ -12,7 +12,8 @@ angular.module('rescour.marketplace', ['rescour.config'])
     .service('Market', ['Dimensions',
         function (Dimensions, $q) {
             // Private items data
-            var activeItem = null;
+            var activeItem = null,
+                prevActive = null;
 
             this.dimensions = {};
             this.items = {};
@@ -24,10 +25,18 @@ angular.module('rescour.marketplace', ['rescour.config'])
 
             this.setActive = function (id) {
                 if (angular.isObject(id)) {
+                    prevActive = activeItem;
                     activeItem = id;
                 } else {
+                    prevActive = activeItem;
                     activeItem = this.items[id];
                 }
+
+                if (prevActive) {
+                    prevActive.isActive = false;
+                }
+
+                activeItem.isActive = true;
                 return activeItem;
             };
 

@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/components/hint.css/hint.min.css">
+    <link rel="stylesheet" href="/components/jquery-ui/themes/ui-darkness/jquery-ui.css">
     <link rel="stylesheet" href="/styles/main.css?v=<%= hash('./tmp/styles/main.css') %>"/>
     <link rel="icon" type="image/png" href="/img/favicon.png">
 

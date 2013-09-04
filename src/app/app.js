@@ -47,12 +47,14 @@ angular.module('roomba.app',
                 {
                     title: 'Title',
                     weight: 5000,
-                    key: 'title'
+                    key: 'title',
+                    type: 'text'
                 },
                 {
                     title: 'Description',
                     weight: 8,
-                    key: 'description'
+                    key: 'description',
+                    type: 'textarea'
                 },
                 {
                     title: 'Broker',
@@ -87,10 +89,11 @@ angular.module('roomba.app',
                 {
                     title: 'Call For Offers',
                     weight: 9,
-                    key: 'callForOffers'
+                    key: 'callForOffers',
+                    type: 'date'
                 },
                 {
-                    title: 'propertyStatus',
+                    title: 'Property Status',
                     weight: 9,
                     key: 'propertyStatus'
                 },
@@ -126,6 +129,7 @@ angular.module('roomba.app',
                 {
                     title: 'Unit Mix',
                     key: 'unitMix',
+                    weight: 100,
                     fields: [
                         {
                             key: 'type',
@@ -157,6 +161,29 @@ angular.module('roomba.app',
                         {
                             key: 'url',
                             title: 'URL'
+                        }
+                    ]
+                },
+                {
+                    title: 'Tour Dates',
+                    key: 'tourDates',
+                    weight: 10,
+                    fields: [
+                        {
+                            key: 'date',
+                            title: 'Date',
+                            type: 'date'
+                        }
+                    ]
+                },
+                {
+                    title: 'Portfolio',
+                    key: 'portfolio',
+                    weight: 10,
+                    fields: [
+                        {
+                            key: 'title',
+                            title: 'Title'
                         }
                     ]
                 },
@@ -320,6 +347,12 @@ angular.module('roomba.app',
 
                             // Initialize edited fields based off config, falling back to placeholders
                             self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
+
+                            // Initialize dates
+                            if (fieldConfig.type === 'date') {
+                                self.edited[fieldConfig.key] = self.edited[fieldConfig.key] ? new Date(self.edited[fieldConfig.key]) : null;
+                                self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(self.raw[fieldConfig.key].value) : null;
+                            }
 
                             // Initialize raw fields based off config
                             if (fieldConfig.fields) {
@@ -637,6 +670,7 @@ angular.module('roomba.app',
                                 throw new Error("Raw field is not in recognized format");
                             }
                         });
+                        self.progressClass = "";
                     } else {
                         self.progressClass = "progress-bar-success";
 
@@ -648,8 +682,6 @@ angular.module('roomba.app',
                 Item.prototype.checkStateAbbreviation = function () {
                     if (this.raw.address.state.value) {
                         var state = (this.raw.address.state.value).replace(/\s+/g, '').toUpperCase();
-
-                            console.log(States[state], state);
                         if (States.hasOwnProperty(state)) {
                             this.raw.address.state.value = States[state];
                         }

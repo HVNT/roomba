@@ -181,6 +181,10 @@ angular.module('roomba.app')
                 $scope.sortBy = sortField;
                 $scope.sortFields[sortField] = true;
             };
+
+            $scope.noop = function () {
+                return null;
+            };
         }])
     .controller('MarketFilterCtrl', ['$scope', 'Market', '$routeParams', '$location',
         function ($scope, Market, $routeParams, $location) {
@@ -229,6 +233,7 @@ angular.module('roomba.app')
             };
 
             $scope.copyFromRaw = function (item, fieldKey) {
+                console.log("sup");
                 item.edited[fieldKey] = item.raw[fieldKey].value;
                 item.raw[fieldKey].copied = true;
             };
