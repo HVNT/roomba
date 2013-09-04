@@ -7,11 +7,8 @@
  */
 
 'use strict';
-//var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
 var path = require('path');
-var mountFolder = function (connect, dir) {
-    return connect.static(require('path').resolve(dir));
-};
+var templateEnv = '';
 
 
 module.exports = function (grunt) {
@@ -32,22 +29,14 @@ module.exports = function (grunt) {
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
+            options: {
+                livereload: true,
+                spawn: false
+            },
             compass: {
                 files: ['<%= yeoman.app %>/styles/{,**/}*.{scss,sass}'],
-                tasks: ['compass'],
-                options: {
-                    livereload: true
-                }
+                tasks: ['compass:dev']
             },
-//            livereload: {
-//                files: [
-//                    '<%= yeoman.app %>/{,**/}*.html',
-//                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/styles/{,*/}*.css',
-//                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/app/{,**/}*.js',
-//                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-//                ],
-//                tasks: ['livereload']
-//            },
             all: {
                 files: [
                     '<%= yeoman.app %>/{,**/}*.html',
@@ -55,40 +44,17 @@ module.exports = function (grunt) {
                     '{<%= yeoman.stage %>,<%= yeoman.app %>}/app/{,**/}*.js',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
-                options: {
-                    livereload: true
-                }
+                tasks: ['copy:local']
+            },
+            template: {
+                files: [
+                    '<%= yeoman.app %>/{,**/}*.template'
+                ]
             }
         },
-//        connect: {
-//            options: {
-//                port: 9000,
-//                // Change this to '0.0.0.0' to access the server from outside.
-//                hostname: 'localhost'
-//            },
-//            livereload: {
-//                options: {
-//                    middleware: function (connect) {
-//                        return [
-//                            lrSnippet,
-//                            mountFolder(connect, yeomanConfig.stage)
-//                        ];
-//                    }
-//                }
-//            },
-//            test: {
-//                options: {
-//                    middleware: function (connect) {
-//                        return [
-//                            mountFolder(connect, yeomanConfig.stage)
-//                        ];
-//                    }
-//                }
-//            }
-//        },
         open: {
             server: {
-                url: 'http://localhost:<%= express.livereload.options.port %>'
+                url: 'http://localhost:<%= express.all.options.port %>'
             }
         },
         clean: {
@@ -136,12 +102,6 @@ module.exports = function (grunt) {
                     ]
                 }]
             }
-//            dist: ['./tmp', './dist'],
-//            buildDemo: ['./tmp', './build/demo'],
-//            buildProd: ['./tmp', './build/prod'],
-//            buildDev: ['./tmp', './build/dev'],
-//            temp: './tmp',
-//            images: './dist/img'
         },
         compass: {
             options: {
@@ -166,9 +126,7 @@ module.exports = function (grunt) {
                 }
             }
         },
-        // Copies directories and files from one location to another.
         copy: {
-            // Copies libs and img directories to temp.
             local: {
                 files: [{
                     expand: true,
@@ -184,10 +142,6 @@ module.exports = function (grunt) {
                     ]
                 }]
             },
-            /*
-             Copies the contents of the temp directory to the dist directory.
-             In 'dev' individual files are used.
-             */
             dev: {
                 files: [
                     {
@@ -292,82 +246,6 @@ module.exports = function (grunt) {
                         ]
                     }
                 ]
-            },
-            /*
-             Copies select files from the temp directory to the dev directory.
-             Dev is deployed to subtree dev for remote testing
-             */
-            buildDev: {
-                files: [
-                    {expand: true, cwd: './tmp/', src: [
-                        'scripts/scripts.dev.js',
-                        'styles/main.css',
-                        'img/**',
-                        'components/**',
-                        '**/*.html'
-                    ], dest: './build/dev/'}
-                ]
-            },
-            buildDemo: {
-                files: [
-                    {expand: true, cwd: './tmp/', src: [
-                        'scripts/scripts.demo.js',
-                        'styles/main.css',
-                        'img/**',
-                        'components/**',
-                        '**/*.html'
-                    ], dest: './build/demo/'}
-                ]
-            },
-            buildProd: {
-                files: [
-                    {expand: true, cwd: './tmp/', src: [
-                        'scripts/scripts.min.js',
-                        'styles/main.css',
-                        'img/**',
-                        'components/**',
-                        '**/*.html'
-                    ], dest: './build/prod/'}
-                ]
-            },
-            // Task is run when a watched script is modified.
-            appjs: {
-                files: [
-                    {expand: true, cwd: './src/', src: ['app/**/*.js'], dest: './dist/'}
-                ]
-            },
-            apphtml: {
-                files: [
-                    {expand: true, cwd: './src/', src: ['app/**/*.html'], dest: './dist/'}
-                ]
-            },
-            core: {
-                files: [
-                    {expand: true, cwd: './src/', src: ['core/**'], dest: './dist/'}
-                ]
-            },
-            // Task is run when a watched style is modified.
-            styles: {
-                files: [
-                    {expand: true, cwd: './tmp/', src: ['styles/main.css'], dest: './dist/'}
-                ]
-            },
-            // Task is run when an image is modified.
-            images: {
-                files: [
-                    {expand: true, cwd: './src/', src: ['img/**'], dest: './dist/'}
-                ]
-            },
-            // Task is run when a template is modified.
-            template: {
-                files: [
-                    {expand: true, cwd: './src/', src: ['template/**'], dest: './dist/'}
-                ]
-            },
-            index: {
-                files: [
-                    {expand: true, cwd: './tmp/', src: ['index.html'], dest: './dist/'}
-                ]
             }
         },
         concat: {
@@ -389,78 +267,7 @@ module.exports = function (grunt) {
                 ],
                 dest: '<%= yeoman.dist %>/demo/scripts/scripts.js'
             }
-//            demo2: {
-//                src: [
-//                    './tmp/scripts/scripts.min.js',
-//                    './tmp/components/angular-mocks/angular-mocks.js',
-//                    './tmp/app/mock.js'
-//                ],
-//                dest: './tmp/scripts/scripts.demo.js'
-//            }
         },
-
-        /*
-         RequireJS optimizer configuration for both scripts and styles.
-         This configuration is only used in the 'prod' build.
-         The optimizer will scan the main file, walk the dependency tree, and write the output in dependent sequence to a single file.
-         Since RequireJS is not being used outside of the main file or for dependency resolution (this is handled by AngularJS), RequireJS is not needed for final output and is excluded.
-         RequireJS is still used for the 'dev' build.
-         The main file is used only to establish the proper loading sequence.
-         */
-//        requirejs: {
-//            dev: {
-//                options: {
-//                    baseUrl: './tmp/',
-//                    findNestedDependencies: true,
-//                    logLevel: 0,
-//                    mainConfigFile: './tmp/main.js',
-//                    name: 'main',
-//                    // Exclude main from the final output to avoid the dependency on RequireJS at runtime.
-//                    onBuildWrite: function (moduleName, path, contents) {
-//                        var modulesToExclude = ['main'],
-//                            shouldExcludeModule = modulesToExclude.indexOf(moduleName) >= 0;
-//
-//                        if (shouldExcludeModule) {
-//                            return '';
-//                        }
-//
-//                        return contents;
-//                    },
-//                    out: './tmp/scripts/scripts.dev.js',
-//                    preserveLicenseComments: false,
-//                    skipModuleInsertion: true,
-//                    optimize: 'none'
-//                }
-//            },
-//            prod: {
-//                options: {
-//                    baseUrl: './tmp/',
-//                    findNestedDependencies: true,
-//                    logLevel: 0,
-//                    mainConfigFile: './tmp/main.js',
-//                    name: 'main',
-//                    // Exclude main from the final output to avoid the dependency on RequireJS at runtime.
-//                    onBuildWrite: function (moduleName, path, contents) {
-//                        var modulesToExclude = ['main'],
-//                            shouldExcludeModule = modulesToExclude.indexOf(moduleName) >= 0;
-//
-//                        if (shouldExcludeModule) {
-//                            return '';
-//                        }
-//
-//                        return contents;
-//                    },
-//                    optimize: 'uglify',
-//                    out: './tmp/scripts/scripts.min.js',
-//                    preserveLicenseComments: false,
-//                    skipModuleInsertion: true,
-//                    uglify: {
-//                        // Let uglifier replace variables to further reduce file size.
-//                        no_mangle: true
-//                    }
-//                }
-//            }
-//        },
 
         /*
          Compile template files (.template) to HTML (.html).
@@ -514,66 +321,6 @@ module.exports = function (grunt) {
                 },
                 environment: 'prod'
             }
-//            shimDev: {
-//                files: {
-//                    './tmp/main.js': './src/main.js.template'
-//                },
-//                environment: 'dev'
-//            },
-//            shimLocalDev: {
-//                files: {
-//                    './tmp/main.js': './src/main.js.template'
-//                },
-//                environment: 'localDev'
-//            },
-//            shimDemo: {
-//                files: {
-//                    './tmp/main.js': './src/main.js.template'
-//                },
-//                environment: 'demo'
-//            },
-//            shimProd: {
-//                files: {
-//                    './tmp/main.js': './src/main.js.template'
-//                },
-//                environment: 'prod'
-//            },
-//            shimLocal: {
-//                files: {
-//                    './tmp/main.js': './src/main.js.template'
-//                },
-//                environment: 'local'
-//            },
-//            indexLocal: {
-//                files: {
-//                    './tmp/index.html': './src/index.html.template'
-//                },
-//                environment: 'local'
-//            },
-//            indexLocalDev: {
-//                files: {
-//                    './tmp/index.html': './src/index.html.template'
-//                },
-//                environment: 'localDev'
-//            },
-//            indexDev: {
-//                files: {
-//                    './tmp/index.html': './src/index.html.template'
-//                },
-//                environment: 'dev'
-//            },
-//            indexProd: {
-//                files: {
-//                    './tmp/index.html': './src/index.html.template'
-//                },
-//                environment: 'prod'
-//            },
-//            indexDemo: {
-//                files: {
-//                    './tmp/index.html': './src/index.html.template'
-//                },
-//                environment: 'demo'
-//            }
         },
         rev: {
             demo: {
@@ -608,14 +355,14 @@ module.exports = function (grunt) {
             }
         },
         express: {
-            livereload: {
+            all: {
                 options: {
                     port: 9000,
                     hostname: '0.0.0.0',
 //                    bases: ['/.tmp'],
                     bases: path.resolve('/.tmp'),
-                    debug: true,
-                    monitor: {},
+//                    debug: true,
+//                    monitor: {},
 //                    server: ['./server'],
                     server: path.resolve('./server'),
                     livereload: true
@@ -644,12 +391,6 @@ module.exports = function (grunt) {
         useminPrepare: {
             html: '<%= yeoman.stage %>/index.html',
             css: '<%= yeoman.stage %>/styles/main.css'
-//            options: {
-//                dest:
-//                    '<%= yeoman.dist %>/demo'
-//                    '<%= yeoman.dist %>/dev',
-//                    '<%= yeoman.dist %>/prod'
-//            }
         },
         usemin: {
             html: [
@@ -870,12 +611,30 @@ module.exports = function (grunt) {
         }
     });
 
-//    grunt.renameTask('regarde', 'watch');
+    /* Watches for changed template files and reprocesses them accordingly */
+    grunt.event.on('watch', function(action, filepath, target) {
+        if (filepath.match(/html.template/).length > 0) {
+            grunt.task.run('template:' + templateEnv);
+        }
+    });
+    grunt.util.hooker.hook(grunt.task, function() {
+        var task = grunt.task.current.nameArgs;
+        if (task.split(':')[0] === 'template') {
+            templateEnv = task.split(':')[1];
+        }
+    });
+
 
     grunt.registerTask('test', [
         'clean:local',
         'connect:test',
         'karma:unit'
+    ]);
+
+    grunt.registerTask('server', [
+        'express',
+        'open',
+        'watch'
     ]);
 
     /*
@@ -890,10 +649,7 @@ module.exports = function (grunt) {
         'copy:local',
         'template:local',
         'clean:template',
-//        'livereload-start',
-        'express',
-        'open',
-        'watch'
+        'server'
     ]);
 
     /*
@@ -909,10 +665,7 @@ module.exports = function (grunt) {
         'copy:local',
         'template:localDev',
         'clean:template',
-        'livereload-start',
-        'express',
-        'open',
-        'watch'
+        'server'
     ]);
 
     /*
@@ -923,7 +676,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('buildDemo', [
         'clean:demo',
-//        'test',
+        'test',
         'copy:local',
         'compass:prod',
         'template:demo',
@@ -949,7 +702,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('buildDev', [
         'clean:dev',
-//        'test',
+        'test',
         'copy:local',
         'compass:prod',
         'template:dev',
@@ -974,7 +727,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('buildProd', [
         'clean:prod',
-//        'test',
+        'test',
         'copy:local',
         'compass:prod',
         'template:prod',
@@ -990,4 +743,5 @@ module.exports = function (grunt) {
         'rev:prod',
         'usemin'
     ]);
+
 };
