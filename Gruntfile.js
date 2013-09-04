@@ -288,21 +288,18 @@ module.exports = function (grunt) {
         template: {
             local: {
                 files: {
-                    '.tmp/main.js': './src/main.js.template',
                     '.tmp/index.html': './src/index.html.template'
                 },
                 environment: 'local'
             },
             localDev: {
                 files: {
-                    '.tmp/main.js': './src/main.js.template',
                     '.tmp/index.html': './src/index.html.template'
                 },
                 environment: 'localDev'
             },
             demo: {
                 files: {
-                    '.tmp/main.js': './src/main.js.template',
                     '.tmp/index.html': './src/index.html.template'
                 },
                 environment: 'demo'
@@ -310,14 +307,12 @@ module.exports = function (grunt) {
             },
             dev: {
                 files: {
-                    '.tmp/main.js': './src/main.js.template',
                     '.tmp/index.html': './src/index.html.template'
                 },
                 environment: 'dev'
             },
             prod: {
                 files: {
-                    '.tmp/main.js': './src/main.js.template',
                     '.tmp/index.html': './src/index.html.template'
                 },
                 environment: 'prod'
@@ -381,12 +376,10 @@ module.exports = function (grunt) {
         },
         karma: {
             unit: {
-                configFile: 'config/karma-unit.conf.js',
-                singleRun: true
+                configFile: 'config/karma-unit.conf.js'
             },
             e2e: {
-                configFile: 'config/karma-e2e.conf.js',
-                singleRun: true
+                configFile: 'config/karma-e2e.conf.js'
             }
         },
         useminPrepare: {
@@ -625,10 +618,11 @@ module.exports = function (grunt) {
         }
     });
 
-
     grunt.registerTask('test', [
         'clean:local',
-        'connect:test',
+        'copy:local',
+        'template:demo',
+        'clean:template',
         'karma:unit'
     ]);
 
@@ -638,12 +632,6 @@ module.exports = function (grunt) {
         'watch'
     ]);
 
-    /*
-     Compiles the app with non-optimized build settings, places the build artifacts in the dist directory, and watches for file changes.
-     Uses local api services and bootstraps with mock backend module
-     Enter the following command at the command line to execute this build task:
-     grunt local
-     */
     grunt.registerTask('local', [
         'clean:local',
         'compass:dev',
@@ -652,13 +640,6 @@ module.exports = function (grunt) {
         'clean:template',
         'server'
     ]);
-
-    /*
-     Compiles the app with non-optimized build settings, places the build artifacts in the dist directory, and watches for file changes.
-     Uses dev api services and bootstraps with main application
-     Enter the following command at the command line to execute this build task:
-     grunt dev
-     */
 
     grunt.registerTask('dev', [
         'clean:local',
@@ -669,18 +650,13 @@ module.exports = function (grunt) {
         'server'
     ]);
 
-    /*
-     Compiles the app with non-optimized build settings, places the build artifacts in the dist directory, and watches for file changes.
-     Uses local api services and bootstraps with mock backend module
-     Enter the following command at the command line to execute this build task:
-     grunt local
-     */
     grunt.registerTask('buildDemo', [
         'clean:demo',
-        'test',
         'copy:local',
         'compass:prod',
         'template:demo',
+        'clean:template',
+        'karma:unit',
         'useminPrepare',
         'concat:.tmp/scripts/scripts.js',
         'concat:.tmp/styles/main.css',
@@ -695,18 +671,13 @@ module.exports = function (grunt) {
         'usemin'
     ]);
 
-    /*
-     Compiles the app with non-optimized build settings, places the build artifacts in the dist directory, and watches for file changes.
-     Uses dev api services and bootstraps with main application
-     Enter the following command at the command line to execute this build task:
-     grunt dev
-     */
     grunt.registerTask('buildDev', [
         'clean:dev',
-        'test',
         'copy:local',
         'compass:prod',
         'template:dev',
+        'clean:template',
+        'karma:unit',
         'useminPrepare',
         'concat:.tmp/scripts/scripts.js',
         'concat:.tmp/styles/main.css',
@@ -720,18 +691,13 @@ module.exports = function (grunt) {
         'usemin'
     ]);
 
-    /*
-     Compiles the app with optimized build settings and places the build artifacts in build/prod directory.
-     Uses production api services and bootstrap with main application
-     Enter the following command at the command line to execute this build task:
-     grunt buildProd
-     */
     grunt.registerTask('buildProd', [
         'clean:prod',
-        'test',
         'copy:local',
         'compass:prod',
         'template:prod',
+        'clean:template',
+        'karma:unit',
         'useminPrepare',
         'concat:.tmp/scripts/scripts.js',
         'concat:.tmp/styles/main.css',
@@ -744,5 +710,4 @@ module.exports = function (grunt) {
         'rev:prod',
         'usemin'
     ]);
-
 };

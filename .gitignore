@@ -1,7 +1,10 @@
 .idea
-.sass-cache/
-/dist/
+.sass-cache
 build
-/node_modules/
 .tmp
 log
+node_modules
+app/components
+.editorconfig
+.gitattributes
+libpeerconnection.log

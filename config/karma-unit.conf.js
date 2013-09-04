@@ -7,20 +7,21 @@
  * To change this template use File | Settings | File Templates.
  */
 
-basePath = '../';
+basePath = '../.tmp';
 
 files = [
     JASMINE,
     JASMINE_ADAPTER,
-    'src/components/angular/angular.js',
-    'src/components/angular-mocks/angular-mocks.js',
-    'src/components/angular-cookies/angular-cookies.js',
-    'src/components/underscore/underscore.js',
-    'src/components/jquery/jquery.js',
-    'src/components/angular-ui-bootstrap-bower/ui-bootstrap.js',
-    'src/core/**/*.js',
-    'src/app/**/*.js',
-    'src/app/**/*.unit.js'
+    'components/angular/angular.js',
+    'components/angular-mocks/angular-mocks.js',
+    'components/angular-cookies/angular-cookies.js',
+    'components/underscore/underscore.js',
+    'components/jquery/jquery.js',
+    'components/angular-ui-bootstrap-bower/ui-bootstrap.js',
+    'core/**/*.js',
+    'app-config/**/*.js',
+    'app/**/*.js',
+    'app/**/*.unit.js'
 ];
 
 exclude = [];
@@ -44,7 +45,7 @@ autoWatch = true;
 
 // Continuous Integration mode
 // if true, it capture browsers, run tests and exit
-singleRun = false;
+singleRun = true;
 
 // break from module
 browsers = ['Chrome'];
@@ -52,45 +53,3 @@ browsers = ['Chrome'];
 junitReporter = {
     outputFile: 'log/test-results.xml'
 };
-
-//var sharedConfig = require('./karma-shared.conf');
-
-//module.exports = function(config) {
-//    sharedConfig(config);
-
-    //config.set({
-        //files: [
-            //JASMINE,
-            //JASMINE_ADAPTER,
-            //'src/components/angular/angular.js',
-            //'src/components/angular-mocks/angular-mocks.js',
-            //'src/app/**/*spec.js',
-        //],
-
-        //exclude: [],
-
-         //enable / disable watching file and executing tests whenever any file changes
-        //autoWatch: true,
-
-         //Continuous Integration mode
-         //if true, it capture browsers, run tests and exit
-        //singleRun: false,
-
-         //break from module
-        //frameworks: ['jasmin'],
-        //basePath: '',
-        //logLevel: config.LOG_INFO,
-        //colors: true,
-        //browsers: ['Chrome'],
-
-         //test results reporter to use
-         //possible values: dots || progress || growl
-        //reporters: ['progress'],
-
-         //web server port
-        //port: 8080,
-
-         //cli runner port
-        //runnerPort: 9100
-    //});
-//}
