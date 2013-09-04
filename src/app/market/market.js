@@ -199,7 +199,14 @@ angular.module('roomba.app')
                         if (!obj.edited[key] && rawValue.value != null) {
                             $scope.copyFromRaw(obj, key);
                         }
-                    } else {
+                    } else if (rawValue.length) {
+                        if (!obj.edited[key].length && angular.isArray(obj.edited[key])) {
+                            angular.forEach(rawValue, function (rawModel) {
+
+                                $scope.copyModelFromRaw(obj, key, rawModel);
+                            });
+                        }
+                    } else if (angular.isObject(rawValue)) {
                         angular.forEach(rawValue, function (rawSubValue, subKey) {
                             if (rawSubValue.hasOwnProperty('edited') && rawSubValue.hasOwnProperty('raw')) {
                                 if (!rawValue.edited[key] && rawValue.value != null) {
@@ -229,6 +236,21 @@ angular.module('roomba.app')
                         }
                     });
                 });
+            };
+
+            $scope.copyModelFromRaw = function (item, modelKey, rawModel) {
+                var _modelConfig = _.find($scope.collection.models, function (val) {
+                        return val.key === modelKey;
+                    }),
+                    _editedModel = {};
+
+                angular.forEach(_modelConfig.fields, function (modelField) {
+                    _editedModel[modelField.key] = rawModel[modelField.key].value || "";
+                });
+
+                item.edited[modelKey].push(_editedModel);
+
+                rawModel.copied = true;
             };
 
             $scope.copyFromRaw = function (item, fieldKey) {
@@ -298,20 +320,7 @@ angular.module('roomba.app')
                 });
             };
 
-            $scope.copyModelFromRaw = function (item, modelKey, rawModel) {
-                var _modelConfig = _.find($scope.collection.models, function (val) {
-                        return val.key === modelKey;
-                    }),
-                    _editedModel = {};
 
-                angular.forEach(_modelConfig.fields, function (modelField) {
-                    _editedModel[modelField.key] = rawModel[modelField.key].value || "";
-                });
-
-                item.edited[modelKey].push(_editedModel);
-
-                rawModel.copied = true;
-            };
 
             $scope.showRaw = function () {
                 $scope.modelView.showRaw = !$scope.modelView.showRaw;

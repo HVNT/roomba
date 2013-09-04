@@ -62,7 +62,7 @@
         </div>
     </div>
 </div>
-<div ng-class="(marketView.collapseFilters && 'col-lg-6' || 'col-lg-4')" class="market-list"
+<div class="market-list col-lg-4"
      ng-controller="MarketListCtrl">
     <div class="row">
         <div class="col-lg-12 header-actions">
@@ -101,7 +101,7 @@
     <div class="scroll-container">
         <div class="scroll-wrap" chunk="items | limitVisible | orderBy:sortBy | filter:searchBy[activeSearch.key]"
              chunk-size="100">
-            <div class="row listing-list-item" ng-class="{'active': item.isActive}"  ng-repeat="item in chunk">
+            <div class="row listing-list-item" ng-class="{'active': item.isActive}" ng-repeat="item in chunk">
                 <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox" ng-model="item.isSelected"/></div>
 
                 <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
@@ -118,13 +118,13 @@
         </div>
     </div>
 </div>
-<div class="col-lg-6 market-details" ng-controller="DetailsCtrl">
+<div ng-class="(marketView.collapseFilters && 'col-lg-8' || 'col-lg-6')" class="col-lg-6 market-details"
+     ng-controller="DetailsCtrl">
 <div class="row">
     <div class="col-lg-12 header-actions">
         <div class="btn-group pull-left">
             <a class="btn btn-inverse" target="_blank" ng-href="{{activeItem.raw.pages[0].url.value}}"
-
-                    ng-class="{'disabled': !activeItem}">
+               ng-class="{'disabled': !activeItem}">
                 Open
             </a>
         </div>
@@ -175,7 +175,6 @@
                                ng-model="activeItem.edited[field.key]" ui-date/>
 
 
-
                         <textarea cols="30" rows="10" ng-switch-when="textarea"
                                   class="form-control"
                                   ng-hide="activeItem.raw[field.key].showRaw"
@@ -188,12 +187,12 @@
                     </div>
 
                     <div class="btn col-lg-1 hint--left hint--bounce"
-                            ng-click="copyFromRaw(activeItem, field.key)"
-                            ng-class="classRawField(activeItem.raw[field.key])"
-                            ng-hide="isRawNull(activeItem.raw[field.key])"
-                            ng-mouseover="activeItem.raw[field.key].showRaw = true"
-                            ng-mouseleave="activeItem.raw[field.key].showRaw = false"
-                            data-hint="Copy">
+                         ng-click="copyFromRaw(activeItem, field.key)"
+                         ng-class="classRawField(activeItem.raw[field.key])"
+                         ng-hide="isRawNull(activeItem.raw[field.key])"
+                         ng-mouseover="activeItem.raw[field.key].showRaw = true"
+                         ng-mouseleave="activeItem.raw[field.key].showRaw = false"
+                         data-hint="Copy">
                         <i ng-hide="activeItem.raw[field.key].copied" class="icon-inbox"></i>
                         <i ng-show="activeItem.raw[field.key].copied" class="icon-check-sign"></i>
                     </div>
@@ -300,9 +299,12 @@
         <div class="group-editor model-editor"
              ng-repeat="modelConfig in collection.models | orderBy: '-weight'"
              ng-controller="ModelCtrl">
-            <h4 ng-click="showRaw()"
-                class="hint--right" data-hint="Show {{ (modelView.showRaw && 'Edited' || 'Raw') }}">
+            <h4 ui-if="activeItem.raw[modelConfig.key].length" ng-click="showRaw()"
+                class="hint--right action" data-hint="Show {{ (modelView.showRaw && 'Edited' || 'Raw') }}">
                 <span ng-show="modelView.showRaw">Raw</span>
+                {{ modelConfig.title }}
+            </h4>
+            <h4 ui-if="!activeItem.raw[modelConfig.key].length">
                 {{ modelConfig.title }}
             </h4>
             <table class="table table-striped">
