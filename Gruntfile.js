@@ -30,8 +30,8 @@ module.exports = function (grunt) {
         yeoman: yeomanConfig,
         watch: {
             options: {
-                livereload: true,
-                spawn: false
+                livereload: true
+//                spawn: false
             },
             compass: {
                 files: ['<%= yeoman.app %>/styles/{,**/}*.{scss,sass}'],
@@ -40,7 +40,6 @@ module.exports = function (grunt) {
             all: {
                 files: [
                     '<%= yeoman.app %>/{,**/}*.html',
-                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/styles/{,*/}*.css',
                     '{<%= yeoman.stage %>,<%= yeoman.app %>}/app/{,**/}*.js',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
@@ -108,9 +107,8 @@ module.exports = function (grunt) {
                 sassDir: '<%= yeoman.app %>/styles',
                 cssDir: '<%= yeoman.stage %>/styles',
                 imagesDir: '<%= yeoman.app %>/img',
-                fontsDir: '<%= yeoman.app %>/styles/fonts',
                 javascriptsDir: '<%= yeoman.app %>/app',
-                importPath: '<%= yeoman.app %>/components',
+                importPath: '<%= yeoman.app %>/styles',
                 relativeAssets: true
             },
             prod: {
@@ -607,7 +605,7 @@ module.exports = function (grunt) {
 
     /* Watches for changed template files and reprocesses them accordingly */
     grunt.event.on('watch', function(action, filepath, target) {
-        if (filepath.match(/html.template/).length > 0) {
+        if (filepath.match(/html.template/)) {
             grunt.task.run('template:' + templateEnv);
         }
     });
