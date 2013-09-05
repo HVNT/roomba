@@ -105,7 +105,7 @@
             <div class="row listing-list-item" ng-class="{'active': item.isActive}" ng-repeat="item in chunk">
                 <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox" ng-model="item.isSelected"/></div>
 
-                <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-click="openDetails(item.id)">
+                <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'bold': item.isEdited}" ng-click="openDetails(item.id)">
                     {{item.title}}
 
                 </div>
@@ -147,7 +147,7 @@
         <h3 class="hint--bottom" data-hint="Copy all Raw" ng-click="copyAllRaw(activeItem, activeItemResources)">
             {{ activeItem.title }}</h3>
     </div>
-    <form class="form-horizontal fields-editor" ng-submit="saveItem(activeItem)">
+    <form class="form-horizontal fields-editor" ng-submit="noop()">
         <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'">
 
             <label class="col-lg-2 control-label">
@@ -355,7 +355,7 @@
                 <!--Raw-->
                 <tr ng-repeat="rawModel in activeItem.raw[modelConfig.key]"
                     ng-show="modelView.showRaw">
-                    <td class="table-icon-action table-icon-info hint--right"
+                    <td class="table-icon-action hint--right table-icon-info"
                         ng-hide="rawModel.copied"
                         data-hint="Copy"
                         ng-click="copyModelFromRaw(activeItem, modelConfig.key, rawModel)">
@@ -366,7 +366,7 @@
                         ng-show="rawModel.copied">
                         <i class="icon-check-sign"></i>
                     </td>
-                    <td ng-repeat="modelFieldConfig in modelConfig.fields">
+                    <td ng-repeat="modelFieldConfig in modelConfig.fields" class="status-text-{{ rawModel[modelFieldConfig.key].status }}">
                         {{ rawModel[modelFieldConfig.key].value }}
 
                     </td>

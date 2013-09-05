@@ -215,18 +215,15 @@ angular.module('roomba.app')
                     } else if (rawValue.length) {
                         if (!obj.edited[key].length && angular.isArray(obj.edited[key])) {
                             angular.forEach(rawValue, function (rawModel) {
-
                                 $scope.copyModelFromRaw(obj, key, rawModel);
                             });
                         }
-                    } else if (angular.isObject(rawValue)) {
+                    } else if (!angular.isArray(rawValue)){
                         angular.forEach(rawValue, function (rawSubValue, subKey) {
-                            if (rawSubValue.hasOwnProperty('edited') && rawSubValue.hasOwnProperty('raw')) {
-                                if (!rawValue.edited[key] && rawValue.value != null) {
-                                    $scope.copyFromRaw(obj, key);
+                            if (rawSubValue.hasOwnProperty('status') && rawSubValue.hasOwnProperty('value')) {
+                                if (rawSubValue.value) {
+                                    $scope.copySubfieldFromRaw(obj, key, subKey);
                                 }
-                            } else if (!obj.edited[key][subKey] && rawSubValue.value != null) {
-                                $scope.copySubfieldFromRaw(obj, key, subKey);
                             }
                         });
                     }

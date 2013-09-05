@@ -339,6 +339,10 @@ angular.module('roomba.app',
 
                     self.checkStateAbbreviation();
 
+                    if (_.contains(self.tags, 'edited')) {
+                        self.isEdited = true;
+                    }
+
                     if (collection) {
                         angular.forEach(collection.fields, function (fieldConfig) {
                             var rawDefault = {
@@ -366,10 +370,12 @@ angular.module('roomba.app',
                                     var subFieldConfig = fieldConfig.fields[i];
                                     _rawField[subFieldConfig.key] = _rawField[subFieldConfig.key] || rawDefault;
                                     _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] || (fieldConfig.placeholder || null);
+
+                                    if (_rawField[subFieldConfig.key].status == 2) {
+                                        self.isConflict = true;
+                                    }
                                 }
                             }
-
-                            console.log(fieldConfig);
                         });
 
                         angular.forEach(collection.models, function (modelConfig) {
@@ -387,6 +393,9 @@ angular.module('roomba.app',
                                     modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || {
                                         value: null,
                                         status: null
+                                    }
+                                    if (modelInstance[modelFieldConfig.key].status == 2) {
+                                        self.isConflict = true;
                                     }
                                 }
                             }
@@ -720,9 +729,9 @@ angular.module('roomba.app',
                                 throw new Error("Raw field is not in recognized format");
                             }
                         });
-                        self.progressClass = "";
+                        self.progressClass = self.isConflict ? "progress-bar-danger" : "";
                     } else {
-                        self.progressClass = "progress-bar-success";
+                        self.progressClass = self.isConflict ? "progress-bar-danger" : "progress-bar-success";
 
                     }
 
