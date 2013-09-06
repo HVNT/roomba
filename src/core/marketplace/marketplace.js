@@ -73,13 +73,36 @@ angular.module('rescour.marketplace', ['rescour.config'])
 
                             angular.forEach(dimensions.discreet, function (attr, attrID) {
                                 if (_item.dimensions) {
-                                    var _discreetVal = _item.dimensions.discreet[attrID] = (_item.dimensions.discreet[attrID] || 'Unknown');
+                                    // If items is in dimensions {} format
+//                                    var _discreetVal = _item.dimensions.discreet[attrID] = (_item.dimensions.discreet[attrID] || 'Unknown');
+//                                    self.dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
                                 } else if (typeof _item[attrID] !== 'undefined') {
-                                    var _discreetVal = _item[attrID] = (_item[attrID] || 'Unknown');
+                                    if (angular.isArray(_item[attrID])) {
+                                        for (var i = 0; i < _item[attrID].length; i++) {
+                                            var _itemAttr = _item[attrID][i] = _item[attrID][i] || 'Unknown',
+                                                _discreetVal;
+                                            // check restrict
+                                            if (attr.restrict) {
+                                                _discreetVal = _.contains(attr.restrict, _itemAttr) ? _itemAttr : 'Unknown';
+                                            } else {
+                                                _discreetVal = _itemAttr;
+                                            }
+                                            self.dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
+                                        }
+                                    } else {
+                                        var _discreetVal;
+                                        _item[attrID] = _item[attrID] || 'Unknown';
+                                        // check restrict
+                                        if (attr.restrict) {
+                                            _discreetVal = _.contains(attr.restrict, _item[attrID]) ? _item[attrID] : 'Other';
+                                        } else {
+                                            _discreetVal = _item[attrID];
+                                        }
+                                        self.dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
+                                    }
                                 } else {
                                     throw new Error("Cannot find discrete attribute: " + attrID);
                                 }
-                                self.dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
                             });
                             idPosition += 1;
                         } catch (e) {
@@ -218,6 +241,7 @@ angular.module('rescour.marketplace', ['rescour.config'])
                         angular.copy(_range, self.range[attrID]);
                     }
                 }
+                console.log(dimensions);
             }
 
             Dimensions.prototype.pushDiscreetId = function (attrID, idPosition, value) {

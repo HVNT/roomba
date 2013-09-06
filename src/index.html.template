@@ -75,7 +75,7 @@
 
 <script src="/components/angular/angular.js"></script>
 <script src="/components/angular-ui/build/angular-ui.js"></script>
-<script src="/components/angular-ui-bootstrap-bower/ui-bootstrap-tpls-0.1.0.js"></script>
+<script src="/components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
 <script src="/components/angular-cookies/angular-cookies.js"></script>
 <script src="/components/angular-resource/angular-resource.js"></script>
 <script src="/components/angular-sanitize/angular-sanitize.js"></script>

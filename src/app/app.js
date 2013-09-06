@@ -31,6 +31,11 @@ angular.module('roomba.app',
                         title: 'Broker',
                         weight: 10
                     },
+                    tags: {
+                        title: 'Tags',
+                        weight: 10,
+                        restrict: ['edited', 'published', 'raw']
+                    },
                     propertyStatus: {
                         title: 'Property Status',
                         weight: 5
@@ -415,20 +420,22 @@ angular.module('roomba.app',
                         angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
                             // Initialize on root level for dimensional filtering
                             if (!attr.nested) {
-                                if (self.raw.hasOwnProperty(attrID)) {
+                                if (self.hasOwnProperty(attrID)) {
+                                    self[attrID] = self[attrID] || (self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || "")));
+                                } else if (self.raw.hasOwnProperty(attrID)) {
                                     self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
                                 } else {
-                                    throw new Error (attrID + " is not defined in $collection");
+                                    throw new Error(attrID + " is not defined in $collection");
                                 }
                             } else {
                                 if (self.raw.hasOwnProperty(attr.nested)) {
                                     if (self.raw[attr.nested].hasOwnProperty(attrID)) {
                                         self[attrID] = self.edited[attr.nested][attrID] || (self.raw[attr.nested][attrID].value || (attr.placeholder || ""));
                                     } else {
-                                        throw new Error (attr.nested + " has no property " + attrID);
+                                        throw new Error(attr.nested + " has no property " + attrID);
                                     }
                                 } else {
-                                    throw new Error (attr.nested + " is not defined in $collection");
+                                    throw new Error(attr.nested + " is not defined in $collection");
                                 }
                             }
 
@@ -587,7 +594,6 @@ angular.module('roomba.app',
                         this.tags = ['edited'];
                     }
 
-
                     var self = this,
                         defer = $q.defer(),
                         config = angular.extend({
@@ -735,8 +741,8 @@ angular.module('roomba.app',
                         self.progressClass = self.isConflict ? "progress-bar-danger" : "progress-bar-success";
 
                     }
-
-                    return parseInt((fieldCounter.filled / fieldCounter.total) * 100, 10) + "%";
+                    this.completion = parseInt((fieldCounter.filled / fieldCounter.total) * 100, 10);
+                    return this.completion + "%";
                 };
 
                 Item.prototype.checkStateAbbreviation = function () {
