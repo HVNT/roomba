@@ -8,13 +8,9 @@
         </ul>
 
         <div class="btn-group pull-right">
-            <button type="button" class="btn btn-inverse dropdown-toggle hint--left hint--bounce" data-hint="Tags">
-                <i class="icon-tags"></i>
+            <button type="button" ng-click="newItem()" class="btn btn-info hint--left hint--bounce" data-hint="New {{ collection.title }}">
+                <i class="icon-plus-sign"></i>
             </button>
-            <ul class="dropdown-menu">
-                <li ng-class="{'active': isActive}" ng-repeat="(tag, isActive) in tags"><a
-                        href="javascript:" ng-click="changeTag(tag)">{{ tag }}</a></li>
-            </ul>
         </div>
     </div>
 </header>

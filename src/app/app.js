@@ -296,8 +296,12 @@ angular.module('roomba.app',
                 {
                     title: 'Link',
                     weight: 8,
-                    key: 'link',
-                    type: 'textarea'
+                    key: 'link'
+                },
+                {
+                    title: 'Category',
+                    weight: 8,
+                    key: 'category'
                 },
                 {
                     title: 'Address',
@@ -399,6 +403,8 @@ angular.module('roomba.app',
 
                 var Item = function (data, defaults) {
                     var _defaults = defaults || {
+                            title: 'New ' + collection.title,
+                            tags: [],
                             isVisible: true
                         },
                         opts = angular.extend({}, _defaults, data),
@@ -406,17 +412,9 @@ angular.module('roomba.app',
 
                     angular.copy(opts, this);
 
-                    if (this.hasOwnProperty('edited') && this.hasOwnProperty('raw')) {
-                        if (!this.edited.title) {
-                            this.title = this.raw.title.value || 'Untitled';
-                        } else {
-                            this.title = this.edited.title;
-                        }
-
-                        if (_.contains(self.tags, 'edited')) {
-                            self.isEdited = true;
-                        }
-
+                    if (collection.key === 'listings') {
+                        self.raw = self.raw || {};
+                        self.edited = self.edited || {};
                         if (collection) {
                             angular.forEach(collection.fields, function (fieldConfig) {
                                 var rawDefault = {
@@ -424,20 +422,9 @@ angular.module('roomba.app',
                                     status: null
                                 };
 
-                                self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || rawDefault;
-
-                                // Initialize edited fields based off config, falling back to placeholders
-                                self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
-
-                                // Initialize dates
-                                if (fieldConfig.type === 'date') {
-                                    self.edited[fieldConfig.key] = self.edited[fieldConfig.key] ? new Date(self.edited[fieldConfig.key]) : null;
-                                    self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(self.raw[fieldConfig.key].value) : null;
-                                }
-
                                 // Initialize raw fields based off config
                                 if (fieldConfig.fields) {
-                                    var _rawField = self.raw[fieldConfig.key],
+                                    var _rawField = self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || {} ,
                                         _editedField = self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || {};
 
                                     for (var i = 0; i < fieldConfig.fields.length; i++) {
@@ -448,8 +435,28 @@ angular.module('roomba.app',
                                         if (_rawField[subFieldConfig.key].status == 2) {
                                             self.isConflict = true;
                                         }
+
+                                        // Initialize dates
+                                        if (subFieldConfig.type === 'date') {
+                                            _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] ? new Date(_editedField[subFieldConfig.key]) : null;
+                                            _editedField[subFieldConfig.key].value = _editedField[subFieldConfig.key].value ? new Date(_editedField[subFieldConfig.key].value) : null;
+                                        }
+                                    }
+                                } else {
+                                    self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || rawDefault;
+
+                                    // Initialize edited fields based off config, falling back to placeholders
+                                    self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
+
+                                    // Initialize dates
+                                    if (fieldConfig.type === 'date') {
+                                        self.edited[fieldConfig.key] = self.edited[fieldConfig.key] ? new Date(self.edited[fieldConfig.key]) : null;
+                                        self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(self.raw[fieldConfig.key].value) : null;
                                     }
                                 }
+
+
+
                             });
 
                             angular.forEach(collection.models, function (modelConfig) {
@@ -517,25 +524,45 @@ angular.module('roomba.app',
                         } else {
                             throw new Error("No collection defined");
                         }
-                    } else {
+
+                        if (!this.edited.title) {
+                            this.title = this.raw.title.value || 'Untitled';
+                        } else {
+                            this.title = this.edited.title;
+                        }
+
+                        if (_.contains(self.tags, 'edited')) {
+                            self.isEdited = true;
+                        }
+                    } else if (collection.key === 'news') {
                         if (collection) {
                             angular.forEach(collection.fields, function (fieldConfig) {
-                                self[fieldConfig.key] = self[fieldConfig.key] || (fieldConfig.placeholder || null);
-
-                                // Initialize dates
-                                if (fieldConfig.type === 'date') {
-                                    self[fieldConfig.key] = self[fieldConfig.key] ? new Date(self[fieldConfig.key]) : null;
-                                }
-
                                 // Initialize raw fields based off config
                                 if (fieldConfig.fields) {
-                                    var _field = self[fieldConfig.key];
+                                    var _field = self[fieldConfig.key] = self[fieldConfig.key] || {} ;
 
                                     for (var i = 0; i < fieldConfig.fields.length; i++) {
                                         var subFieldConfig = fieldConfig.fields[i];
                                         _field[subFieldConfig.key] = _field[subFieldConfig.key] || (fieldConfig.placeholder || null);
+
+                                        // Initialize dates
+                                        if (subFieldConfig.type === 'date') {
+                                            _field[subFieldConfig.key] = _field[subFieldConfig.key] ? new Date(_field[subFieldConfig.key]) : null;
+                                        }
+                                    }
+                                } else {
+                                    self[fieldConfig.key] = self[fieldConfig.key] || (fieldConfig.placeholder || null);
+
+                                    // Initialize dates
+                                    if (fieldConfig.type === 'date') {
+                                        self[fieldConfig.key] = self[fieldConfig.key] ? new Date(self[fieldConfig.key]) : null;
                                     }
                                 }
+                            });
+
+                            angular.forEach(collection.models, function (modelConfig) {
+                                // Initialize raw fields based off config
+                                self[modelConfig.key] = self[modelConfig.key] || [];
                             });
 
                             angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
@@ -558,6 +585,8 @@ angular.module('roomba.app',
                                     }
                                 }
                             });
+
+                            console.log(this);
                         } else {
                             throw new Error("No collection defined");
                         }
@@ -662,6 +691,8 @@ angular.module('roomba.app',
                             }
                         }, $_api.config);
 
+                    self.resources = self.resources || {};
+
                     for (var i = 0; i < collection.resources.length; i++) {
                         var _resource = collection.resources[i],
                             _resourcePath = _resource.path;
@@ -670,6 +701,9 @@ angular.module('roomba.app',
                             var _resourceInstance = resources[_resource.key][i];
                             var _defer = $q.defer();
                             var body = angular.toJson(_resourceInstance);
+
+                            // If its a new property it won't have resources
+                            self.resources[_resource.key] = self.resources[_resource.key] || [];
 
                             if (!_resourceInstance.id) {
                                 (function (defer, resourceKey) {
@@ -793,85 +827,108 @@ angular.module('roomba.app',
                             filled: 0
                         };
 
-                    // Check edited first
-                    angular.forEach(_edited, function (editedField) {
-                        if (angular.isArray(editedField)) {
-                            angular.forEach(editedField, function (editedModel) {
-                                angular.forEach(editedModel, function (editedModelField) {
-                                    if (editedModelField) {
-                                        hasEdited = true;
-                                        fieldCounter.filled++;
-                                    }
-                                    fieldCounter.total++;
-                                });
-                            });
-                        } else if (angular.isObject(editedField)) {
-                            // Address field or embedded object
-                            angular.forEach(editedField, function (editedSubField) {
-                                if (editedSubField) {
-                                    hasEdited = true;
-                                    fieldCounter.filled++;
-                                }
-                                fieldCounter.total++;
-                            });
-                        } else {
-                            if (editedField) {
-                                hasEdited = true;
-                                fieldCounter.filled++;
-                            }
-                            fieldCounter.total++;
-                        }
-                    });
-
-                    // If no edited calculate based off raw data
-                    if (!hasEdited) {
-                        fieldCounter.total = 0;
-                        fieldCounter.filled = 0;
-
-                        angular.forEach(_raw, function (rawField, key) {
-                            if (rawField.hasOwnProperty('value') && rawField.hasOwnProperty('status')) {
-                                if (rawField.value) {
-                                    fieldCounter.filled++;
-                                }
-                                fieldCounter.total++;
-                            } else if (angular.isArray(rawField)) {
-                                angular.forEach(rawField, function (rawModel) {
-                                    angular.forEach(rawModel, function (rawModelField, key) {
-                                        if (rawModelField.value) {
+                    if (_edited && _raw) {
+                        // Check edited first
+                        angular.forEach(_edited, function (editedField) {
+                            if (angular.isArray(editedField)) {
+                                angular.forEach(editedField, function (editedModel) {
+                                    angular.forEach(editedModel, function (editedModelField) {
+                                        if (editedModelField) {
+                                            hasEdited = true;
                                             fieldCounter.filled++;
                                         }
                                         fieldCounter.total++;
                                     });
                                 });
-                            } else if (angular.isObject(rawField)) {
-                                angular.forEach(rawField, function (rawSubField, key) {
-                                    if (rawSubField.value) {
+                            } else if (angular.isObject(editedField)) {
+                                // Address field or embedded object
+                                angular.forEach(editedField, function (editedSubField) {
+                                    if (editedSubField) {
+                                        hasEdited = true;
                                         fieldCounter.filled++;
                                     }
                                     fieldCounter.total++;
                                 });
                             } else {
-                                throw new Error("Raw field is not in recognized format");
+                                if (editedField) {
+                                    hasEdited = true;
+                                    fieldCounter.filled++;
+                                }
+                                fieldCounter.total++;
                             }
                         });
-                        self.progressClass = self.isConflict ? "progress-bar-danger" : "";
-                    } else {
-                        self.progressClass = self.isConflict ? "progress-bar-danger" : "progress-bar-success";
 
+                        // If no edited calculate based off raw data
+                        if (!hasEdited) {
+                            fieldCounter.total = 0;
+                            fieldCounter.filled = 0;
+
+                            angular.forEach(_raw, function (rawField, key) {
+                                if (rawField.hasOwnProperty('value') && rawField.hasOwnProperty('status')) {
+                                    if (rawField.value) {
+                                        fieldCounter.filled++;
+                                    }
+                                    fieldCounter.total++;
+                                } else if (angular.isArray(rawField)) {
+                                    angular.forEach(rawField, function (rawModel) {
+                                        angular.forEach(rawModel, function (rawModelField, key) {
+                                            if (rawModelField.value) {
+                                                fieldCounter.filled++;
+                                            }
+                                            fieldCounter.total++;
+                                        });
+                                    });
+                                } else if (angular.isObject(rawField)) {
+                                    angular.forEach(rawField, function (rawSubField, key) {
+                                        if (rawSubField.value) {
+                                            fieldCounter.filled++;
+                                        }
+                                        fieldCounter.total++;
+                                    });
+                                } else {
+                                    throw new Error("Raw field is not in recognized format");
+                                }
+                            });
+                            self.progressClass = self.isConflict ? "progress-bar-danger" : "";
+                        } else {
+                            self.progressClass = self.isConflict ? "progress-bar-danger" : "progress-bar-success";
+                        }
+                    } else {
+                        fieldCounter.total = 0;
+                        fieldCounter.filled = 0;
+
+                        angular.forEach(collection.fields, function(fieldConfig){
+                            if (fieldConfig.fields) {
+                                angular.forEach(fieldConfig.fields, function(subFieldConfig){
+                                    if (self[fieldConfig.key][subFieldConfig.key]) {
+                                        fieldCounter.filled++;
+                                    }
+                                    fieldCounter.total++;
+                                });
+                            } else {
+                                if (self[fieldConfig.key]) {
+                                    fieldCounter.filled++;
+                                }
+                                fieldCounter.total++;
+                            }
+                        });
+
+                        self.progressClass = "";
                     }
+
                     this.completion = parseInt((fieldCounter.filled / fieldCounter.total) * 100, 10);
                     return this.completion + "%";
                 };
 
                 Item.prototype.checkStateAbbreviation = function () {
                     if (this.address) {
-                        var state = (this.address.state).replace(/\s+/g, '').toUpperCase();
+                        var state = this.address.state ? (this.address.state).replace(/\s+/g, '').toUpperCase() : null;
                         if (States.hasOwnProperty(state)) {
                             this.address.state = States[state];
                         }
                     } else if (this.hasOwnProperty('raw')) {
                         if (this.raw.address.state.value) {
-                            var state = (this.raw.address.state.value).replace(/\s+/g, '').toUpperCase();
+                            var state = this.raw.address.state.value ? (this.raw.address.state.value).replace(/\s+/g, '').toUpperCase() : null;
                             if (States.hasOwnProperty(state)) {
                                 this.raw.address.state.value = States[state];
                             }

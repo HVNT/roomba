@@ -140,6 +140,15 @@ angular.module('roomba.app')
                 }
             };
 
+            $scope.newItem = function () {
+                var _newItem = new Model();
+                $scope.items.unshift(_newItem);
+                $scope.activeItem = Market.setActive(_newItem);
+                angular.forEach($scope.collection.resources, function(resource){
+                    $scope.activeItemResources[resource.key] = [];
+                });
+            };
+
             $scope.classRawField = function (field) {
                 if (field) {
                     if (field.copied) {
@@ -174,7 +183,6 @@ angular.module('roomba.app')
                     var _item = $scope.items[i];
                     if (_item.isSelected) {
                         _item.$save();
-                        console.log(_item);
                     }
                 }
             }
@@ -299,6 +307,7 @@ angular.module('roomba.app')
                     console.log("empty!");
                 } else {
                     $scope.activeItemResources[resourceKey] ? $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource })) : null;
+                    console.log($scope.activeItemResources);
                     $scope.newResource = {};
                     $scope.$broadcast('ResourceAdded');
                 }
