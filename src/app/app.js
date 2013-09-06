@@ -580,12 +580,13 @@ angular.module('roomba.app',
                 };
 
                 Item.prototype.$save = function () {
-                    console.log(this);
-                    if (!_.contains(this.tags, 'published')) {
+
+                    if (_.contains(this.tags, 'published')) {
                         this.tags = ['edited', 'published'];
                     } else {
                         this.tags = ['edited'];
                     }
+
 
                     var self = this,
                         defer = $q.defer(),
