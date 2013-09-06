@@ -67,18 +67,23 @@ angular.module('roomba.app')
             $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
             $scope.collection = Model.collection;
-            $scope.srcListingDetails = '/app/market/partials/listing-details.html?v=' + Date.now();
+            $scope.srcListingDetails = '/app/market/partials/' + $scope.collection.key + '-details.html?v=' + Date.now();
             $scope.searchBy = {
                 $: ""
             };
 
             $scope.activeSearch = {title: 'Any', key: '$'};
-            $scope.tags = {
-                raw: false,
-                published: false,
-                edited: false,
-                all: false
-            };
+            $scope.tags = (function (tags) {
+                var _tags = {
+                    all: false
+                };
+                angular.forEach(tags, function(value){
+                    _tags[value] = false;
+                });
+
+                return _tags;
+            })($scope.collection.tags);
+
             $scope.marketView = {
                 collapseFilters: true
             };

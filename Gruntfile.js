@@ -37,13 +37,37 @@ module.exports = function (grunt) {
                 files: ['<%= yeoman.app %>/styles/{,**/}*.{scss,sass}'],
                 tasks: ['compass:dev']
             },
-            all: {
+//            all: {
+//                files: [
+//                    '<%= yeoman.app %>/{,**/}*.html',
+//                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/app/{,**/}*.js',
+//                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+//                ],
+//                tasks: ['copy:local']
+//            },
+            app: {
                 files: [
-                    '<%= yeoman.app %>/{,**/}*.html',
-                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/app/{,**/}*.js',
+                    '<%= yeoman.app %>/app/**/*'
+                ],
+                tasks: ['copy:app']
+            },
+            core: {
+                files: [
+                    '<%= yeoman.app %>/core/**/*'
+                ],
+                tasks: ['copy:core']
+            },
+            img: {
+                files: [
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
-                tasks: ['copy:local']
+                tasks: ['copy:img']
+            },
+            appConfig: {
+                files: [
+                    '<%= yeoman.app %>/app-config/**/*'
+                ],
+                tasks: ['copy:appConfig']
             },
             template: {
                 files: [
@@ -138,6 +162,50 @@ module.exports = function (grunt) {
                         'core/**/*',
                         'img/**/*',
                         '*.html*'
+                    ]
+                }]
+            },
+            app: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.stage %>',
+                    src: [
+                        'app/**/*'
+                    ]
+                }]
+            },
+            core: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.stage %>',
+                    src: [
+                        'core/**/*'
+                    ]
+                }]
+            },
+            img: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.stage %>',
+                    src: [
+                        'img/**/*'
+                    ]
+                }]
+            },
+            appConfig: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.stage %>',
+                    src: [
+                        'app-config/**/*'
                     ]
                 }]
             },
