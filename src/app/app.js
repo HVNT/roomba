@@ -412,6 +412,8 @@ angular.module('roomba.app',
 
                     angular.copy(opts, this);
 
+
+                    self.checkStateAbbreviation();
                     if (collection.key === 'listings') {
                         self.raw = self.raw || {};
                         self.edited = self.edited || {};
@@ -454,10 +456,8 @@ angular.module('roomba.app',
                                         self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(self.raw[fieldConfig.key].value) : null;
                                     }
                                 }
-
-
-
                             });
+
 
                             angular.forEach(collection.models, function (modelConfig) {
                                 // Initialize raw fields based off config
@@ -585,14 +585,10 @@ angular.module('roomba.app',
                                     }
                                 }
                             });
-
-                            console.log(this);
                         } else {
                             throw new Error("No collection defined");
                         }
                     }
-                    self.checkStateAbbreviation();
-
                 };
 
                 Item.collection = collection;

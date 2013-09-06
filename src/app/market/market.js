@@ -144,9 +144,6 @@ angular.module('roomba.app')
                 var _newItem = new Model();
                 $scope.items.unshift(_newItem);
                 $scope.activeItem = Market.setActive(_newItem);
-                angular.forEach($scope.collection.resources, function(resource){
-                    $scope.activeItemResources[resource.key] = [];
-                });
             };
 
             $scope.classRawField = function (field) {
@@ -287,15 +284,15 @@ angular.module('roomba.app')
             };
 
             $scope.saveItem = function (item) {
-                item.$saveResources($scope.activeItemResources).then(function (results) {
+                console.log($scope.activeItemResources);
+                if (_.isEmpty($scope.activeItemResources)) {
                     item.$save();
-                });
+                } else {
+                    item.$saveResources($scope.activeItemResources).then(function (results) {
+                        item.$save();
+                    });
+                }
             };
-
-            $scope.displayRaw = function (resource, field) {
-
-            };
-
         }])
     .controller('ResourceCtrl', ['$scope',
         function ($scope) {
@@ -306,12 +303,15 @@ angular.module('roomba.app')
                 if (_.isEmpty(resource)) {
                     console.log("empty!");
                 } else {
-                    $scope.activeItemResources[resourceKey] ? $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource })) : null;
-                    console.log($scope.activeItemResources);
+                    angular.forEach($scope.collection.resources, function(resource){
+                        $scope.activeItemResources[resource.key] = [];
+                    });
+
+                    $scope.activeItemResources[resourceKey] = $scope.activeItemResources[resourceKey] || [];
+                    $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource }));
                     $scope.newResource = {};
                     $scope.$broadcast('ResourceAdded');
                 }
-
             };
 
             $scope.removeResource = function (resourceKey, itemResource) {
