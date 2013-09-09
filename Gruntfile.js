@@ -660,7 +660,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'clean:local',
         'copy:local',
-        'template:demo',
+        'template:local',
         'clean:template',
         'karma:unit'
     ]);
