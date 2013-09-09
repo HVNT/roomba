@@ -47,7 +47,14 @@
                     </div>
 
                     <div class="col-lg-12">
+                        <ul ng-repeat="range in dimensions.range" class="ribbon-nav">
+                            <li class="header">{{range.title}} <div class="pull-right">{{range.lowSelected}} - {{range.highSelected}}</div></li>
+                            <div class="slider-container" slider></div>
+                        </ul>
+                    </div>
 
+
+                    <div class="col-lg-12">
                         <ul ng-repeat="discreet in dimensions.discreet" class="ribbon-nav">
                             <li class="header">{{discreet.title}}</li>
                             <li ng-repeat="value in discreet.values"
@@ -100,8 +107,12 @@
             </div>
             <div class="scroll-container">
                 <div class="scroll-wrap"
-                     chunk="items | limitVisible | orderBy:sortBy | filter:searchBy[activeSearch.key]"
+                     chunk="filteredItems = (items | filter:searchBy[activeSearch.key] | limitVisible | orderBy:sortBy)"
                      chunk-size="100">
+
+                    <div class="row label-list-item">
+                        Displaying {{ filteredItems.length }} items
+                    </div>
                     <div class="row listing-list-item" ng-class="{'active': item.isActive}" ng-repeat="item in chunk">
                         <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox" ng-model="item.isSelected"/></div>
 

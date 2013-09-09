@@ -71,46 +71,74 @@ angular.module('rescour.marketplace', ['rescour.config'])
 
                             this.dimensions.idMap.push(model.id);
 
-                            angular.forEach(dimensions.discreet, function (attr, attrID) {
-                                if (_item.dimensions) {
-                                    // If items is in dimensions {} format
+                            for (var _discreetKey in dimensions.discreet) {
+                                if (dimensions.discreet.hasOwnProperty(_discreetKey)) {
+                                    var _discreetAttr = dimensions.discreet[_discreetKey];
+                                    if (_item.dimensions) {
+                                        // If items is in dimensions {} format
 //                                    var _discreetVal = _item.dimensions.discreet[attrID] = (_item.dimensions.discreet[attrID] || 'Unknown');
 //                                    self.dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
-                                } else if (typeof _item[attrID] !== 'undefined') {
-                                    if (angular.isArray(_item[attrID])) {
-                                        for (var i = 0; i < _item[attrID].length; i++) {
-                                            var _itemAttr = _item[attrID][i] = _item[attrID][i] || 'Unknown',
-                                                _discreetVal;
-                                            // check restrict
-                                            if (attr.restrict) {
-                                                _discreetVal = _.contains(attr.restrict, _itemAttr) ? _itemAttr : 'Unknown';
-                                            } else {
-                                                _discreetVal = _itemAttr;
+                                    } else if (typeof _item[_discreetKey] !== 'undefined') {
+                                        if (angular.isArray(_item[_discreetKey])) {
+                                            for (var i = 0; i < _item[_discreetKey].length; i++) {
+                                                var _itemAttr = _item[_discreetKey][i] = _item[_discreetKey][i] || 'Unknown',
+                                                    _discreetVal;
+                                                // check restrict
+                                                if (_discreetAttr.restrict) {
+                                                    _discreetVal = _.contains(_discreetAttr.restrict, _itemAttr) ? _itemAttr : 'Other';
+                                                } else {
+                                                    _discreetVal = _itemAttr;
+                                                }
+                                                self.dimensions.pushDiscreetId(_discreetKey, idPosition, _discreetVal);
                                             }
-                                            self.dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
+                                        } else {
+                                            var _discreetVal;
+                                            _item[_discreetKey] = _item[_discreetKey] || 'Unknown';
+                                            // check restrict
+                                            if (_discreetAttr.restrict) {
+                                                _discreetVal = _.contains(_discreetAttr.restrict, _item[_discreetKey]) ? _item[_discreetKey] : 'Other';
+                                            } else {
+                                                _discreetVal = _item[_discreetKey];
+                                            }
+                                            self.dimensions.pushDiscreetId(_discreetKey, idPosition, _discreetVal);
                                         }
                                     } else {
-                                        var _discreetVal;
-                                        _item[attrID] = _item[attrID] || 'Unknown';
-                                        // check restrict
-                                        if (attr.restrict) {
-                                            _discreetVal = _.contains(attr.restrict, _item[attrID]) ? _item[attrID] : 'Other';
-                                        } else {
-                                            _discreetVal = _item[attrID];
-                                        }
-                                        self.dimensions.pushDiscreetId(attrID, idPosition, _discreetVal);
+                                        throw new Error("Cannot find discreet attribute: " + _discreetKey);
                                     }
-                                } else {
-                                    throw new Error("Cannot find discrete attribute: " + attrID);
                                 }
-                            });
+                            }
+
+                            for (var _rangeKey in dimensions.range) {
+                                if (dimensions.range.hasOwnProperty(_rangeKey)) {
+                                    var _rangeAttr = self.dimensions.range[_rangeKey];
+
+                                    if (!_item.dimensions) {
+                                        var _itemAttr = _item[_rangeKey] = parseInt(_item[_rangeKey], 10) || 'NA';
+                                        if (!_rangeAttr.highBound) {
+                                            if (((_itemAttr >= _rangeAttr.high) || _rangeAttr.high == null) && _itemAttr !== 'NA') {
+                                                console.log(_rangeAttr.high, _itemAttr);
+                                                _rangeAttr.high = _rangeAttr.highSelected =_itemAttr;
+                                            }
+                                        } else {
+                                            _rangeAttr.high = _rangeAttr.highSelected = _rangeAttr.highBound;
+                                        }
+
+                                        if (!_rangeAttr.lowBound) {
+                                            if (((_itemAttr <= _rangeAttr.low) || _rangeAttr.low == null) && _itemAttr !== 'NA') {
+                                                _rangeAttr.low = _rangeAttr.lowSelected =_itemAttr;
+                                            }
+                                        } else {
+                                            _rangeAttr.low = _rangeAttr.lowSelected = _rangeAttr.lowBound;
+                                        }
+                                    }
+                                }
+                            }
                             idPosition += 1;
                         } catch (e) {
                             console.log(e.message);
                         }
                     }
                 }
-//                this.dimensions.initialize();
                 this.apply();
                 console.log(this.items);
                 console.log(this.dimensions);
@@ -180,8 +208,27 @@ angular.module('rescour.marketplace', ['rescour.config'])
                         // index is (i * 32) + whatever bit number is flipped
                         var itemIndex = (i * 32) + p;
                         if (dimensions.idMap[itemIndex]) {
-                            items[dimensions.idMap[itemIndex]].isVisible = !!(1 & bitSet[i]);
-                            dimensions.visibleIds.push(dimensions.idMap[itemIndex]);
+                            var _currItem = items[dimensions.idMap[itemIndex]];
+                            if (!_.isEmpty(dimensions.range)) {
+                                for (var _rangeKey in dimensions.range) {
+                                    if (dimensions.range.hasOwnProperty(_rangeKey)) {
+                                        var _rangeAttr = dimensions.range[_rangeKey],
+                                            _currItemAttr = _currItem[_rangeKey];
+
+                                        if ((_currItemAttr >= _rangeAttr.lowSelected &&
+                                            _currItemAttr <= _rangeAttr.highSelected) || _currItemAttr === 'NA' ) {
+                                            _currItem.isVisible = !!(1 & bitSet[i]);
+                                            dimensions.visibleIds.push(dimensions.idMap[itemIndex]);
+                                        } else {
+                                            _currItem.isVisible = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            } else {
+                                _currItem.isVisible = !!(1 & bitSet[i]);
+                                dimensions.visibleIds.push(dimensions.idMap[itemIndex]);
+                            }
                         }
 
                         bitSet[i] = bitSet[i] >> 1;
@@ -241,7 +288,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
                         angular.copy(_range, self.range[attrID]);
                     }
                 }
-                console.log(dimensions);
             }
 
             Dimensions.prototype.pushDiscreetId = function (attrID, idPosition, value) {
@@ -265,55 +311,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
                     }
                 }
 
-            };
-
-            Dimensions.prototype.pushRangeId = function (attrID, itemID, value) {
-                if (_.has(this.range, attrID)) {
-                    var _range = this.range[attrID],
-                        parsedVal = parseInt(value, 10),
-                        boundedVal = _.isNaN(parsedVal) ? "NA" : (this.range[attrID].bound ? (parsedVal > this.range[attrID].bound ? this.range[attrID].bound : parsedVal) : parsedVal);
-                    if (boundedVal === "NA") {
-                        _range.na.push(itemID);
-                    }
-                    else {
-                        _range.ids.push({
-                            id: itemID,
-                            value: boundedVal
-                        });
-
-                        // Check to see if current value is the low bound value
-                        if (_range.low === null || parsedVal <= _range.low) {
-                            _range.low = boundedVal;
-                        }
-
-                        // Check to see if the current value is the high bound value
-                        if (_range.high === null || parsedVal >= _range.high) {
-                            _range.high = boundedVal;
-                        }
-                    }
-                }
-            };
-
-            Dimensions.prototype.initialize = function () {
-                var attrID;
-                // Set selected to the bounds of high and low
-                if (this.range !== {}) {
-                    _.each(this.range, function (r) {
-                        r.highSelected = r.highSelected || r.high;
-                        r.lowSelected = r.lowSelected || r.low;
-                    });
-                }
-
-                // Sort
-                for (attrID in this.range) {
-                    if (this.range.hasOwnProperty(attrID)) {
-                        this.range[attrID].ids = _.sortBy(this.range[attrID].ids, function (i) {
-                            return i.value;
-                        });
-                    }
-                }
-
-                return this;
             };
 
             Dimensions.prototype.predict = function () {

@@ -72,6 +72,10 @@ angular.module('roomba.app')
                 $: ""
             };
 
+            $scope.applyFilters = function () {
+                Market.apply();
+            };
+
             $scope.activeSearch = {title: 'Any', key: '$'};
             $scope.tags = (function (tags) {
                 var _tags = {
@@ -94,7 +98,6 @@ angular.module('roomba.app')
 
             function setActiveItem(id) {
                 $scope.activeItem = Market.setActive(id);
-
                 if ($scope.activeItem) {
                     $scope.activeItemResources = {};
                     $scope.activeItem.$getResources().then(function (results) {
@@ -284,7 +287,6 @@ angular.module('roomba.app')
             };
 
             $scope.saveItem = function (item) {
-                console.log($scope.activeItemResources);
                 if (_.isEmpty($scope.activeItemResources)) {
                     item.$save();
                 } else {
@@ -370,4 +372,41 @@ angular.module('roomba.app')
                 })
             }
         };
-    });
+    })
+    .directive('slider', ['$timeout', function ($timeout) {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attr) {
+                function setupSlider() {
+                    $(element).slider({
+                        range: true,
+                        min: 0,
+                        max: 100,
+                        // Calculate percentages based off what the low selected and high selected are
+                        values: [
+                            parseInt((((scope.range.lowSelected - scope.range.low) / (scope.range.high - scope.range.low)) * 100), 10),
+                            parseInt((((scope.range.highSelected - scope.range.low) / (scope.range.high - scope.range.low)) * 100), 10)
+                        ],
+                        step: 1,
+                        slide: function (event, ui) {
+                            scope.$apply(function () {
+                                scope.range.lowSelected = parseInt((((ui.values[0] / 100) * (scope.range.high - scope.range.low)) + scope.range.low), 10);
+                                scope.range.highSelected = parseInt((((ui.values[1] / 100) * (scope.range.high - scope.range.low)) + scope.range.low), 10);
+                            });
+                        },
+                        stop: function (event, ui) {
+                            scope.$apply(function() {
+                                scope.applyFilters();
+                            });
+
+                            // WHY THE FUCK DO I NEED TO CALL THIS TWICE??
+                            scope.$apply();
+                        }
+                    });
+                }
+
+                setupSlider();
+            }
+        };
+    }]);
+

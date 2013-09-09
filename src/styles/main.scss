@@ -144,16 +144,29 @@ header {
 }
 
 .market-filter {
+  .slider-container {
+    margin: 20px 20px 10px;
+    position:relative
+  }
 }
 
 $marketListBg: #333;
 .market-list {
   background: lighten($marketListBg, 25%);
   color: white;
+
+  .listing-list-item,
+  .label-list-item {
+    padding: 10px 0;
+  }
+
+  .label-list-item {
+    text-align: center;
+    background-color: lighten($marketListBg, 10%) !important;
+  }
+
   .listing-list-item {
     cursor: pointer;
-    padding: 10px 0;
-
     &:hover,
     &.active {
       background-color: $marketListBg !important;

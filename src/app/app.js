@@ -47,7 +47,12 @@ angular.module('roomba.app',
                         weight: 5
                     }
                 },
-                range: {}
+                range: {
+                    numUnits: {
+                        title: '# of Units',
+                        weight: 5
+                    }
+                }
             },
             fields: [
                 {
