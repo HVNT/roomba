@@ -110,8 +110,8 @@
                      chunk="filteredItems = (items | filter:searchBy[activeSearch.key] | limitVisible | orderBy:sortBy)"
                      chunk-size="100">
 
-                    <div class="row label-list-item">
-                        Displaying {{ filteredItems.length }} items
+                    <div class="row label-list-item" ng-click="toggleSelectAll()">
+                        Select {{ filteredItems.length }} items
                     </div>
                     <div class="row listing-list-item" ng-class="{'active': item.isActive}" ng-repeat="item in chunk">
                         <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox" ng-model="item.isSelected"/></div>

@@ -175,6 +175,7 @@ angular.module('roomba.app')
                     var _item = $scope.items[i];
                     if (_item.isSelected) {
                         _item.$publish();
+                        _item.isSelected = false;
                     }
                 }
             };
@@ -184,12 +185,19 @@ angular.module('roomba.app')
                     var _item = $scope.items[i];
                     if (_item.isSelected) {
                         _item.$save();
+                        _item.isSelected = false;
                     }
                 }
-            }
+            };
+
+            $scope.noop = function () {
+                return null;
+            };
         }])
     .controller('MarketListCtrl', ['$scope', '$location',
         function ($scope, $location) {
+            var selectToggle = true;
+
             $scope.openDetails = function (id) {
                 $location.search('id', id);
             };
@@ -208,8 +216,12 @@ angular.module('roomba.app')
                 $scope.sortFields[sortField] = true;
             };
 
-            $scope.noop = function () {
-                return null;
+
+            $scope.toggleSelectAll = function () {
+                angular.forEach($scope.filteredItems, function(value){
+                    value.isSelected = selectToggle;
+                });
+                selectToggle = !selectToggle;
             };
         }])
     .controller('MarketFilterCtrl', ['$scope', 'Market', '$routeParams', '$location',
