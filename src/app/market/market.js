@@ -147,6 +147,7 @@ angular.module('roomba.app')
                 var _newItem = new Model();
                 $scope.items.unshift(_newItem);
                 $scope.activeItem = Market.setActive(_newItem);
+                $scope.activeItemResources = {};
             };
 
             $scope.classRawField = function (field) {
@@ -302,16 +303,14 @@ angular.module('roomba.app')
             $scope.resourceView = {};
 
             $scope.addResource = function (resourceKey, resource) {
+                console.log($scope.activeItemResources);
                 if (_.isEmpty(resource)) {
                     console.log("empty!");
                 } else {
-                    angular.forEach($scope.collection.resources, function(resource){
-                        $scope.activeItemResources[resource.key] = [];
-                    });
-
                     $scope.activeItemResources[resourceKey] = $scope.activeItemResources[resourceKey] || [];
                     $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource }));
                     $scope.newResource = {};
+
                     $scope.$broadcast('ResourceAdded');
                 }
             };
