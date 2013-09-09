@@ -326,22 +326,6 @@ module.exports = function (grunt) {
                 dest: '<%= yeoman.dist %>/demo/scripts/scripts.js'
             }
         },
-
-        /*
-         Compile template files (.template) to HTML (.html).
-
-         .template files are essentially html; however, you can take advantage of features provided by grunt such as underscore templating.
-
-         The example below demonstrates the use of the environment configuration setting.
-         In 'prod' the concatenated and minified scripts are used along with a QueryString parameter of the hash of the file contents to address browser caching.
-         In environments other than 'prod' the individual files are used and loaded with RequireJS.
-
-         <% if (config.environment === 'prod') { %>
-         <script src="/scripts/scripts.min.js?v=<%= config.hash('./temp/scripts/scripts.min.js') %>"></script>
-         <% } else { %>
-         <script data-main="/scripts/main.js" src="/scripts/libs/require.js"></script>
-         <% } %>
-         */
         template: {
             local: {
                 files: {
@@ -412,11 +396,7 @@ module.exports = function (grunt) {
                 options: {
                     port: 9000,
                     hostname: '0.0.0.0',
-//                    bases: ['/.tmp'],
                     bases: path.resolve('/.tmp'),
-//                    debug: true,
-//                    monitor: {},
-//                    server: ['./server'],
                     server: path.resolve('./server'),
                     livereload: true
                 }
@@ -433,10 +413,12 @@ module.exports = function (grunt) {
         },
         karma: {
             unit: {
-                configFile: 'config/karma-unit.conf.js'
+                configFile: 'config/karma-unit.conf.js',
+                singleRun: true
             },
             e2e: {
-                configFile: 'config/karma-e2e.conf.js'
+                configFile: 'config/karma-e2e.conf.js',
+                singleRun: true
             }
         },
         useminPrepare: {
