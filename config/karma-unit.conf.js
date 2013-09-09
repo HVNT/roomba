@@ -15,6 +15,7 @@ files = [
     'components/angular/angular.js',
     'components/angular-mocks/angular-mocks.js',
     'components/angular-cookies/angular-cookies.js',
+    'components/angular-ui/build/angular-ui.js',
     'components/underscore/underscore.js',
     'components/jquery/jquery.js',
     'components/angular-ui-bootstrap-bower/ui-bootstrap.js',

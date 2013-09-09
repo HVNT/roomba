@@ -1,13 +1,13 @@
 {
-  "name": "roomba",
+  "name": "rescour-app",
   "version": "0.0.1",
-  "deescription": "Frontend application for REscour's scraper application",
+  "deescription": "Frontend application for REscour",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rescour/roomba"
+    "url": "https://github.com/REscour/app"
   },
   "bugs": {
-    "url": "https://github.com/rescoure/roomba/issues"
+    "url": "https://github.com/REscour/app/issues"
   },
   "dependencies": {},
   "peerDependencies": {},

@@ -18,6 +18,10 @@ angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
                 articles: {
                     state: ['Georgia', 'Tennessee', 'Kentucky', 'Alabama', 'Arkansas', 'Texas'],
                     tags: ['raw', 'staged', 'published']
+                },
+                news: {
+                    source: ['ABC'],
+                    tags: ['raw', 'staged', 'published']
                 }
             },
             items = {},

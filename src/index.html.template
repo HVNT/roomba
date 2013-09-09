@@ -103,7 +103,6 @@
     <script src="/app-config/prod.js"></script>
 <% } %>
 
-
 <script src="/app/app.js"></script>
 <script src="/app/market/market.js"></script>
 <script src="/app/login/login.js"></script>
