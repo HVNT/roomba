@@ -97,8 +97,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th class="table-icon-action table-icon-success hint--right"
-                        data-hint="Add {{ resourceConfig.title }} ( &#9166; )"
+                    <th class="table-icon-action table-icon-success"
                         ng-click="addResource(resourceConfig.key, newResource)">
 
                         <i class="icon-plus-sign"></i>
@@ -168,9 +167,8 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th class="table-icon-action table-icon-success hint--right"
-                        ng-click="addModel(activeItem, modelConfig.key, newModel)"
-                        data-hint="Add {{ modelConfig.title }} ( &#9166; )">
+                    <th class="table-icon-action table-icon-success"
+                        ng-click="addModel(activeItem, modelConfig.key, newModel)">
                         <i class="icon-plus-sign"></i>
                     </th>
                     <th ng-repeat="modelFieldConfig in modelConfig.fields" ng-switch="modelFieldConfig.type">
@@ -223,7 +221,8 @@
                         ng-show="rawModel.copied">
                         <i class="icon-check-sign"></i>
                     </td>
-                    <td ng-repeat="modelFieldConfig in modelConfig.fields" class="status-text-{{ rawModel[modelFieldConfig.key].status }}">
+                    <td ng-repeat="modelFieldConfig in modelConfig.fields"
+                        class="status-text-{{ rawModel[modelFieldConfig.key].status }}">
                         {{ rawModel[modelFieldConfig.key].value }}
 
                     </td>

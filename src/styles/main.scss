@@ -155,17 +155,14 @@ $marketListBg: #333;
   background: lighten($marketListBg, 25%);
   color: white;
 
-  .listing-list-item,
-  .label-list-item {
-    padding: 10px 0;
-  }
-
   .label-list-item {
     text-align: center;
     background-color: lighten($marketListBg, 10%) !important;
   }
 
+  .label-list-item,
   .listing-list-item {
+    padding: 10px 0;
     cursor: pointer;
     &:hover,
     &.active {

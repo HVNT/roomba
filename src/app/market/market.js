@@ -147,6 +147,7 @@ angular.module('roomba.app')
                 var _newItem = new Model();
                 $scope.items.unshift(_newItem);
                 $scope.activeItem = Market.setActive(_newItem);
+                $scope.activeItemResources = {};
             };
 
             $scope.classRawField = function (field) {
@@ -174,6 +175,7 @@ angular.module('roomba.app')
                     var _item = $scope.items[i];
                     if (_item.isSelected) {
                         _item.$publish();
+                        _item.isSelected = false;
                     }
                 }
             };
@@ -183,12 +185,19 @@ angular.module('roomba.app')
                     var _item = $scope.items[i];
                     if (_item.isSelected) {
                         _item.$save();
+                        _item.isSelected = false;
                     }
                 }
-            }
+            };
+
+            $scope.noop = function () {
+                return null;
+            };
         }])
     .controller('MarketListCtrl', ['$scope', '$location',
         function ($scope, $location) {
+            var selectToggle = true;
+
             $scope.openDetails = function (id) {
                 $location.search('id', id);
             };
@@ -207,8 +216,12 @@ angular.module('roomba.app')
                 $scope.sortFields[sortField] = true;
             };
 
-            $scope.noop = function () {
-                return null;
+
+            $scope.toggleSelectAll = function () {
+                angular.forEach($scope.filteredItems, function(value){
+                    value.isSelected = selectToggle;
+                });
+                selectToggle = !selectToggle;
             };
         }])
     .controller('MarketFilterCtrl', ['$scope', 'Market', '$routeParams', '$location',
@@ -302,16 +315,14 @@ angular.module('roomba.app')
             $scope.resourceView = {};
 
             $scope.addResource = function (resourceKey, resource) {
+                console.log($scope.activeItemResources);
                 if (_.isEmpty(resource)) {
                     console.log("empty!");
                 } else {
-                    angular.forEach($scope.collection.resources, function(resource){
-                        $scope.activeItemResources[resource.key] = [];
-                    });
-
                     $scope.activeItemResources[resourceKey] = $scope.activeItemResources[resourceKey] || [];
                     $scope.activeItemResources[resourceKey].push(angular.extend({}, { edited: resource }));
                     $scope.newResource = {};
+
                     $scope.$broadcast('ResourceAdded');
                 }
             };
