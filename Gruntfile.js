@@ -31,20 +31,11 @@ module.exports = function (grunt) {
         watch: {
             options: {
                 livereload: true
-//                spawn: false
             },
             compass: {
                 files: ['<%= yeoman.app %>/styles/{,**/}*.{scss,sass}'],
                 tasks: ['compass:dev']
             },
-//            all: {
-//                files: [
-//                    '<%= yeoman.app %>/{,**/}*.html',
-//                    '{<%= yeoman.stage %>,<%= yeoman.app %>}/app/{,**/}*.js',
-//                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-//                ],
-//                tasks: ['copy:local']
-//            },
             app: {
                 files: [
                     '<%= yeoman.app %>/app/**/*'
