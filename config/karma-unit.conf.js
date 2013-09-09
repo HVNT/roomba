@@ -21,6 +21,7 @@ files = [
     'components/angular-ui-bootstrap-bower/ui-bootstrap.js',
     'core/**/*.js',
     'app-config/**/*.js',
+    'app/app.js',
     'app/**/*.js',
     'app/**/*.unit.js'
 ];
