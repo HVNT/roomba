@@ -210,8 +210,7 @@ module.exports = function (grunt) {
                         src: [
                             '<%= yeoman.app %>/*.{ico,txt}',
                             '<%= yeoman.app %>/img/{,*/}*.{gif,webp}',
-                            '<%= yeoman.app %>/styles/fonts/*',
-                            '<%= yeoman.app %>/components/*'
+                            '<%= yeoman.app %>/styles/fonts/*'
                         ]
                     },
                     {
@@ -232,6 +231,16 @@ module.exports = function (grunt) {
                         dest: '<%= yeoman.dist %>/dev/styles',
                         src: [
                             '<%= yeoman.stage %>/styles/main.css'
+                        ]
+                    },
+                    {
+                        expand: true,
+                        dot: false,
+                        flatten: false,
+                        cwd: '<%= yeoman.app %>',
+                        dest: '<%= yeoman.dist %>/dev',
+                        src: [
+                            'components/**/*'
                         ]
                     }
                 ]
@@ -269,6 +278,16 @@ module.exports = function (grunt) {
                         src: [
                             '<%= yeoman.stage %>/styles/main.css'
                         ]
+                    },
+                    {
+                        expand: true,
+                        dot: false,
+                        flatten: false,
+                        cwd: '<%= yeoman.app %>',
+                        dest: '<%= yeoman.dist %>/demo',
+                        src: [
+                            'components/**/*'
+                        ]
                     }
                 ]
             },
@@ -304,6 +323,16 @@ module.exports = function (grunt) {
                         dest: '<%= yeoman.dist %>/prod/styles',
                         src: [
                             '<%= yeoman.stage %>/styles/main.css'
+                        ]
+                    },
+                    {
+                        expand: true,
+                        dot: false,
+                        flatten: false,
+                        cwd: '<%= yeoman.app %>',
+                        dest: '<%= yeoman.dist %>/prod',
+                        src: [
+                            'components/**/*'
                         ]
                     }
                 ]
