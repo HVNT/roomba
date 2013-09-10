@@ -1,4 +1,13 @@
-var app, dir, express, io, port, server, _ref, _ref1, ignorePaths, fs;
+var app,
+    dir,
+    express,
+    io,
+    port,
+    server,
+    _ref,
+    _ref1,
+    ignorePaths,
+    fs;
 
 express = require('express');
 
