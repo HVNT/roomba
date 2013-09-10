@@ -62,6 +62,12 @@ angular.module('roomba.app',
                     type: 'text'
                 },
                 {
+                    title: 'Year Built',
+                    weight: 3000,
+                    key: 'yearBuilt',
+                    type: 'text'
+                },
+                {
                     title: 'Description',
                     weight: 8,
                     key: 'description',
