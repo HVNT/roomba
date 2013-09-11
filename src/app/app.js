@@ -299,6 +299,12 @@ angular.module('roomba.app',
                     key: 'title'
                 },
                 {
+                    title: 'Date',
+                    weight: 4000,
+                    key: 'date',
+                    type: 'date'
+                },
+                {
                     title: 'Body',
                     weight: 8,
                     key: 'body',
