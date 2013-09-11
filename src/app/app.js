@@ -312,7 +312,9 @@ angular.module('roomba.app',
                 {
                     title: 'Category',
                     weight: 8,
-                    key: 'category'
+                    key: 'category',
+                    type: 'typeahead',
+                    typeahead: ['Under Construction', 'Future Development', 'Transactions']
                 },
                 {
                     title: 'Address',
