@@ -1,7 +1,7 @@
 {
   "name": "rescour-app",
   "version": "0.0.1",
-  "deescription": "Frontend application for REscour",
+  "description": "Frontend application for REscour",
   "repository": {
     "type": "git",
     "url": "https://github.com/REscour/app"
