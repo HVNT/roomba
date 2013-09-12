@@ -1,0 +1,334 @@
+{
+    "listings": {
+        "title": "Listings",
+        "key": "listings",
+        "tags": ["raw", "edited", "published"],
+        "path": "/listings/",
+        "dimensions": {
+            "discreet": {
+                "broker": {
+                    "title": "Broker",
+                    "weight": 10
+                },
+                "tags": {
+                    "title": "Tags",
+                    "weight": 10,
+                    "restrict": ["edited", "published", "raw"]
+                },
+                "propertyStatus": {
+                    "title": "Property Status",
+                    "weight": 5
+                },
+                "state": {
+                    "title": "State",
+                    "nested": "address",
+                    "weight": 5
+                }
+            },
+            "range": {
+                "numUnits": {
+                    "title": "# of Units",
+                    "weight": 5
+                }
+            }
+        },
+        "fields": [
+            {
+                "title": "Title",
+                "weight": 5000,
+                "key": "title",
+                "type": "text"
+            },
+            {
+                "title": "Year Built",
+                "weight": 3000,
+                "key": "yearBuilt",
+                "type": "text"
+            },
+            {
+                "title": "Description",
+                "weight": 8,
+                "key": "description",
+                "type": "textarea"
+            },
+            {
+                "title": "Broker",
+                "weight": 10,
+                "key": "broker"
+            },
+            {
+                "title": "# Units",
+                "weight": 10,
+                "key": "numUnits"
+            },
+            {
+                "title": "Flyer",
+                "weight": 9,
+                "key": "flyer"
+            },
+            {
+                "title": "Status",
+                "weight": 9,
+                "key": "status"
+            },
+            {
+                "title": "Acres",
+                "weight": 9,
+                "key": "acres"
+            },
+            {
+                "title": "Call For Offers",
+                "weight": 9,
+                "key": "callForOffers",
+                "type": "date"
+            },
+            {
+                "title": "Property Status",
+                "weight": 9,
+                "key": "propertyStatus",
+                "type": "typeahead",
+                "typeahead": ["Marketing", "Under Contract", "Under LOI", "Sold"]
+            },
+            {
+                "title": "Address",
+                "weight": 0,
+                "key": "address",
+                "fields": [
+                    {
+                        "title": "Street 1",
+                        "key": "street1"
+                    },
+                    {
+                        "title": "Street 2",
+                        "key": "street2"
+                    },
+                    {
+                        "title": "City",
+                        "key": "city"
+                    },
+                    {
+                        "title": "State",
+                        "key": "state"
+                    },
+                    {
+                        "title": "Zip",
+                        "key": "zip"
+                    }
+                ]
+            }
+        ],
+        "models": [
+            {
+                "title": "Unit Mix",
+                "key": "unitMix",
+                "weight": 100,
+                "fields": [
+                    {
+                        "key": "type",
+                        "title": "Type",
+                        "type": "typeahead",
+                        "typeahead": [
+                            "1 BR / 1 BA", "1 BR / 1.5 BA", "2 BR / 1 BA", "2 BR / 1.5 BA", "2 BR / 2 BA", "3 BR / 2 BA", "3 BR / 2.5 BA", "3 BR / 3 BA", "4 BR / 2 BA", "4 BR / 2.5 BA", "4 BR / 3 BA",
+                            "1 BR / 1 BA S", "1 BR / 1.5 BA S", "2 BR / 1 BA S", "2 BR / 1.5 BA S", "2 BR / 2 BA S", "3 BR / 2 BA S", "3 BR / 2.5 BA S", "3 BR / 3 BA S", "4 BR / 2 BA S", "4 BR / 2.5 BA S", "4 BR / 3 BA S",
+                            "AVERAGE", "Studio"
+                        ]
+                    },
+                    {
+                        "key": "units",
+                        "title": "Units"
+                    },
+                    {
+                        "key": "sqft",
+                        "title": "Sq Ft"
+                    },
+                    {
+                        "key": "rent",
+                        "title": "Rent"
+                    },
+                    {
+                        "key": "rentpsqft",
+                        "title": "Rent / Sqft"
+                    }
+                ]
+            },
+            {
+                "title": "Pages",
+                "key": "pages",
+                "weight": 5000,
+                "fields": [
+                    {
+                        "key": "url",
+                        "title": "URL"
+                    }
+                ]
+            },
+            {
+                "title": "Tour Dates",
+                "key": "tourDates",
+                "weight": 10,
+                "fields": [
+                    {
+                        "key": "date",
+                        "title": "Date",
+                        "type": "date"
+                    }
+                ]
+            },
+            {
+                "title": "Portfolio",
+                "key": "portfolio",
+                "weight": 10,
+                "fields": [
+                    {
+                        "key": "title",
+                        "title": "Title"
+                    }
+                ]
+            },
+            {
+                "title": "Parking Spots",
+                "key": "parking",
+                "weight": 10,
+                "fields": [
+                    {
+                        "key": "title",
+                        "title": "Title"
+                    }
+                ]
+            },
+            {
+                "title": "Comps",
+                "weight": 9,
+                "key": "comps",
+                "fields": [
+                    {
+                        "key": "link",
+                        "title": "Link"
+                    },
+                    {
+                        "key": "title",
+                        "title": "Title"
+                    },
+                    {
+                        "key": "buyer",
+                        "title": "Buyer"
+                    },
+                    {
+                        "key": "seller",
+                        "title": "Seller"
+                    },
+                    {
+                        "key": "price",
+                        "title": "Price"
+                    },
+                    {
+                        "key": "body",
+                        "title": "Body"
+                    }
+                ]
+            }
+        ],
+        "resources": [
+            {
+                "title": "Contacts",
+                "key": "contacts",
+                "path": "/contacts/",
+                "fields": [
+                    {
+                        "key": "name",
+                        "title": "Name"
+                    },
+                    {
+                        "key": "email",
+                        "title": "Email"
+                    },
+                    {
+                        "key": "phone",
+                        "title": "Phone"
+                    }
+                ]
+            },
+            {
+                "title": "Images",
+                "path": "/images/",
+                "key": "images",
+                "fields": [
+                    {
+                        "key": "url",
+                        "title": "URL"
+                    }
+                ]
+            }
+        ]
+    },
+    "news": {
+        "title": "News",
+        "key": "news",
+        "tags": [],
+        "path": "/news/",
+        "dimensions": {
+            "discreet": {},
+            "range": {}
+        },
+        "fields": [
+            {
+                "title": "Title",
+                "weight": 5000,
+                "key": "title"
+            },
+            {
+                "title": "Date",
+                "weight": 4000,
+                "key": "date",
+                "type": "date"
+            },
+            {
+                "title": "Body",
+                "weight": 8,
+                "key": "body",
+                "type": "textarea"
+            },
+            {
+                "title": "Link",
+                "weight": 8,
+                "key": "link"
+            },
+            {
+                "title": "Category",
+                "weight": 8,
+                "key": "category",
+                "type": "typeahead",
+                "typeahead": ["Under Construction", "Future Development", "Transactions"]
+            },
+            {
+                "title": "Address",
+                "weight": 0,
+                "key": "address",
+                "fields": [
+                    {
+                        "title": "Street 1",
+                        "key": "street1"
+                    },
+                    {
+                        "title": "Street 2",
+                        "key": "street2"
+                    },
+                    {
+                        "title": "City",
+                        "key": "city"
+                    },
+                    {
+                        "title": "State",
+                        "key": "state"
+                    },
+                    {
+                        "title": "Zip",
+                        "key": "zip"
+                    }
+                ]
+            }
+        ],
+        "models": [],
+        "resources": []
+    }
+}

@@ -60,6 +60,11 @@ module.exports = function (grunt) {
                 ],
                 tasks: ['copy:appConfig']
             },
+            server: {
+                files: [
+                    'server.js'
+                ]
+            },
             template: {
                 files: [
                     '<%= yeoman.app %>/{,**/}*.template'
