@@ -14,33 +14,17 @@ angular.module('roomba.app')
                     resolve: {
                         collection: function (Market, $route, $q, Models) {
                             var defer = $q.defer(),
-                                _Item = Models[$route.current.params.collection];
+                                _Item;
 
-                            _Item.query().then(function (response) {
-                                console.log(response);
-                                defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
-                            });
-
-                            return defer.promise;
-                        },
-                        Model: function ($route, Models) {
-                            return Models[$route.current.params.collection];
-                        }
-                    }
-                })
-                .when('/market/:collection/:tag',
-                {
-                    templateUrl: '/app/market/views/market.html?v=' + Date.now(),
-                    controller: 'CollectionCtrl',
-                    reloadOnSearch: false,
-                    resolve: {
-                        collection: function (Market, $route, $q, Models) {
-                            var defer = $q.defer(),
-                                _Item = Models[$route.current.params.collection];
-
-                            _Item.query($route.current.params.tag).then(function (response) {
-                                defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
-                            });
+                            Models.request()
+                                .then(function (models) {
+                                    _Item = models[$route.current.params.collection];
+                                    return _Item.query();
+                                })
+                                .then(function (response) {
+                                    Market.initialize(response.data, _Item.dimensions, _Item);
+                                    defer.resolve(_Item);
+                                });
 
                             return defer.promise;
                         },
@@ -55,8 +39,6 @@ angular.module('roomba.app')
         }])
     .controller('MarketCtrl', ['$scope', '$collections', '$location', 'collection', '$http',
         function ($scope, $collections, $location, collection, $http) {
-            $scope.collections = $collections;
-            $scope.collection = collection;
 
         }])
     .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model',
@@ -81,7 +63,7 @@ angular.module('roomba.app')
                 var _tags = {
                     all: false
                 };
-                angular.forEach(tags, function(value){
+                angular.forEach(tags, function (value) {
                     _tags[value] = false;
                 });
 
@@ -218,7 +200,7 @@ angular.module('roomba.app')
 
 
             $scope.toggleSelectAll = function () {
-                angular.forEach($scope.filteredItems, function(value){
+                angular.forEach($scope.filteredItems, function (value) {
                     value.isSelected = selectToggle;
                 });
                 selectToggle = !selectToggle;
@@ -244,7 +226,7 @@ angular.module('roomba.app')
                                 $scope.copyModelFromRaw(obj, key, rawModel);
                             });
                         }
-                    } else if (!angular.isArray(rawValue)){
+                    } else if (!angular.isArray(rawValue)) {
                         angular.forEach(rawValue, function (rawSubValue, subKey) {
                             if (rawSubValue.hasOwnProperty('status') && rawSubValue.hasOwnProperty('value')) {
                                 if (rawSubValue.value) {
@@ -341,7 +323,7 @@ angular.module('roomba.app')
     .controller('ModelCtrl', ['$scope',
         function ($scope) {
             $scope.newModel = {};
-            $scope.modelView = {};
+            scope.modelView = {};
 
             $scope.addModel = function (item, modelKey, model) {
                 if (!_.isEmpty(model)) {
@@ -358,20 +340,46 @@ angular.module('roomba.app')
             };
 
 
-
             $scope.showRaw = function () {
                 $scope.modelView.showRaw = !$scope.modelView.showRaw;
             };
         }])
-    .factory('Models', ['Item', '$collections',
-        function (Item, $collections) {
+//    .factory('Models', ['Item', '$collections',
+//        function (Item, $collections) {
+//            var models = {};
+//
+//            angular.forEach($collections, function (value, key) {
+//                models[key] = Item(value);
+//            });
+//
+//            return models;
+//        }])
+    .factory('Models', ['Item', '$http', '$_api', '$q',
+        function (Item, $http, $_api, $q) {
             var models = {};
 
-            angular.forEach($collections, function (value, key) {
-                models[key] = Item(value);
-            });
+            return {
+                get: function () {
+                    return models;
+                },
+                request: function () {
+                    var defer = $q.defer();
 
-            return models;
+                    $http.get('/app-config/market.json', $_api.config)
+                        .success(function (response) {
+                            angular.forEach(response, function (value, key) {
+                                models[key] = Item(value);
+                            });
+
+                            defer.resolve(models);
+                        })
+                        .error(function(data, status, headers, config) {
+                            console.log('error');
+                        });
+
+                    return defer.promise;
+                }
+            };
         }])
     .directive('focusFirstOn', function () {
         return {
@@ -406,7 +414,7 @@ angular.module('roomba.app')
                             });
                         },
                         stop: function (event, ui) {
-                            scope.$apply(function() {
+                            scope.$apply(function () {
                                 scope.applyFilters();
                             });
 
