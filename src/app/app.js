@@ -626,7 +626,7 @@ angular.module('roomba.app',
                         }, $_api.config),
                         path = tag ? $_api.path + Item.path + tag : $_api.path + Item.path;
 
-                    path += "/?limit=5000";
+                    path += "?limit=5000";
 
                     $http.get(path, config).then(function (response) {
                         console.log(path);
