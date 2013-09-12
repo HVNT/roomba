@@ -27,9 +27,6 @@ angular.module('roomba.app')
                                 });
 
                             return defer.promise;
-                        },
-                        Model: function ($route, Models) {
-                            return Models[$route.current.params.collection];
                         }
                     }
                 })
@@ -41,14 +38,14 @@ angular.module('roomba.app')
         function ($scope, $collections, $location, collection, $http) {
 
         }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model',
-        function ($scope, Market, $routeParams, $location, Model) {
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'collection',
+        function ($scope, Market, $routeParams, $location, collection) {
             $scope.items = Market.getItems();
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
             $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
-            $scope.collection = Model.collection;
+            $scope.collection = collection.collection;
             $scope.srcListingDetails = '/app/market/partials/' + $scope.collection.key + '-details.html?v=' + Date.now();
             $scope.searchBy = {
                 $: ""
@@ -323,7 +320,7 @@ angular.module('roomba.app')
     .controller('ModelCtrl', ['$scope',
         function ($scope) {
             $scope.newModel = {};
-            scope.modelView = {};
+            $scope.modelView = {};
 
             $scope.addModel = function (item, modelKey, model) {
                 if (!_.isEmpty(model)) {
@@ -344,16 +341,6 @@ angular.module('roomba.app')
                 $scope.modelView.showRaw = !$scope.modelView.showRaw;
             };
         }])
-//    .factory('Models', ['Item', '$collections',
-//        function (Item, $collections) {
-//            var models = {};
-//
-//            angular.forEach($collections, function (value, key) {
-//                models[key] = Item(value);
-//            });
-//
-//            return models;
-//        }])
     .factory('Models', ['Item', '$http', '$_api', '$q',
         function (Item, $http, $_api, $q) {
             var models = {};
