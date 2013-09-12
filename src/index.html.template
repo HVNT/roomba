@@ -21,7 +21,7 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/components/jquery-ui/themes/ui-darkness/jquery-ui.css">
-    <!-- build:css styles/main.css -->
+    <!-- build:css /styles/main.css -->
     <link rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/components/hint.css/hint.min.css">
     <link rel="stylesheet" href="/styles/main.css"/>
@@ -69,7 +69,7 @@
 
 <div ng-view></div>
 
-<!-- build:js scripts/scripts.js -->
+<!-- build:js /scripts/scripts.js -->
 <script src="/components/jquery/jquery.js"></script>
 <script src="/components/jquery-ui/jquery-ui.min.js"></script>
 
