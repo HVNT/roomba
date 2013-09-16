@@ -103,11 +103,7 @@
                                 ng-click="saveSelected()">
                             <i class="icon-save"></i>
                         </button>
-                        <button class="btn hint--bottom hint--info hint--bounce" data-hint="Join"
-                                ng-click="joinSelected()">
-                            <i class="icon-exchange"></i>
-                        </button>
-                        <button class="btn btn-danger hint--top hint--error hint--bounce"
+                        <button class="btn btn-danger hint--bottom hint--error hint--bounce"
                                 ng-click="flagSelected()"
                                 data-hint="Flag Selected">
                             <i class="icon-flag"></i>
@@ -127,10 +123,9 @@
                     <div class="row listing-list-item" ng-class="{'active': item.isActive}" ng-repeat="item in chunk">
                         <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox" ng-model="item.isSelected"/></div>
 
-                        <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'bold': item.isEdited}"
+                        <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'bold': hasTag(item, 'edited')}"
                              ng-click="openDetails(item)">
-                            <div class="col-lg-1" ng-show="isFlagged(item)"></div>
-                            {{item.title}}
+                            {{item.title}}  <i class="icon-flag status-text-error" ng-show="hasTag(item, 'flagged')"></i>
 
                         </div>
                         <div class="col-lg-2 col-sm-3 col-3">

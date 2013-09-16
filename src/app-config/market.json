@@ -12,7 +12,7 @@
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
-                    "restrict": ["edited", "published", "raw", "unpublished"]
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
                 },
                 "propertyStatus": {
                     "title": "Property Status",
@@ -195,17 +195,6 @@
                 ]
             },
             {
-                "title": "Parking Spots",
-                "key": "parking",
-                "weight": 10,
-                "fields": [
-                    {
-                        "key": "title",
-                        "title": "Title"
-                    }
-                ]
-            },
-            {
                 "title": "Comps",
                 "weight": 9,
                 "key": "comps",
@@ -275,7 +264,18 @@
         "key": "news",
         "path": "/news/",
         "dimensions": {
-            "discreet": {},
+            "discreet": {
+                "tags": {
+                    "title": "Tags",
+                    "weight": 10,
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
+                },
+                "category": {
+                    "title": "Category",
+                    "weight": 10,
+                    "restrict": ["Under Construction", "Future Development", "Transactions"]
+                }
+            },
             "range": {}
         },
         "fields": [

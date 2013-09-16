@@ -135,10 +135,31 @@ angular.module('roomba.app')
                 return field ? (field.status == null || field.value === "" || field.value == null) : true;
             };
 
+            $scope.hasTag = function (item, tag) {
+                return _.contains(item.tags, tag);
+            };
+
             $scope.setSearchCriteria = function (field) {
                 $scope.activeSearch = {};
                 $scope.activeSearch = field ? field : {title: 'Any', key: '$'};
                 $scope.searchBy[$scope.activeSearch.key] = "";
+            };
+
+            $scope.flagSelected = function () {
+                var successes = 0;
+                for (var i = $scope.items.length - 1; i >= 0; i--) {
+                    var _item = $scope.items[i];
+                    if (_item.isSelected) {
+                        _item.$flag().then(function () {
+                            successes++;
+                            $scope.setGlobalAlert({
+                                type: 'success',
+                                text: successes + " items flagged."
+                            });
+                        });
+                        _item.isSelected = false;
+                    }
+                }
             };
 
             $scope.publishSelected = function () {

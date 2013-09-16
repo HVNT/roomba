@@ -193,6 +193,13 @@ $marketListBg: #333;
     .list-item-title {
       &:hover {
         text-decoration: underline;
+
+        i {
+          text-decoration: none;
+        }
+      }
+      i {
+        margin-left: 5px;
       }
     }
 

@@ -468,14 +468,7 @@ angular.module('roomba.app',
                     return $q.all(promises);
                 };
 
-                Item.prototype.$save = function () {
-
-                    if (_.contains(this.tags, 'published')) {
-                        this.tags = ['edited', 'published'];
-                    } else {
-                        this.tags = ['edited'];
-                    }
-
+                Item.prototype.$update = function () {
                     var self = this,
                         defer = $q.defer(),
                         config = angular.extend({
@@ -508,80 +501,34 @@ angular.module('roomba.app',
                     }
 
                     return defer.promise;
+                };
+
+                Item.prototype.$save = function () {
+                    this.tags = _.without(this.tags, 'edited', 'raw');
+                    this.tags.push('edited');
+
+                    return this.$update();
                 };
 
                 Item.prototype.$publish = function () {
-                    this.tags = ['published'];
+                    this.tags = _.without(this.tags, 'edited', 'raw', 'published', 'unpublished');
+                    this.tags.push('published');
 
-                    var self = this,
-                        defer = $q.defer(),
-                        config = angular.extend({
-                            transformRequest: function (data) {
-                                self.$spinner = true;
-                                return data;
-                            }
-                        }, $_api.config),
-                        body = angular.toJson(self);
-
-                    if (self.id) {
-                        $http.put($_api.path + Item.path + self.id, body, config)
-                            .then(function (response) {
-                                self.$spinner = false;
-                                defer.resolve(response);
-                            }, function (response) {
-                                self.$spinner = false;
-                                defer.reject(response);
-                            });
-                    } else {
-                        $http.post($_api.path + Item.path, body, config)
-                            .then(function (response) {
-                                self.$spinner = false;
-                                self.id = response.data.id;
-                                defer.resolve(response);
-                            }, function (response) {
-                                self.$spinner = false;
-                                defer.reject(response);
-                            });
-                    }
-
-                    return defer.promise;
+                    return this.$update();
                 };
 
                 Item.prototype.$unpublish = function () {
-                    this.tags = ['unpublished'];
+                    this.tags = _.without(this.tags, 'edited', 'raw', 'published', 'unpublished');
+                    this.tags.push('unpublished');
 
-                    var self = this,
-                        defer = $q.defer(),
-                        config = angular.extend({
-                            transformRequest: function (data) {
-                                self.$spinner = true;
-                                return data;
-                            }
-                        }, $_api.config),
-                        body = angular.toJson(self);
+                    return this.$update();
+                };
 
-                    if (self.id) {
-                        $http.put($_api.path + Item.path + self.id, body, config)
-                            .then(function (response) {
-                                self.$spinner = false;
-                                defer.resolve(response);
-                            }, function (response) {
-                                self.$spinner = false;
-                                defer.reject(response);
-                            });
-                    } else {
-                        $http.post($_api.path + Item.path, body, config)
-                            .then(function (response) {
-                                self.$spinner = false;
-                                self.id = response.data.id;
-                                defer.resolve(response);
-                            }, function (response) {
-                                self.$spinner = false;
-                                defer.reject(response);
-                            });
-                    }
+                Item.prototype.$flag = function () {
+                    this.tags = _.without(this.tags, 'flagged');
+                    this.tags.push('flagged');
 
-                    return defer.promise;
+                    return this.$update();
                 };
 
                 Item.prototype.calcFillPercent = function () {
