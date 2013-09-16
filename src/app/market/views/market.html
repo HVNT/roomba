@@ -93,17 +93,27 @@
                                 ng-click="publishSelected()">
                             <i class="icon-cloud-upload"></i>
                         </button>
-                        <button class="btn btn-success hint--bottom hint--success hint--bounce"
-                                data-hint="Save Selected"
-                                ng-click="saveSelected()">
-                            <i class="icon-save"></i>
-                        </button>
-                        <button class="btn btn-danger hint--top hint--error hint--bounce"
+                        <button class="btn btn-danger hint--bottom hint--error hint--bounce"
                                 ng-click="unpublishSelected()"
                                 data-hint="Un Publish Selected">
                             <i class="icon-cloud"></i>
                         </button>
+                        <button class="btn btn-success hint--top hint--success hint--bounce"
+                                data-hint="Save Selected"
+                                ng-click="saveSelected()">
+                            <i class="icon-save"></i>
+                        </button>
+                        <button class="btn hint--bottom hint--info hint--bounce" data-hint="Join"
+                                ng-click="joinSelected()">
+                            <i class="icon-exchange"></i>
+                        </button>
+                        <button class="btn btn-danger hint--top hint--error hint--bounce"
+                                ng-click="flagSelected()"
+                                data-hint="Flag Selected">
+                            <i class="icon-flag"></i>
+                        </button>
                     </div>
+
                 </div>
             </div>
             <div class="scroll-container">
@@ -119,6 +129,7 @@
 
                         <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'bold': item.isEdited}"
                              ng-click="openDetails(item)">
+                            <div class="col-lg-1" ng-show="isFlagged(item)"></div>
                             {{item.title}}
 
                         </div>
