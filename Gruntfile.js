@@ -247,6 +247,16 @@ module.exports = function (grunt) {
                         src: [
                             'components/**/*'
                         ]
+                    },
+                    {
+                        expand: true,
+                        dot: false,
+                        flatten: false,
+                        cwd: '<%= yeoman.stage %>',
+                        dest: '<%= yeoman.dist %>/dev',
+                        src: [
+                            '**/*.html'
+                        ]
                     }
                 ]
             },
@@ -293,6 +303,16 @@ module.exports = function (grunt) {
                         src: [
                             'components/**/*'
                         ]
+                    },
+                    {
+                        expand: true,
+                        dot: false,
+                        flatten: false,
+                        cwd: '<%= yeoman.stage %>',
+                        dest: '<%= yeoman.dist %>/demo',
+                        src: [
+                            '**/*.html'
+                        ]
                     }
                 ]
             },
@@ -338,6 +358,16 @@ module.exports = function (grunt) {
                         dest: '<%= yeoman.dist %>/prod',
                         src: [
                             'components/**/*'
+                        ]
+                    },
+                    {
+                        expand: true,
+                        dot: false,
+                        flatten: false,
+                        cwd: '<%= yeoman.stage %>',
+                        dest: '<%= yeoman.dist %>/prod',
+                        src: [
+                            '**/*.html'
                         ]
                     }
                 ]
