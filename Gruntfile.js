@@ -245,7 +245,8 @@ module.exports = function (grunt) {
                         cwd: '<%= yeoman.app %>',
                         dest: '<%= yeoman.dist %>/dev',
                         src: [
-                            'components/**/*'
+                            'components/**/*',
+                            'app-config/**/*'
                         ]
                     },
                     {
@@ -301,7 +302,8 @@ module.exports = function (grunt) {
                         cwd: '<%= yeoman.app %>',
                         dest: '<%= yeoman.dist %>/demo',
                         src: [
-                            'components/**/*'
+                            'components/**/*',
+                            'app-config/**/*'
                         ]
                     },
                     {
@@ -357,7 +359,8 @@ module.exports = function (grunt) {
                         cwd: '<%= yeoman.app %>',
                         dest: '<%= yeoman.dist %>/prod',
                         src: [
-                            'components/**/*'
+                            'components/**/*',
+                            'app-config/**/*'
                         ]
                     },
                     {

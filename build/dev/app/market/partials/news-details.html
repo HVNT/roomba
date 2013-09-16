@@ -12,14 +12,25 @@
             <div class="col-lg-10" ui-if="!field.fields">
                 <div class="row">
                     <div class="col-lg-10" ng-switch="field.type">
-                        <input ng-switch-default="" type="text" class="form-control" ng-readonly="subfield.readonly" ng-model="activeItem[field.key]">
+                        <input ng-switch-default
+                               type="text" class="form-control"
+                               ng-readonly="subfield.readonly"
+                               ng-model="activeItem[field.key]"/>
 
-                        <input ng-switch-when="typeahead" type="text" class="form-control" typeahead-editable="true" typeahead="option for option in field.typeahead | filter:$viewValue" ng-model="activeItem[field.key]">
+                        <input ng-switch-when="typeahead"
+                               type="text" class="form-control"
+                               typeahead-editable="true"
+                               typeahead="option for option in field.typeahead | filter:$viewValue"
+                               ng-model="activeItem[field.key]"/>
 
-                        <input ng-switch-when="date" type="text" class="form-control" ng-model="activeItem[field.key]" ui-date="">
+                        <input ng-switch-when="date"
+                               type="text" class="form-control"
+                               ng-model="activeItem[field.key]" ui-date/>
 
 
-                        <textarea cols="30" rows="10" ng-switch-when="textarea" class="form-control" ng-model="activeItem[field.key]"></textarea>
+                        <textarea cols="30" rows="10" ng-switch-when="textarea"
+                                  class="form-control"
+                                  ng-model="activeItem[field.key]"></textarea>
                     </div>
                 </div>
             </div>
@@ -28,7 +39,10 @@
             <div class="col-lg-10" ui-if="field.fields">
                 <div class="form-group" ng-repeat="subfield in field.fields" ng-hide="subfield.hidden">
                     <div class="col-lg-10">
-                        <input type="text" class="form-control" ng-model="activeItem[field.key][subfield.key]" ng-readonly="subfield.readonly" placeholder="{{ subfield.title }}">
+                        <input type="text" class="form-control"
+                               ng-model="activeItem[field.key][subfield.key]"
+                               ng-readonly="subfield.readonly"
+                               placeholder="{{ subfield.title }}"/>
                     </div>
                 </div>
             </div>
