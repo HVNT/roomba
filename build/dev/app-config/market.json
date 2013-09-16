@@ -2,7 +2,6 @@
     "listings": {
         "title": "Listings",
         "key": "listings",
-        "tags": ["raw", "edited", "published"],
         "path": "/listings/",
         "dimensions": {
             "discreet": {
@@ -13,7 +12,7 @@
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
-                    "restrict": ["edited", "published", "raw"]
+                    "restrict": ["edited", "published", "raw", "unpublished"]
                 },
                 "propertyStatus": {
                     "title": "Property Status",
@@ -274,7 +273,6 @@
     "news": {
         "title": "News",
         "key": "news",
-        "tags": [],
         "path": "/news/",
         "dimensions": {
             "discreet": {},

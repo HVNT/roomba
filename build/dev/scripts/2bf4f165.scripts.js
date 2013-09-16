@@ -23685,6 +23685,34 @@ angular.module('roomba.app', [
         }
         return defer.promise;
       };
+      Item.prototype.$unpublish = function () {
+        this.tags = ['unpublished'];
+        var self = this, defer = $q.defer(), config = angular.extend({
+            transformRequest: function (data) {
+              self.$spinner = true;
+              return data;
+            }
+          }, $_api.config), body = angular.toJson(self);
+        if (self.id) {
+          $http.put($_api.path + Item.path + self.id, body, config).then(function (response) {
+            self.$spinner = false;
+            defer.resolve(response);
+          }, function (response) {
+            self.$spinner = false;
+            defer.reject(response);
+          });
+        } else {
+          $http.post($_api.path + Item.path, body, config).then(function (response) {
+            self.$spinner = false;
+            self.id = response.data.id;
+            defer.resolve(response);
+          }, function (response) {
+            self.$spinner = false;
+            defer.reject(response);
+          });
+        }
+        return defer.promise;
+      };
       Item.prototype.calcFillPercent = function () {
         var self = this, _edited = self.edited, _raw = self.raw, hasEdited = false, fieldCounter = {
             total: 0,
@@ -23974,6 +24002,22 @@ angular.module('roomba.app').config([
             $scope.setGlobalAlert({
               type: 'success',
               text: successes + ' items published.'
+            });
+          });
+          _item.isSelected = false;
+        }
+      }
+    };
+    $scope.unpublishSelected = function () {
+      var successes = 0;
+      for (var i = $scope.items.length - 1; i >= 0; i--) {
+        var _item = $scope.items[i];
+        if (_item.isSelected) {
+          _item.$unpublish().then(function () {
+            successes++;
+            $scope.setGlobalAlert({
+              type: 'success',
+              text: successes + ' items unpublished.'
             });
           });
           _item.isSelected = false;
