@@ -696,7 +696,6 @@ module.exports = function (grunt) {
         'copy:dev',
         'cssmin:dev',
         'ngmin:dev',
-        'uglify:dev',
         'rev:dev',
         'usemin'
     ]);
