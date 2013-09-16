@@ -14,6 +14,7 @@
                     <div class="col-lg-10" ng-switch="field.type">
                         <input ng-switch-default
                                type="text" class="form-control"
+                               ng-readonly="subfield.readonly"
                                ng-model="activeItem[field.key]"/>
 
                         <input ng-switch-when="typeahead"
@@ -40,6 +41,7 @@
                     <div class="col-lg-10">
                         <input type="text" class="form-control"
                                ng-model="activeItem[field.key][subfield.key]"
+                               ng-readonly="subfield.readonly"
                                placeholder="{{ subfield.title }}"/>
                     </div>
                 </div>

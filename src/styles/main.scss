@@ -226,6 +226,10 @@ $marketListBg: #333;
 
   input {
     @extend %input-edit;
+
+    &[readonly] {
+      background-color: #999;
+    }
   }
 }
 

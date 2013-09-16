@@ -18,6 +18,7 @@
                         <input ng-switch-default
                                type="text" class="form-control"
                                ng-hide="activeItem.raw[field.key].showRaw"
+                               ng-readonly="subfield.readonly"
                                ng-model="activeItem.edited[field.key]"/>
 
                         <input ng-switch-when="typeahead"
@@ -64,6 +65,7 @@
                         <input type="text" class="form-control"
                                ng-hide="activeItem.raw[field.key][subfield.key].showRaw"
                                ng-model="activeItem.edited[field.key][subfield.key]"
+                               ng-readonly="subfield.readonly"
                                placeholder="{{ subfield.title }}"/>
                         <input type="text"
                                class="form-control status-text-{{ activeItem.raw[field.key][subfield.key].status }}"

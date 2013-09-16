@@ -14,37 +14,19 @@ angular.module('roomba.app')
                     resolve: {
                         collection: function (Market, $route, $q, Models) {
                             var defer = $q.defer(),
-                                _Item = Models[$route.current.params.collection];
+                                _Item;
 
-                            _Item.query().then(function (response) {
-                                defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
-                            });
-
-                            return defer.promise;
-                        },
-                        Model: function ($route, Models) {
-                            return Models[$route.current.params.collection];
-                        }
-                    }
-                })
-                .when('/market/:collection/:tag',
-                {
-                    templateUrl: '/app/market/views/market.html?v=' + Date.now(),
-                    controller: 'CollectionCtrl',
-                    reloadOnSearch: false,
-                    resolve: {
-                        collection: function (Market, $route, $q, Models) {
-                            var defer = $q.defer(),
-                                _Item = Models[$route.current.params.collection];
-
-                            _Item.query($route.current.params.tag).then(function (response) {
-                                defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
-                            });
+                            Models.request()
+                                .then(function (models) {
+                                    _Item = models[$route.current.params.collection];
+                                    return _Item.query();
+                                })
+                                .then(function (response) {
+                                    Market.initialize(response.data, _Item.dimensions, _Item);
+                                    defer.resolve(_Item);
+                                });
 
                             return defer.promise;
-                        },
-                        Model: function ($route, Models) {
-                            return Models[$route.current.params.collection];
                         }
                     }
                 })
@@ -52,20 +34,14 @@ angular.module('roomba.app')
                     redirectTo: '/market'
                 });
         }])
-    .controller('MarketCtrl', ['$scope', '$collections', '$location', 'collection', '$http',
-        function ($scope, $collections, $location, collection, $http) {
-            $scope.collections = $collections;
-            $scope.collection = collection;
-
-        }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model', '$q',
-        function ($scope, Market, $routeParams, $location, Model, $q) {
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'collection', '$q',
+        function ($scope, Market, $routeParams, $location, collection, $q) {
             $scope.items = Market.getItems();
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
             $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
-            $scope.collection = Model.collection;
+            $scope.collection = collection.collection;
             $scope.srcListingDetails = '/app/market/partials/' + $scope.collection.key + '-details.html?v=' + Date.now();
             $scope.searchBy = {
                 $: ""
@@ -202,6 +178,9 @@ angular.module('roomba.app')
                                     .then(function (response) {
                                         if (response.status) {
                                             saveStats.geoSuccesses++;
+                                        } else {
+                                            console.log(response);
+                                            saveStats.geoFails++;
                                         }
                                         return _item.$save();
                                     }, function (response) {
@@ -234,7 +213,7 @@ angular.module('roomba.app')
                             },
                             {
                                 type: 'danger',
-                                text: "Failed to save " + saveStats.saveFails + " items.  Failed to geocode " + saveStats.geoFails + " items."
+                                text: saveStats.geoFails + " geocode fails." + saveStats.saveFails + " save fails.  "
                             }
                         ]);
                     } else {
@@ -372,6 +351,11 @@ angular.module('roomba.app')
                                     type: 'success',
                                     text: item.title + ' successfully geocoded.'
                                 });
+                            } else {
+                                $scope.addGlobalAlert({
+                                    type: 'warning',
+                                    text: item.title + ' did not geocode: ' + response.message
+                                });
                             }
                             return item.$save();
                         }, function (response) {
@@ -400,6 +384,11 @@ angular.module('roomba.app')
                                 $scope.addGlobalAlert({
                                     type: 'success',
                                     text: item.title + ' successfully geocoded.'
+                                });
+                            } else {
+                                $scope.addGlobalAlert({
+                                    type: 'warning',
+                                    text: item.title + ' did not geocode: ' + response.message
                                 });
                             }
                             return item.$saveResources($scope.activeItemResources);
@@ -484,20 +473,36 @@ angular.module('roomba.app')
                     return val.$$hashKey === model.$$hashKey;
                 });
             };
-
             $scope.showRaw = function () {
                 $scope.modelView.showRaw = !$scope.modelView.showRaw;
             };
         }])
-    .factory('Models', ['Item', '$collections',
-        function (Item, $collections) {
+    .factory('Models', ['Item', '$http', '$_api', '$q',
+        function (Item, $http, $_api, $q) {
             var models = {};
 
-            angular.forEach($collections, function (value, key) {
-                models[key] = Item(value);
-            });
+            return {
+                get: function () {
+                    return models;
+                },
+                request: function () {
+                    var defer = $q.defer();
 
-            return models;
+                    $http.get('/app-config/market.json', $_api.config)
+                        .success(function (response) {
+                            angular.forEach(response, function (value, key) {
+                                models[key] = Item(value);
+                            });
+
+                            defer.resolve(models);
+                        })
+                        .error(function(data, status, headers, config) {
+                            console.log('error');
+                        });
+
+                    return defer.promise;
+                }
+            };
         }])
     .directive('focusFirstOn', function () {
         return {
