@@ -8,7 +8,7 @@
 
 angular.module('roomba.mock', ['roomba.app', 'ngMockE2E'])
 // Dummy Calls
-    .run(['$httpBackend', '$timeout', '$collections', function ($httpBackend, $timeout, $collections) {
+    .run(['$httpBackend', '$timeout', function ($httpBackend, $timeout) {
         $httpBackend.whenGET('/app-config/market.json')
             .respond({
                 listings: {
