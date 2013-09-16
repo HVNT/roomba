@@ -158,6 +158,23 @@ angular.module('roomba.app')
                 }
             };
 
+            $scope.unpublishSelected = function () {
+                var successes = 0;
+                for (var i = $scope.items.length - 1; i >= 0; i--) {
+                    var _item = $scope.items[i];
+                    if (_item.isSelected) {
+                        _item.$unpublish().then(function () {
+                            successes++;
+                            $scope.setGlobalAlert({
+                                type: 'success',
+                                text: successes + " items unpublished."
+                            });
+                        });
+                        _item.isSelected = false;
+                    }
+                }
+            };
+
             $scope.saveSelected = function () {
                 var saveStats = {
                     saveSuccesses: 0,
