@@ -23622,15 +23622,7 @@ angular.module('roomba.app', [
         }
         return $q.all(promises);
       };
-      Item.prototype.$save = function () {
-        if (_.contains(this.tags, 'published')) {
-          this.tags = [
-            'edited',
-            'published'
-          ];
-        } else {
-          this.tags = ['edited'];
-        }
+      Item.prototype.$update = function () {
         var self = this, defer = $q.defer(), config = angular.extend({
             transformRequest: function (data) {
               self.$spinner = true;
@@ -23656,62 +23648,26 @@ angular.module('roomba.app', [
           });
         }
         return defer.promise;
+      };
+      Item.prototype.$save = function () {
+        this.tags = _.without(this.tags, 'edited', 'raw');
+        this.tags.push('edited');
+        return this.$update();
       };
       Item.prototype.$publish = function () {
-        this.tags = ['published'];
-        var self = this, defer = $q.defer(), config = angular.extend({
-            transformRequest: function (data) {
-              self.$spinner = true;
-              return data;
-            }
-          }, $_api.config), body = angular.toJson(self);
-        if (self.id) {
-          $http.put($_api.path + Item.path + self.id, body, config).then(function (response) {
-            self.$spinner = false;
-            defer.resolve(response);
-          }, function (response) {
-            self.$spinner = false;
-            defer.reject(response);
-          });
-        } else {
-          $http.post($_api.path + Item.path, body, config).then(function (response) {
-            self.$spinner = false;
-            self.id = response.data.id;
-            defer.resolve(response);
-          }, function (response) {
-            self.$spinner = false;
-            defer.reject(response);
-          });
-        }
-        return defer.promise;
+        this.tags = _.without(this.tags, 'edited', 'raw', 'published', 'unpublished');
+        this.tags.push('published');
+        return this.$update();
       };
       Item.prototype.$unpublish = function () {
-        this.tags = ['unpublished'];
-        var self = this, defer = $q.defer(), config = angular.extend({
-            transformRequest: function (data) {
-              self.$spinner = true;
-              return data;
-            }
-          }, $_api.config), body = angular.toJson(self);
-        if (self.id) {
-          $http.put($_api.path + Item.path + self.id, body, config).then(function (response) {
-            self.$spinner = false;
-            defer.resolve(response);
-          }, function (response) {
-            self.$spinner = false;
-            defer.reject(response);
-          });
-        } else {
-          $http.post($_api.path + Item.path, body, config).then(function (response) {
-            self.$spinner = false;
-            self.id = response.data.id;
-            defer.resolve(response);
-          }, function (response) {
-            self.$spinner = false;
-            defer.reject(response);
-          });
-        }
-        return defer.promise;
+        this.tags = _.without(this.tags, 'edited', 'raw', 'published', 'unpublished');
+        this.tags.push('unpublished');
+        return this.$update();
+      };
+      Item.prototype.$flag = function () {
+        this.tags = _.without(this.tags, 'flagged');
+        this.tags.push('flagged');
+        return this.$update();
       };
       Item.prototype.calcFillPercent = function () {
         var self = this, _edited = self.edited, _raw = self.raw, hasEdited = false, fieldCounter = {
@@ -23984,6 +23940,9 @@ angular.module('roomba.app').config([
     $scope.isRawNull = function (field) {
       return field ? field.status == null || field.value === '' || field.value == null : true;
     };
+    $scope.hasTag = function (item, tag) {
+      return _.contains(item.tags, tag);
+    };
     $scope.setSearchCriteria = function (field) {
       $scope.activeSearch = {};
       $scope.activeSearch = field ? field : {
@@ -23991,6 +23950,22 @@ angular.module('roomba.app').config([
         key: '$'
       };
       $scope.searchBy[$scope.activeSearch.key] = '';
+    };
+    $scope.flagSelected = function () {
+      var successes = 0;
+      for (var i = $scope.items.length - 1; i >= 0; i--) {
+        var _item = $scope.items[i];
+        if (_item.isSelected) {
+          _item.$flag().then(function () {
+            successes++;
+            $scope.setGlobalAlert({
+              type: 'success',
+              text: successes + ' items flagged.'
+            });
+          });
+          _item.isSelected = false;
+        }
+      }
     };
     $scope.publishSelected = function () {
       var successes = 0;
