@@ -45,6 +45,18 @@ $bgColor: $grayLighter;
   }
 }
 
+.global-alerts-container {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  width: 50%;
+  margin-left: -25%;
+  z-index: 5000;
+
+  .alert {
+    box-shadow: 0 0px 4px rgba(0,0,0,0.2);
+  }
+}
 
 .origami-left {
   position: absolute;

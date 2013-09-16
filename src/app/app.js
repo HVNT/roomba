@@ -135,6 +135,16 @@ angular.module('roomba.app',
                         {
                             title: 'Zip',
                             key: 'zip'
+                        },
+                        {
+                            title: 'Latitude',
+                            key: 'latitude',
+                            hidden: true
+                        },
+                        {
+                            title: 'Longitude',
+                            key: 'longitude',
+                            hidden: true
                         }
                     ]
                 }
@@ -346,6 +356,16 @@ angular.module('roomba.app',
                         {
                             title: 'Zip',
                             key: 'zip'
+                        },
+                        {
+                            title: 'Latitude',
+                            key: 'latitude',
+                            hidden: true
+                        },
+                        {
+                            title: 'Longitude',
+                            key: 'longitude',
+                            hidden: true
                         }
                     ]
                 }
@@ -415,8 +435,9 @@ angular.module('roomba.app',
         "WI": "Wisconsin",
         "WY": "Wyoming"
     })
-    .factory('Item', ['$_api', '$q', '$http', 'States',
-        function ($_api, $q, $http, States) {
+    .factory('Item', ['$_api', '$q', '$http', 'States', '$rootScope',
+
+        function ($_api, $q, $http, States, $rootScope) {
 
             function ItemFactory(collection) {
 
@@ -430,7 +451,6 @@ angular.module('roomba.app',
                         self = this;
 
                     angular.copy(opts, this);
-
 
                     self.checkStateAbbreviation();
                     if (collection.key === 'listings') {
@@ -476,7 +496,6 @@ angular.module('roomba.app',
                                     }
                                 }
                             });
-
 
                             angular.forEach(collection.models, function (modelConfig) {
                                 // Initialize raw fields based off config
@@ -558,7 +577,7 @@ angular.module('roomba.app',
                             angular.forEach(collection.fields, function (fieldConfig) {
                                 // Initialize raw fields based off config
                                 if (fieldConfig.fields) {
-                                    var _field = self[fieldConfig.key] = self[fieldConfig.key] || {} ;
+                                    var _field = self[fieldConfig.key] = self[fieldConfig.key] || {};
 
                                     for (var i = 0; i < fieldConfig.fields.length; i++) {
                                         var subFieldConfig = fieldConfig.fields[i];
@@ -657,6 +676,56 @@ angular.module('roomba.app',
                         self.$spinner = false;
                         defer.reject(response);
                     });
+
+                    return defer.promise;
+                };
+
+                Item.prototype.$geocode = function () {
+
+                    var defer = $q.defer(),
+                        self = this,
+                        geocoder = new google.maps.Geocoder(),
+                        address = self.edited ? self.edited.address : self.address;
+
+                    if (address.street1 && address.city && address.state) {
+                        geocoder.geocode({
+                            address: address.street1 + ',' + address.city + ',' + address.state
+                        }, function(results, status){
+                            if (!$rootScope.$$phase) {
+                                $rootScope.$apply(function () {
+                                    if (results) {
+                                        var _location = results[0].geometry.location;
+                                        if (_location) {
+                                            address.latitude = _location.lat();
+                                            address.longitude = _location.lng();
+                                            defer.resolve({status: "success"});
+                                        } else {
+                                            defer.reject({message: "Could not find location."});
+                                        }
+                                    } else {
+                                        defer.reject({message: "No results", status: status});
+                                    }
+                                });
+                            } else {
+                                if (results) {
+                                    var _location = results[0].geometry.location;
+                                    if (_location) {
+                                        address.latitude = _location.lat();
+                                        address.longitude = _location.lng();
+                                        defer.resolve({status: "success"});
+                                    } else {
+                                        defer.reject({message: "Could not find location."});
+                                    }
+                                } else {
+                                    defer.reject({message: "No results", status: status});
+                                }
+                            }
+
+                        });
+                    } else {
+                        defer.resolve({status: 0, message: "No address provided."})
+                    }
+
 
                     return defer.promise;
                 };
@@ -912,9 +981,9 @@ angular.module('roomba.app',
                         fieldCounter.total = 0;
                         fieldCounter.filled = 0;
 
-                        angular.forEach(collection.fields, function(fieldConfig){
+                        angular.forEach(collection.fields, function (fieldConfig) {
                             if (fieldConfig.fields) {
-                                angular.forEach(fieldConfig.fields, function(subFieldConfig){
+                                angular.forEach(fieldConfig.fields, function (subFieldConfig) {
                                     if (self[fieldConfig.key][subFieldConfig.key]) {
                                         fieldCounter.filled++;
                                     }
@@ -985,6 +1054,31 @@ angular.module('roomba.app',
                 $scope.loading = false;
                 $scope.failure = true;
             });
+
+            $scope.globalAlerts = [];
+
+            $scope.setGlobalAlert = function (alert) {
+                if (angular.isArray(alert) ) {
+                    $scope.globalAlerts = alert;
+                } else {
+                    $scope.globalAlerts = [alert];
+                }
+            };
+
+            $scope.addGlobalAlert = function (alert) {
+                $scope.globalAlerts.push(alert);
+            };
+
+            $scope.closeGlobalAlert = function (alert) {
+                $scope.globalAlerts = _.reject($scope.globalAlerts, function (val) {
+                    return angular.equals(alert, val);
+                });
+            };
+
+            $scope.clearGlobalAlerts = function () {
+                $scope.globalAlerts = [];
+            };
+
         }]);
 
 

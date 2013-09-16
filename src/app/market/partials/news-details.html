@@ -2,7 +2,7 @@
 <div class="row">
     <div class="details-header"><h3> {{ activeItem.title }}</h3></div>
     <form class="form-horizontal fields-editor" ng-submit="noop()">
-        <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'">
+        <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'" ng-hide="field.hidden">
 
             <label class="col-lg-2 control-label">
                 {{ field.title }}
@@ -36,7 +36,7 @@
 
             <!--Address and other subfield-->
             <div class="col-lg-10" ui-if="field.fields">
-                <div class="form-group" ng-repeat="subfield in field.fields">
+                <div class="form-group" ng-repeat="subfield in field.fields" ng-hide="subfield.hidden">
                     <div class="col-lg-10">
                         <input type="text" class="form-control"
                                ng-model="activeItem[field.key][subfield.key]"

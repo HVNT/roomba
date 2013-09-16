@@ -17,7 +17,6 @@ angular.module('roomba.app')
                                 _Item = Models[$route.current.params.collection];
 
                             _Item.query().then(function (response) {
-                                console.log(response);
                                 defer.resolve(Market.initialize(response.data, _Item.dimensions, _Item));
                             });
 
@@ -59,8 +58,8 @@ angular.module('roomba.app')
             $scope.collection = collection;
 
         }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model',
-        function ($scope, Market, $routeParams, $location, Model) {
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'Model', '$q',
+        function ($scope, Market, $routeParams, $location, Model, $q) {
             $scope.items = Market.getItems();
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
@@ -71,52 +70,49 @@ angular.module('roomba.app')
             $scope.searchBy = {
                 $: ""
             };
+            $scope.marketView = {
+                collapseFilters: true
+            };
+            $scope.activeSearch = {title: 'Any', key: '$'};
 
             $scope.applyFilters = function () {
                 Market.apply();
             };
 
-            $scope.activeSearch = {title: 'Any', key: '$'};
-            $scope.tags = (function (tags) {
-                var _tags = {
-                    all: false
-                };
-                angular.forEach(tags, function(value){
-                    _tags[value] = false;
-                });
+            $scope.selectItem = function (item) {
+                if (Market.setActive(item)) {
+                    $scope.previousActive = $scope.activeItem;
 
-                return _tags;
-            })($scope.collection.tags);
+                    $scope.activeItem = Market.getActive();
+                    $scope.activeItem.isActive = true;
+                    $scope.activeItemResources = {};
 
-            $scope.marketView = {
-                collapseFilters: true
+                    if ($scope.previousActive) {
+                        $scope.previousActive.isActive = false;
+                    }
+                }
             };
-
-            $scope.activeTag = $routeParams.tag || 'all';
-
-            $scope.tags[$scope.activeTag] = true;
 
             function setActiveItem(id) {
-                $scope.activeItem = Market.setActive(id);
-                if ($scope.activeItem) {
-                    $scope.activeItemResources = {};
-                    $scope.activeItem.$getResources().then(function (results) {
-                        for (var i = results.length - 1; i >= 0; i--) {
-                            for (var _resource in results[i]) {
-                                if (results[i].hasOwnProperty(_resource)) {
-                                    $scope.activeItemResources[_resource] = [];
-                                    angular.copy(results[i][_resource], $scope.activeItemResources[_resource]);
+                if (id) {
+                    $scope.selectItem(id);
+
+                    if ($scope.activeItem) {
+                        $scope.activeItem.$getResources().then(function (results) {
+                            for (var i = results.length - 1; i >= 0; i--) {
+                                for (var _resource in results[i]) {
+                                    if (results[i].hasOwnProperty(_resource)) {
+                                        $scope.activeItemResources[_resource] = [];
+                                        angular.copy(results[i][_resource], $scope.activeItemResources[_resource]);
+                                    }
                                 }
                             }
-                        }
-                    });
+
+                            console.log($scope.activeItem);
+                        });
+                    }
                 }
             }
-
-            $scope.changeTag = function (tag) {
-                tag = (tag === 'all') ? '' : tag;
-                $location.path('/market/' + $routeParams.collection + '/' + tag);
-            };
 
             if ($location.search().id) {
                 setActiveItem($location.search().id);
@@ -146,8 +142,7 @@ angular.module('roomba.app')
             $scope.newItem = function () {
                 var _newItem = new Model();
                 $scope.items.unshift(_newItem);
-                $scope.activeItem = Market.setActive(_newItem);
-                $scope.activeItemResources = {};
+                $scope.selectItem(_newItem);
             };
 
             $scope.classRawField = function (field) {
@@ -171,35 +166,103 @@ angular.module('roomba.app')
             };
 
             $scope.publishSelected = function () {
+                var successes = 0;
                 for (var i = $scope.items.length - 1; i >= 0; i--) {
                     var _item = $scope.items[i];
                     if (_item.isSelected) {
-                        _item.$publish();
+                        _item.$publish().then(function () {
+                            successes++;
+                            $scope.setGlobalAlert({
+                                type: 'success',
+                                text: successes + " items published."
+                            });
+                        });
                         _item.isSelected = false;
                     }
                 }
             };
 
             $scope.saveSelected = function () {
-                for (var i = $scope.items.length - 1; i >= 0; i--) {
-                    var _item = $scope.items[i];
-                    if (_item.isSelected) {
-                        _item.$save();
-                        _item.isSelected = false;
+                var saveStats = {
+                    saveSuccesses: 0,
+                    saveFails: 0,
+                    geoSuccesses: 0,
+                    geoFails: 0
+                };
+
+                function saveAll() {
+                    var promises = [];
+                    for (var i = $scope.items.length - 1; i >= 0; i--) {
+                        var _item = $scope.items[i];
+                        if (_item.isSelected) {
+                            var defer = $q.defer();
+
+                            (function (defer, saveStats, _item) {
+                                _item.$geocode()
+                                    .then(function (response) {
+                                        if (response.status) {
+                                            saveStats.geoSuccesses++;
+                                        }
+                                        return _item.$save();
+                                    }, function (response) {
+                                        console.log(response);
+                                        saveStats.geoFails++;
+                                    })
+                                    .then(function () {
+                                        saveStats.saveSuccesses++;
+                                        defer.resolve();
+                                    }, function () {
+                                        defer.reject();
+                                        saveStats.saveFails++;
+                                    });
+                            })(defer, saveStats, _item);
+                            promises.push(defer.promise);
+
+                            _item.isSelected = false;
+                        }
                     }
+
+                    return $q.all(promises);
                 }
+
+                saveAll().then(function () {
+                    if (saveStats.geoFails || saveStats.saveFails) {
+                        $scope.setGlobalAlert([
+                            {
+                                type: 'success',
+                                text: saveStats.geoSuccesses + " items geocoded. " + saveStats.saveSuccesses + " items saved."
+                            },
+                            {
+                                type: 'danger',
+                                text: "Failed to save " + saveStats.saveFails + " items.  Failed to geocode " + saveStats.geoFails + " items."
+                            }
+                        ]);
+                    } else {
+                        $scope.setGlobalAlert({
+                            type: 'success',
+                            text: saveStats.geoSuccesses + " items geocoded. " + saveStats.saveSuccesses + " items saved."
+                        });
+                    }
+                })
+
             };
 
             $scope.noop = function () {
                 return null;
             };
         }])
-    .controller('MarketListCtrl', ['$scope', '$location',
+    .
+    controller('MarketListCtrl', ['$scope', '$location',
         function ($scope, $location) {
             var selectToggle = true;
 
-            $scope.openDetails = function (id) {
-                $location.search('id', id);
+            $scope.openDetails = function (item) {
+                if (item.id) {
+                    $location.search('id', item.id);
+                } else {
+                    $location.search('id', '');
+                    $scope.selectItem(item);
+                }
             };
 
             $scope.sortFields = {
@@ -216,9 +279,8 @@ angular.module('roomba.app')
                 $scope.sortFields[sortField] = true;
             };
 
-
             $scope.toggleSelectAll = function () {
-                angular.forEach($scope.filteredItems, function(value){
+                angular.forEach($scope.filteredItems, function (value) {
                     value.isSelected = selectToggle;
                 });
                 selectToggle = !selectToggle;
@@ -244,7 +306,7 @@ angular.module('roomba.app')
                                 $scope.copyModelFromRaw(obj, key, rawModel);
                             });
                         }
-                    } else if (!angular.isArray(rawValue)){
+                    } else if (!angular.isArray(rawValue)) {
                         angular.forEach(rawValue, function (rawSubValue, subKey) {
                             if (rawSubValue.hasOwnProperty('status') && rawSubValue.hasOwnProperty('value')) {
                                 if (rawSubValue.value) {
@@ -300,12 +362,78 @@ angular.module('roomba.app')
             };
 
             $scope.saveItem = function (item) {
+
+                $scope.clearGlobalAlerts();
                 if (_.isEmpty($scope.activeItemResources)) {
-                    item.$save();
+                    item.$geocode()
+                        .then(function (response) {
+                            if (response.status) {
+                                $scope.addGlobalAlert({
+                                    type: 'success',
+                                    text: item.title + ' successfully geocoded.'
+                                });
+                            }
+                            return item.$save();
+                        }, function (response) {
+                            $scope.addGlobalAlert({
+                                type: 'danger',
+                                text: 'Error during geocoding: ' + response.message || ''
+                            });
+                        })
+                        .then(function () {
+                            $scope.addGlobalAlert({
+                                type: 'success',
+                                text: item.title + ' successfully saved.'
+                            });
+
+                            console.log(item);
+                        }, function () {
+                            $scope.addGlobalAlert({
+                                type: 'danger',
+                                text: 'Failed to save ' + item.title + '.'
+                            });
+                        });
                 } else {
-                    item.$saveResources($scope.activeItemResources).then(function (results) {
-                        item.$save();
-                    });
+                    item.$geocode()
+                        .then(function (response) {
+                            if (response.status) {
+                                $scope.addGlobalAlert({
+                                    type: 'success',
+                                    text: item.title + ' successfully geocoded.'
+                                });
+                            }
+                            return item.$saveResources($scope.activeItemResources);
+                        }, function (response) {
+                            $scope.addGlobalAlert({
+                                type: 'danger',
+                                text: 'Error during geocoding: ' + response.message || ''
+                            });
+                        })
+                        .then(function (results) {
+                            $scope.addGlobalAlert({
+                                type: 'success',
+                                text: 'Resources successfully saved.'
+                            });
+
+                            return item.$save();
+                        }, function () {
+                            $scope.addGlobalAlert({
+                                type: 'danger',
+                                text: 'Failed to save resources.'
+                            });
+                        })
+                        .then(function () {
+                            $scope.addGlobalAlert({
+                                type: 'success',
+                                text: item.title + ' successfully saved.'
+                            });
+                            return
+                        }, function () {
+                            $scope.addGlobalAlert({
+                                type: 'danger',
+                                text: 'Failed to save ' + item.title + '.'
+                            });
+                        });
                 }
             };
         }])
@@ -357,8 +485,6 @@ angular.module('roomba.app')
                 });
             };
 
-
-
             $scope.showRaw = function () {
                 $scope.modelView.showRaw = !$scope.modelView.showRaw;
             };
@@ -406,7 +532,7 @@ angular.module('roomba.app')
                             });
                         },
                         stop: function (event, ui) {
-                            scope.$apply(function() {
+                            scope.$apply(function () {
                                 scope.applyFilters();
                             });
 

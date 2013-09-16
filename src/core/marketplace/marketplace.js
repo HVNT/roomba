@@ -25,19 +25,11 @@ angular.module('rescour.marketplace', ['rescour.config'])
 
             this.setActive = function (id) {
                 if (angular.isObject(id)) {
-                    prevActive = activeItem;
                     activeItem = id;
-                    activeItem.isActive = true;
                 } else if (this.items[id]) {
-                    prevActive = activeItem;
                     activeItem = this.items[id];
-                    activeItem.isActive = true;
                 } else {
                     activeItem = null;
-                }
-
-                if (prevActive) {
-                    prevActive.isActive = false;
                 }
 
                 return activeItem;
@@ -116,7 +108,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
                                         var _itemAttr = _item[_rangeKey] = parseInt(_item[_rangeKey], 10) || 'NA';
                                         if (!_rangeAttr.highBound) {
                                             if (((_itemAttr >= _rangeAttr.high) || _rangeAttr.high == null) && _itemAttr !== 'NA') {
-                                                console.log(_rangeAttr.high, _itemAttr);
                                                 _rangeAttr.high = _rangeAttr.highSelected =_itemAttr;
                                             }
                                         } else {
@@ -140,8 +131,6 @@ angular.module('rescour.marketplace', ['rescour.config'])
                     }
                 }
                 this.apply();
-                console.log(this.items);
-                console.log(this.dimensions);
                 return this.items;
             };
 
