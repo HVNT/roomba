@@ -1,0 +1,38 @@
+<div class="login-wrap" ng-cloak>
+    <div class="origami-left"></div>
+    <div class="origami-right"></div>
+
+    <div class="container login">
+        <div class="login-logo">
+            <a href="/"><img src="/img/logo-medium.png" alt=""/></a>
+        </div>
+        <form class="form-signin form-horizontal">
+            <h2 class="form-signin-heading">LOG IN</h2>
+
+            <div alert ng-repeat="alert in loginAlerts" type="alert.type">{{alert.msg}}</div>
+            <div class="form-group">
+                <label class="control-label col-lg-2">Email</label>
+
+                <div class="col-lg-10">
+                    <input class="form-control" type="text" ng-model="creds.email" placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2">Password</label>
+
+                <div class="col-lg-10">
+                    <input class="form-control" type="password" ng-model="creds.password" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-offset-2 col-lg-10">
+                    <button class="btn btn-large btn-danger" type="submit" ng-click="login()">Sign in</button>
+                    <button class="btn btn-large btn-danger" ng-click="forgotPassword()">Forgot Password</button>
+                </div>
+            </div>
+            <div class="sign-up-text">
+                Don't have an account yet? Click <a href="https://www.rescour.com/account">here</a> to sign up.
+            </div>
+        </form>
+    </div>
+</div>
