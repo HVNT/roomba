@@ -99,12 +99,12 @@ angular.module('roomba.app',
                     angular.copy(opts, this);
 
                     if (collection.key === 'listings') {
+                        self.checkStateAbbreviation();
                         if (!this.edited.title) {
                             this.title = this.raw.title.value || 'Untitled';
                         } else {
                             this.title = this.edited.title;
                         }
-                        self.checkStateAbbreviation();
                     } else if (collection.key === 'contacts') {
                         if (!this.edited.title) {
                             this.title = this.raw.name.value || 'Unnamed';
@@ -272,7 +272,6 @@ angular.module('roomba.app',
                             }
                         });
                     }
-
                 };
 
                 Item.collection = collection;
