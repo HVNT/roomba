@@ -501,7 +501,7 @@ angular.module('roomba.app',
                     return defer.promise;
                 };
 
-                Item.prototype.$delete = function() {
+                Item.prototype.$delete = function () {
                     var self = this,
                         defer = $q.defer(),
                         config = angular.extend({
@@ -553,8 +553,6 @@ angular.module('roomba.app',
 
                 Item.prototype.$join = function (selectedItem) {
                     var defer = $q.defer();
-                    this.tags = _.without(this.tags, 'flagged');
-                    this.tags.push('flagged');
 
                     function isNull(obj) {
                         var _isNull = true;
@@ -563,7 +561,7 @@ angular.module('roomba.app',
                                 angular.forEach(obj, function (value) {
                                     recursive(value);
                                 });
-                            } else if (obj != null && obj != '' && !angular.isArray(obj) &&  !angular.isObject(obj)) {
+                            } else if (obj != null && obj != '' && !angular.isArray(obj) && !angular.isObject(obj)) {
                                 console.log(obj);
                                 _isNull = false;
                                 return;
@@ -590,17 +588,18 @@ angular.module('roomba.app',
                     if (_oldItem && _newItem) {
                         _newItem.edited = _oldItem.edited;
                         _newItem.resources = _oldItem.resources;
-                        
-                        _newItem.$save().then(function(response) {
-                            _oldItem.$delete().then(function(response) {
+
+                        _newItem.$save()
+                            .then(function (response) {
+                                return _oldItem.$delete();
+                            },function (response) {
+                                defer.reject(response);
+                            }).then(function (response) {
                                 defer.resolve(response);
-                            }, function(response) {
+                            }, function (response) {
                                 defer.reject(response);
                             });
-                        }, function (response) {
-                            defer.reject(response);
-                        });
-                    
+
                         // Save _newItem, delete _old
                     } else {
                         throw new Error("Items are not compatible to join");
@@ -621,7 +620,8 @@ angular.module('roomba.app',
 
                     if (_edited && _raw) {
                         // Check edited first
-                        angular.forEach(_edited, function (editedField) { if (angular.isArray(editedField)) {
+                        angular.forEach(_edited, function (editedField) {
+                            if (angular.isArray(editedField)) {
                                 angular.forEach(editedField, function (editedModel) {
                                     angular.forEach(editedModel, function (editedModelField) {
                                         if (editedModelField) {
