@@ -501,6 +501,28 @@ angular.module('roomba.app',
                     return defer.promise;
                 };
 
+                Item.prototype.$delete = function() {
+                    var self = this,
+                        defer = $q.defer(),
+                        config = angular.extend({
+                            transformRequest: function (data) {
+                                self.$spinner = true;
+                                return data;
+                            }
+                        }, $_api.config);
+
+                    $http.delete($_api.path + Item.path + self.id, config)
+                        .then(function (response) {
+                            self.$spinner = false;
+                            defer.resolve(response);
+                        }, function (response) {
+                            self.$spinner = false;
+                            defer.reject(response);
+                        });
+
+                    return defer.promise;
+                }
+
                 Item.prototype.$save = function () {
                     this.tags = _.without(this.tags, 'edited', 'raw');
                     this.tags.push('edited');
@@ -541,7 +563,8 @@ angular.module('roomba.app',
                                 angular.forEach(obj, function (value) {
                                     recursive(value);
                                 });
-                            } else if (obj != null && !angular.isArray(obj) &&  !angular.isObject(obj)) {
+                            } else if (obj != null && obj != '' && !angular.isArray(obj) &&  !angular.isObject(obj)) {
+                                console.log(obj);
                                 _isNull = false;
                                 return;
                             }
@@ -553,13 +576,31 @@ angular.module('roomba.app',
                         throw new Error("No Item to join with");
                     }
 
-                    var _oldItem = isNull(this.raw) ? this : isNull(selectedItem.raw) ? selectedItem : null,
-                        _newItem = isNull(this.edited) ? this : isNull(selectedItem.edited) ? selectedItem : null;
+                    var _oldItem = null,
+                        _newItem = null;
+
+                    if (isNull(this.raw) && isNull(selectedItem.edited)) {
+                        _oldItem = this;
+                        _newItem = selectedItem;
+                    } else if (isNull(this.edited) && isNull(selectedItem.raw)) {
+                        _oldItem = selectedItem;
+                        _newItem = this;
+                    }
 
                     if (_oldItem && _newItem) {
-                        // Copy edited from old into new
-
-
+                        _newItem.edited = _oldItem.edited;
+                        _newItem.resources = _oldItem.resources;
+                        
+                        _newItem.$save().then(function(response) {
+                            _oldItem.$delete().then(function(response) {
+                                defer.resolve(response);
+                            }, function(response) {
+                                defer.reject(response);
+                            });
+                        }, function (response) {
+                            defer.reject(response);
+                        });
+                    
                         // Save _newItem, delete _old
                     } else {
                         throw new Error("Items are not compatible to join");
@@ -580,8 +621,7 @@ angular.module('roomba.app',
 
                     if (_edited && _raw) {
                         // Check edited first
-                        angular.forEach(_edited, function (editedField) {
-                            if (angular.isArray(editedField)) {
+                        angular.forEach(_edited, function (editedField) { if (angular.isArray(editedField)) {
                                 angular.forEach(editedField, function (editedModel) {
                                     angular.forEach(editedModel, function (editedModelField) {
                                         if (editedModelField) {
