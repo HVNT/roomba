@@ -19,6 +19,9 @@ angular.module('roomba.app')
                             Models.request()
                                 .then(function (models) {
                                     _Item = models[$route.current.params.collection];
+                                    if (_Item) {
+                                        Models.setActive($route.current.params.collection);
+                                    }
                                     return _Item.query();
                                 })
                                 .then(function (response) {
@@ -34,8 +37,8 @@ angular.module('roomba.app')
                     redirectTo: '/market'
                 });
         }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'collection', '$q',
-        function ($scope, Market, $routeParams, $location, collection, $q) {
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'collection', '$q', '$dialog',
+        function ($scope, Market, $routeParams, $location, collection, $q, $dialog) {
             $scope.items = Market.getItems();
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
@@ -50,6 +53,16 @@ angular.module('roomba.app')
                 collapseFilters: true
             };
             $scope.activeSearch = {title: 'Any', key: '$'};
+
+            $scope.joinDialog = $dialog.dialog({
+                templateUrl: '/app/market/partials/join-dialog.html?v=' + Date.now(),
+                controller: 'JoinDialogCtrl',
+                backdrop: true,
+                keyboard: true,
+                backdropClick: true,
+                dialogFade: true,
+                backdropFade: true
+            });
 
             $scope.applyFilters = function () {
                 Market.apply();
@@ -261,6 +274,12 @@ angular.module('roomba.app')
                 })
 
             };
+
+            $scope.openJoinDialog = function () {
+                $scope.joinDialog.open().then(function (response) {
+                    console.log(response);
+                });
+            }
 
             $scope.noop = function () {
                 return null;
@@ -513,13 +532,41 @@ angular.module('roomba.app')
                 $scope.modelView.showRaw = !$scope.modelView.showRaw;
             };
         }])
+    .controller('JoinDialogCtrl', ['$scope', 'Market', 'dialog', 'Models',
+        function ($scope, Market, dialog, Models) {
+            $scope.joinItems = Market.getItems();
+            $scope.activeItem = Market.getActive();
+            $scope.selectedItem = {};
+            $scope.collection = Models.getActive().collection;
+            $scope.searchBy = {};
+
+            $scope.join = function (selectedItem) {
+                console.log(selectedItem, $scope.activeItem);
+            };
+
+            $scope.selectItem = function (item) {
+                $scope.selectedItem = item;
+                console.log($scope.selectedItem);
+            };
+
+            $scope.close = function () {
+                dialog.close();
+            };
+        }])
     .factory('Models', ['Item', '$http', '$_api', '$q',
         function (Item, $http, $_api, $q) {
-            var models = {};
+            var models = {},
+                activeModel = {};
 
             return {
                 get: function () {
                     return models;
+                },
+                setActive: function (collectionKey) {
+                    activeModel = models[collectionKey];
+                },
+                getActive: function () {
+                    return activeModel;
                 },
                 request: function () {
                     var defer = $q.defer();
@@ -532,7 +579,7 @@ angular.module('roomba.app')
 
                             defer.resolve(models);
                         })
-                        .error(function(data, status, headers, config) {
+                        .error(function (data, status, headers, config) {
                             console.log('error');
                         });
 

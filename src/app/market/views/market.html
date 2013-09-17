@@ -143,10 +143,14 @@
              ng-controller="DetailsCtrl">
             <div class="row">
                 <div class="col-lg-12 header-actions">
-                    <div class="btn-group pull-left">
+                    <div class="btn-group pull-left" ui-if="collection.key  == 'listings'">
                         <a class="btn btn-inverse" target="_blank" ng-href="{{activeItem.raw.pages[0].url.value}}"
                            ng-class="{'disabled': !activeItem}">
                             Open
+                        </a>
+                        <a class="btn btn-info hint--bottom hint--info" data-hint="Open Join Dialog" ng-click="openJoinDialog()"
+                           ng-class="{'disabled': !activeItem}">
+                            <i class="icon-exchange"></i>
                         </a>
                     </div>
                     <div class="btn-group pull-right">

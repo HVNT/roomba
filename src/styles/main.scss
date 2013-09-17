@@ -2,6 +2,7 @@
 //@import "compass/reset";
 @import "compass_twitter_bootstrap/mixins";
 @import "compass_twitter_bootstrap/variables";
+@import "compass_twitter_bootstrap/modals";
 //@import "compass_twitter_bootstrap/scaffolding";
 //@import "rescour_variables";
 //@import "header";
@@ -179,6 +180,10 @@ $marketListBg: #333;
     &:hover,
     &.active {
       background-color: $marketListBg !important;
+    }
+
+    &:active {
+      background-color: darken($marketListBg, 5%) !important;
     }
 
     i {
@@ -395,4 +400,13 @@ $marketListBg: #333;
 
 .bold {
   font-weight: bold;
+}
+
+.modal {
+  display: block;
+  height: 526px;
+}
+
+.modal-footer {
+  margin-top: 0;
 }
