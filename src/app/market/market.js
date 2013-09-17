@@ -46,7 +46,6 @@ angular.module('roomba.app')
             $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
             $scope.collection = collection.collection;
-            console.log(collection);
             $scope.srcListingDetails = '/app/market/partials/' + $scope.collection.key + '-details.html?v=' + Date.now();
             $scope.searchBy = {
                 $: ""
@@ -426,8 +425,6 @@ angular.module('roomba.app')
                                 type: 'success',
                                 text: item.title + ' successfully saved.'
                             });
-
-                            console.log(item);
                         }, function () {
                             $scope.addGlobalAlert({
                                 type: 'danger',
@@ -543,6 +540,12 @@ angular.module('roomba.app')
             $scope.searchBy = {};
 
             $scope.join = function (selectedItem) {
+                $scope.activeItem.$join(selectedItem)
+                    .then(function () {
+                        dialog.close({status: "success", message: $scope.activeItem.title + ' and ' + selectedItem.title + ' successfully joined!'})
+                    }, function () {
+                        dialog.close({status: 0, message: 'Join failed.'})
+                    });
                 console.log(selectedItem, $scope.activeItem);
             };
 

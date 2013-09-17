@@ -529,6 +529,45 @@ angular.module('roomba.app',
                     return this.$update();
                 };
 
+                Item.prototype.$join = function (selectedItem) {
+                    var defer = $q.defer();
+                    this.tags = _.without(this.tags, 'flagged');
+                    this.tags.push('flagged');
+
+                    function isNull(obj) {
+                        var _isNull = true;
+                        (function recursive(obj) {
+                            if (angular.isObject(obj)) {
+                                angular.forEach(obj, function (value) {
+                                    recursive(value);
+                                });
+                            } else if (obj != null && !angular.isArray(obj) &&  !angular.isObject(obj)) {
+                                _isNull = false;
+                                return;
+                            }
+                        })(obj);
+                        return _isNull;
+                    }
+
+                    if (!selectedItem) {
+                        throw new Error("No Item to join with");
+                    }
+
+                    var _oldItem = isNull(this.raw) ? this : isNull(selectedItem.raw) ? selectedItem : null,
+                        _newItem = isNull(this.edited) ? this : isNull(selectedItem.edited) ? selectedItem : null;
+
+                    if (_oldItem && _newItem) {
+                        // Copy edited from old into new
+
+
+                        // Save _newItem, delete _old
+                    } else {
+                        throw new Error("Items are not compatible to join");
+                    }
+
+                    return defer.promise;
+                };
+
                 Item.prototype.calcFillPercent = function () {
                     var self = this,
                         _edited = self.edited,
