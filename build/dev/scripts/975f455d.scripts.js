@@ -23330,142 +23330,141 @@ angular.module('roomba.app', [
             isVisible: true
           }, opts = angular.extend({}, _defaults, data), self = this;
         angular.copy(opts, this);
-        self.checkStateAbbreviation();
         if (collection.key === 'listings') {
-          self.raw = self.raw || {};
-          self.edited = self.edited || {};
-          if (collection) {
-            angular.forEach(collection.fields, function (fieldConfig) {
-              var rawDefault = {
-                  value: null,
-                  status: null
-                };
-              if (fieldConfig.fields) {
-                var _rawField = self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || {}, _editedField = self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || {};
-                for (var i = 0; i < fieldConfig.fields.length; i++) {
-                  var subFieldConfig = fieldConfig.fields[i];
-                  _rawField[subFieldConfig.key] = _rawField[subFieldConfig.key] || rawDefault;
-                  _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] || (fieldConfig.placeholder || null);
-                  if (_rawField[subFieldConfig.key].status == 2) {
-                    self.isConflict = true;
-                  }
-                  if (subFieldConfig.type === 'date') {
-                    _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] ? new Date(_editedField[subFieldConfig.key]) : null;
-                    _editedField[subFieldConfig.key].value = _editedField[subFieldConfig.key].value ? new Date(_editedField[subFieldConfig.key].value) : null;
-                  }
-                }
-              } else {
-                self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || rawDefault;
-                self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
-                if (fieldConfig.type === 'date') {
-                  self.edited[fieldConfig.key] = self.edited[fieldConfig.key] ? new Date(self.edited[fieldConfig.key]) : null;
-                  self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(self.raw[fieldConfig.key].value) : null;
-                }
-              }
-            });
-            angular.forEach(collection.models, function (modelConfig) {
-              self.raw[modelConfig.key] = self.raw[modelConfig.key] || [];
-              self.edited[modelConfig.key] = self.edited[modelConfig.key] || [];
-              for (var i = 0; i < self.raw[modelConfig.key].length; i++) {
-                var modelInstance = self.raw[modelConfig.key][i];
-                for (var j = 0; j < modelConfig.fields.length; j++) {
-                  var modelFieldConfig = modelConfig.fields[j];
-                  modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || {
-                    value: null,
-                    status: null
-                  };
-                  if (modelInstance[modelFieldConfig.key].status == 2) {
-                    self.isConflict = true;
-                  }
-                }
-              }
-              for (var i = 0; i < self.edited[modelConfig.key].length; i++) {
-                var modelInstance = self.edited[modelConfig.key][i];
-                for (var j = 0; j < modelConfig.fields.length; j++) {
-                  var modelFieldConfig = modelConfig.fields[j];
-                  modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || (modelFieldConfig.placeholder || '');
-                }
-              }
-            });
-            angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
-              if (!attr.nested) {
-                if (self.hasOwnProperty(attrID)) {
-                  self[attrID] = self[attrID] || (self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || '')));
-                } else if (self.raw.hasOwnProperty(attrID)) {
-                  self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ''));
-                } else {
-                  throw new Error(attrID + ' is not defined in $collection');
-                }
-              } else {
-                if (self.raw.hasOwnProperty(attr.nested)) {
-                  if (self.raw[attr.nested].hasOwnProperty(attrID)) {
-                    self[attrID] = self.edited[attr.nested][attrID] || (self.raw[attr.nested][attrID].value || (attr.placeholder || ''));
-                  } else {
-                    throw new Error(attr.nested + ' has no property ' + attrID);
-                  }
-                } else {
-                  throw new Error(attr.nested + ' is not defined in $collection');
-                }
-              }
-            });
-            angular.forEach(collection.dimensions.range, function (attr, attrID) {
-              self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ''));
-            });
-          } else {
-            throw new Error('No collection defined');
-          }
+          self.checkStateAbbreviation();
           if (!this.edited.title) {
             this.title = this.raw.title.value || 'Untitled';
           } else {
             this.title = this.edited.title;
           }
-          if (_.contains(self.tags, 'edited')) {
-            self.isEdited = true;
+        } else if (collection.key === 'contacts') {
+          if (!this.edited.title) {
+            this.title = this.raw.name.value || 'Unnamed';
+          } else {
+            this.title = this.edited.name;
           }
         } else if (collection.key === 'news') {
-          if (collection) {
-            angular.forEach(collection.fields, function (fieldConfig) {
-              if (fieldConfig.fields) {
-                var _field = self[fieldConfig.key] = self[fieldConfig.key] || {};
-                for (var i = 0; i < fieldConfig.fields.length; i++) {
-                  var subFieldConfig = fieldConfig.fields[i];
-                  _field[subFieldConfig.key] = _field[subFieldConfig.key] || (fieldConfig.placeholder || null);
-                  if (subFieldConfig.type === 'date') {
-                    _field[subFieldConfig.key] = _field[subFieldConfig.key] ? new Date(_field[subFieldConfig.key]) : null;
-                  }
+          self.checkStateAbbreviation();
+        }
+        if (data.edited && data.raw) {
+          self.raw = self.raw || {};
+          self.edited = self.edited || {};
+          angular.forEach(collection.fields, function (fieldConfig) {
+            var rawDefault = {
+                value: null,
+                status: null
+              };
+            if (fieldConfig.fields) {
+              var _rawField = self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || {}, _editedField = self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || {};
+              for (var i = 0; i < fieldConfig.fields.length; i++) {
+                var subFieldConfig = fieldConfig.fields[i];
+                _rawField[subFieldConfig.key] = _rawField[subFieldConfig.key] || rawDefault;
+                _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] || (fieldConfig.placeholder || null);
+                if (_rawField[subFieldConfig.key].status == 2) {
+                  self.isConflict = true;
                 }
-              } else {
-                self[fieldConfig.key] = self[fieldConfig.key] || (fieldConfig.placeholder || null);
-                if (fieldConfig.type === 'date') {
-                  self[fieldConfig.key] = self[fieldConfig.key] ? new Date(self[fieldConfig.key]) : null;
-                }
-              }
-            });
-            angular.forEach(collection.models, function (modelConfig) {
-              self[modelConfig.key] = self[modelConfig.key] || [];
-            });
-            angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
-              if (!attr.nested) {
-                if (self.hasOwnProperty(attrID)) {
-                  self[attrID] = self[attrID] || (attr.placeholder || '');
-                } else {
-                  throw new Error(attrID + ' is not defined in $collection');
-                }
-              } else {
-                if (self.hasOwnProperty(attr.nested)) {
-                  if (self[attr.nested].hasOwnProperty(attrID)) {
-                    self[attrID] = self[attr.nested][attrID] || (attr.placeholder || '');
-                  } else {
-                    throw new Error(attr.nested + ' has no property ' + attrID);
-                  }
-                } else {
-                  throw new Error(attr.nested + ' is not defined in $collection');
+                if (subFieldConfig.type === 'date') {
+                  _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] ? new Date(_editedField[subFieldConfig.key]) : null;
+                  _editedField[subFieldConfig.key].value = _editedField[subFieldConfig.key].value ? new Date(_editedField[subFieldConfig.key].value) : null;
                 }
               }
-            });
-          } else {
-            throw new Error('No collection defined');
-          }
+            } else {
+              self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || rawDefault;
+              self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
+              if (fieldConfig.type === 'date') {
+                self.edited[fieldConfig.key] = self.edited[fieldConfig.key] ? new Date(self.edited[fieldConfig.key]) : null;
+                self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(self.raw[fieldConfig.key].value) : null;
+              }
+            }
+          });
+          angular.forEach(collection.models, function (modelConfig) {
+            self.raw[modelConfig.key] = self.raw[modelConfig.key] || [];
+            self.edited[modelConfig.key] = self.edited[modelConfig.key] || [];
+            for (var i = 0; i < self.raw[modelConfig.key].length; i++) {
+              var modelInstance = self.raw[modelConfig.key][i];
+              for (var j = 0; j < modelConfig.fields.length; j++) {
+                var modelFieldConfig = modelConfig.fields[j];
+                modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || {
+                  value: null,
+                  status: null
+                };
+                if (modelInstance[modelFieldConfig.key].status == 2) {
+                  self.isConflict = true;
+                }
+              }
+            }
+            for (var i = 0; i < self.edited[modelConfig.key].length; i++) {
+              var modelInstance = self.edited[modelConfig.key][i];
+              for (var j = 0; j < modelConfig.fields.length; j++) {
+                var modelFieldConfig = modelConfig.fields[j];
+                modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || (modelFieldConfig.placeholder || '');
+              }
+            }
+          });
+          angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
+            if (!attr.nested) {
+              if (self.hasOwnProperty(attrID)) {
+                self[attrID] = self[attrID] || (self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || '')));
+              } else if (self.raw.hasOwnProperty(attrID)) {
+                self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ''));
+              } else {
+                throw new Error(attrID + ' is not defined in $collection');
+              }
+            } else {
+              if (self.raw.hasOwnProperty(attr.nested)) {
+                if (self.raw[attr.nested].hasOwnProperty(attrID)) {
+                  self[attrID] = self.edited[attr.nested][attrID] || (self.raw[attr.nested][attrID].value || (attr.placeholder || ''));
+                } else {
+                  throw new Error(attr.nested + ' has no property ' + attrID);
+                }
+              } else {
+                throw new Error(attr.nested + ' is not defined in $collection');
+              }
+            }
+          });
+          angular.forEach(collection.dimensions.range, function (attr, attrID) {
+            self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ''));
+          });
+        } else {
+          angular.forEach(collection.fields, function (fieldConfig) {
+            if (fieldConfig.fields) {
+              var _field = self[fieldConfig.key] = self[fieldConfig.key] || {};
+              for (var i = 0; i < fieldConfig.fields.length; i++) {
+                var subFieldConfig = fieldConfig.fields[i];
+                _field[subFieldConfig.key] = _field[subFieldConfig.key] || (fieldConfig.placeholder || null);
+                if (subFieldConfig.type === 'date') {
+                  _field[subFieldConfig.key] = _field[subFieldConfig.key] ? new Date(_field[subFieldConfig.key]) : null;
+                }
+              }
+            } else {
+              self[fieldConfig.key] = self[fieldConfig.key] || (fieldConfig.placeholder || null);
+              if (fieldConfig.type === 'date') {
+                self[fieldConfig.key] = self[fieldConfig.key] ? new Date(self[fieldConfig.key]) : null;
+              }
+            }
+          });
+          angular.forEach(collection.models, function (modelConfig) {
+            self[modelConfig.key] = self[modelConfig.key] || [];
+          });
+          angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
+            if (!attr.nested) {
+              if (self.hasOwnProperty(attrID)) {
+                self[attrID] = self[attrID] || (attr.placeholder || '');
+              } else {
+                throw new Error(attrID + ' is not defined in $collection');
+              }
+            } else {
+              if (self.hasOwnProperty(attr.nested)) {
+                if (self[attr.nested].hasOwnProperty(attrID)) {
+                  self[attrID] = self[attr.nested][attrID] || (attr.placeholder || '');
+                } else {
+                  throw new Error(attr.nested + ' has no property ' + attrID);
+                }
+              } else {
+                throw new Error(attr.nested + ' is not defined in $collection');
+              }
+            }
+          });
         }
       };
       Item.collection = collection;
@@ -23897,7 +23896,6 @@ angular.module('roomba.app').config([
                 }
               }
             }
-            console.log($scope.activeItem);
           });
         }
       }
