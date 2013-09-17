@@ -23330,23 +23330,7 @@ angular.module('roomba.app', [
             isVisible: true
           }, opts = angular.extend({}, _defaults, data), self = this;
         angular.copy(opts, this);
-        if (collection.key === 'listings') {
-          self.checkStateAbbreviation();
-          if (!this.edited.title) {
-            this.title = this.raw.title.value || 'Untitled';
-          } else {
-            this.title = this.edited.title;
-          }
-        } else if (collection.key === 'contacts') {
-          if (!this.edited.title) {
-            this.title = this.raw.name.value || 'Unnamed';
-          } else {
-            this.title = this.edited.name;
-          }
-        } else if (collection.key === 'news') {
-          self.checkStateAbbreviation();
-        }
-        if (data.edited && data.raw) {
+        if (collection.key === 'listings' || collection.key === 'contacts') {
           self.raw = self.raw || {};
           self.edited = self.edited || {};
           angular.forEach(collection.fields, function (fieldConfig) {
@@ -23465,6 +23449,22 @@ angular.module('roomba.app', [
               }
             }
           });
+        }
+        if (collection.key === 'listings') {
+          self.checkStateAbbreviation();
+          if (!this.edited.title) {
+            this.title = this.raw.title.value || 'Untitled';
+          } else {
+            this.title = this.edited.title;
+          }
+        } else if (collection.key === 'contacts') {
+          if (!this.edited.title) {
+            this.title = this.raw.name.value || 'Unnamed';
+          } else {
+            this.title = this.edited.name;
+          }
+        } else if (collection.key === 'news') {
+          self.checkStateAbbreviation();
         }
       };
       Item.collection = collection;
@@ -23648,6 +23648,22 @@ angular.module('roomba.app', [
         }
         return defer.promise;
       };
+      Item.prototype.$delete = function () {
+        var self = this, defer = $q.defer(), config = angular.extend({
+            transformRequest: function (data) {
+              self.$spinner = true;
+              return data;
+            }
+          }, $_api.config);
+        $http.delete($_api.path + Item.path + self.id, config).then(function (response) {
+          self.$spinner = false;
+          defer.resolve(response);
+        }, function (response) {
+          self.$spinner = false;
+          defer.reject(response);
+        });
+        return defer.promise;
+      };
       Item.prototype.$save = function () {
         this.tags = _.without(this.tags, 'edited', 'raw');
         this.tags.push('edited');
@@ -23667,6 +23683,51 @@ angular.module('roomba.app', [
         this.tags = _.without(this.tags, 'flagged');
         this.tags.push('flagged');
         return this.$update();
+      };
+      Item.prototype.$join = function (selectedItem) {
+        var defer = $q.defer();
+        function isNull(obj) {
+          var _isNull = true;
+          (function recursive(obj) {
+            if (angular.isObject(obj)) {
+              angular.forEach(obj, function (value) {
+                recursive(value);
+              });
+            } else if (obj != null && obj != '' && !angular.isArray(obj) && !angular.isObject(obj)) {
+              console.log(obj);
+              _isNull = false;
+              return;
+            }
+          }(obj));
+          return _isNull;
+        }
+        if (!selectedItem) {
+          throw new Error('No Item to join with');
+        }
+        var _oldItem = null, _newItem = null;
+        if (isNull(this.raw) && isNull(selectedItem.edited)) {
+          _oldItem = this;
+          _newItem = selectedItem;
+        } else if (isNull(this.edited) && isNull(selectedItem.raw)) {
+          _oldItem = selectedItem;
+          _newItem = this;
+        }
+        if (_oldItem && _newItem) {
+          _newItem.edited = _oldItem.edited;
+          _newItem.resources = _oldItem.resources;
+          _newItem.$save().then(function (response) {
+            return _oldItem.$delete();
+          }, function (response) {
+            defer.reject(response);
+          }).then(function (response) {
+            defer.resolve(response);
+          }, function (response) {
+            defer.reject(response);
+          });
+        } else {
+          throw new Error('Items are not compatible to join');
+        }
+        return defer.promise;
       };
       Item.prototype.calcFillPercent = function () {
         var self = this, _edited = self.edited, _raw = self.raw, hasEdited = false, fieldCounter = {
@@ -23838,6 +23899,9 @@ angular.module('roomba.app').config([
           var defer = $q.defer(), _Item;
           Models.request().then(function (models) {
             _Item = models[$route.current.params.collection];
+            if (_Item) {
+              Models.setActive($route.current.params.collection);
+            }
             return _Item.query();
           }).then(function (response) {
             Market.initialize(response.data, _Item.dimensions, _Item);
@@ -23855,7 +23919,9 @@ angular.module('roomba.app').config([
   '$location',
   'collection',
   '$q',
-  function ($scope, Market, $routeParams, $location, collection, $q) {
+  '$dialog',
+  function ($scope, Market, $routeParams, $location, collection, $q, $dialog) {
+    var Model = collection;
     $scope.items = Market.getItems();
     $scope.dimensions = Market.getDimensions();
     $scope.activeItem = Market.getActive();
@@ -23869,6 +23935,15 @@ angular.module('roomba.app').config([
       title: 'Any',
       key: '$'
     };
+    $scope.joinDialog = $dialog.dialog({
+      templateUrl: '/app/market/partials/join-dialog.html?v=' + Date.now(),
+      controller: 'JoinDialogCtrl',
+      backdrop: true,
+      keyboard: true,
+      backdropClick: true,
+      dialogFade: true,
+      backdropFade: true
+    });
     $scope.applyFilters = function () {
       Market.apply();
     };
@@ -24056,6 +24131,11 @@ angular.module('roomba.app').config([
         }
       });
     };
+    $scope.openJoinDialog = function () {
+      $scope.joinDialog.open().then(function (response) {
+        console.log(response);
+      });
+    };
     $scope.noop = function () {
       return null;
     };
@@ -24188,7 +24268,6 @@ angular.module('roomba.app').config([
             type: 'success',
             text: item.title + ' successfully saved.'
           });
-          console.log(item);
         }, function () {
           $scope.addGlobalAlert({
             type: 'danger',
@@ -24286,16 +24365,57 @@ angular.module('roomba.app').config([
       $scope.modelView.showRaw = !$scope.modelView.showRaw;
     };
   }
+]).controller('JoinDialogCtrl', [
+  '$scope',
+  'Market',
+  'dialog',
+  'Models',
+  function ($scope, Market, dialog, Models) {
+    $scope.joinItems = Market.getItems();
+    $scope.activeItem = Market.getActive();
+    $scope.selectedItem = {};
+    $scope.collection = Models.getActive().collection;
+    $scope.searchBy = {};
+    $scope.join = function (selectedItem) {
+      $scope.activeItem.$join(selectedItem).then(function () {
+        dialog.close({
+          status: 'success',
+          message: $scope.activeItem.title + ' and ' + selectedItem.title + ' successfully joined!'
+        });
+      }, function () {
+        dialog.close({
+          status: 0,
+          message: 'Join failed.'
+        });
+      });
+      console.log(selectedItem, $scope.activeItem);
+    };
+    $scope.selectItem = function (item) {
+      $scope.selectedItem = item;
+    };
+    $scope.close = function () {
+      dialog.close();
+    };
+    $scope.hasTag = function (item, tag) {
+      return _.contains(item.tags, tag);
+    };
+  }
 ]).factory('Models', [
   'Item',
   '$http',
   '$_api',
   '$q',
   function (Item, $http, $_api, $q) {
-    var models = {};
+    var models = {}, activeModel = {};
     return {
       get: function () {
         return models;
+      },
+      setActive: function (collectionKey) {
+        activeModel = models[collectionKey];
+      },
+      getActive: function () {
+        return activeModel;
       },
       request: function () {
         var defer = $q.defer();
