@@ -98,24 +98,7 @@ angular.module('roomba.app',
 
                     angular.copy(opts, this);
 
-                    if (collection.key === 'listings') {
-                        self.checkStateAbbreviation();
-                        if (!this.edited.title) {
-                            this.title = this.raw.title.value || 'Untitled';
-                        } else {
-                            this.title = this.edited.title;
-                        }
-                    } else if (collection.key === 'contacts') {
-                        if (!this.edited.title) {
-                            this.title = this.raw.name.value || 'Unnamed';
-                        } else {
-                            this.title = this.edited.name;
-                        }
-                    } else if (collection.key === 'news') {
-                        self.checkStateAbbreviation();
-                    }
-
-                    if (data.edited && data.raw) {
+                    if (collection.key === 'listings' || collection.key === 'contacts') {
                         self.raw = self.raw || {};
                         self.edited = self.edited || {};
 
@@ -271,6 +254,23 @@ angular.module('roomba.app',
                                 }
                             }
                         });
+                    }
+
+                    if (collection.key === 'listings') {
+                        self.checkStateAbbreviation();
+                        if (!this.edited.title) {
+                            this.title = this.raw.title.value || 'Untitled';
+                        } else {
+                            this.title = this.edited.title;
+                        }
+                    } else if (collection.key === 'contacts') {
+                        if (!this.edited.title) {
+                            this.title = this.raw.name.value || 'Unnamed';
+                        } else {
+                            this.title = this.edited.name;
+                        }
+                    } else if (collection.key === 'news') {
+                        self.checkStateAbbreviation();
                     }
                 };
 

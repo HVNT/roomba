@@ -39,12 +39,14 @@ angular.module('roomba.app')
         }])
     .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'collection', '$q', '$dialog',
         function ($scope, Market, $routeParams, $location, collection, $q, $dialog) {
+            var Model = collection;
             $scope.items = Market.getItems();
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
             $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
             $scope.collection = collection.collection;
+            console.log(collection);
             $scope.srcListingDetails = '/app/market/partials/' + $scope.collection.key + '-details.html?v=' + Date.now();
             $scope.searchBy = {
                 $: ""
@@ -546,11 +548,14 @@ angular.module('roomba.app')
 
             $scope.selectItem = function (item) {
                 $scope.selectedItem = item;
-                console.log($scope.selectedItem);
             };
 
             $scope.close = function () {
                 dialog.close();
+            };
+
+            $scope.hasTag = function (item, tag) {
+                return _.contains(item.tags, tag);
             };
         }])
     .factory('Models', ['Item', '$http', '$_api', '$q',
