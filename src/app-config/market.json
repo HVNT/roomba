@@ -348,5 +348,39 @@
         ],
         "models": [],
         "resources": []
+    },
+    "contacts": {
+        "title": "Contacts",
+        "key": "contacts",
+        "path": "/contacts/",
+        "dimensions": {
+            "discreet": {
+                "tags": {
+                    "title": "Tags",
+                    "weight": 10,
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
+                }
+            },
+            "range": {}
+        },
+        "fields": [
+            {
+                "title": "Name",
+                "weight": 5000,
+                "key": "name"
+            },
+            {
+                "title": "Email",
+                "weight": 4000,
+                "key": "email"
+            },
+            {
+                "title": "Phone",
+                "weight": 8,
+                "key": "phone"
+            }
+        ],
+        "models": [],
+        "resources": []
     }
 }

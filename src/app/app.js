@@ -98,181 +98,181 @@ angular.module('roomba.app',
 
                     angular.copy(opts, this);
 
-                    self.checkStateAbbreviation();
                     if (collection.key === 'listings') {
-                        self.raw = self.raw || {};
-                        self.edited = self.edited || {};
-                        if (collection) {
-                            angular.forEach(collection.fields, function (fieldConfig) {
-                                var rawDefault = {
-                                    value: null,
-                                    status: null
-                                };
-
-                                // Initialize raw fields based off config
-                                if (fieldConfig.fields) {
-                                    var _rawField = self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || {} ,
-                                        _editedField = self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || {};
-
-                                    for (var i = 0; i < fieldConfig.fields.length; i++) {
-                                        var subFieldConfig = fieldConfig.fields[i];
-                                        _rawField[subFieldConfig.key] = _rawField[subFieldConfig.key] || rawDefault;
-                                        _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] || (fieldConfig.placeholder || null);
-
-                                        if (_rawField[subFieldConfig.key].status == 2) {
-                                            self.isConflict = true;
-                                        }
-
-                                        // Initialize dates
-                                        if (subFieldConfig.type === 'date') {
-                                            _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] ? new Date(_editedField[subFieldConfig.key]) : null;
-                                            _editedField[subFieldConfig.key].value = _editedField[subFieldConfig.key].value ? new Date(_editedField[subFieldConfig.key].value) : null;
-                                        }
-                                    }
-                                } else {
-                                    self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || rawDefault;
-
-                                    // Initialize edited fields based off config, falling back to placeholders
-                                    self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
-
-                                    // Initialize dates
-                                    if (fieldConfig.type === 'date') {
-                                        self.edited[fieldConfig.key] = self.edited[fieldConfig.key] ? new Date(self.edited[fieldConfig.key]) : null;
-                                        self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(self.raw[fieldConfig.key].value) : null;
-                                    }
-                                }
-                            });
-
-                            angular.forEach(collection.models, function (modelConfig) {
-                                // Initialize raw fields based off config
-                                self.raw[modelConfig.key] = self.raw[modelConfig.key] || [];
-                                self.edited[modelConfig.key] = self.edited[modelConfig.key] || [];
-
-                                // For each raw model instance
-                                for (var i = 0; i < self.raw[modelConfig.key].length; i++) {
-                                    var modelInstance = self.raw[modelConfig.key][i];
-
-                                    // instantiate fields based off config
-                                    for (var j = 0; j < modelConfig.fields.length; j++) {
-                                        var modelFieldConfig = modelConfig.fields[j];
-                                        modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || {
-                                            value: null,
-                                            status: null
-                                        }
-                                        if (modelInstance[modelFieldConfig.key].status == 2) {
-                                            self.isConflict = true;
-                                        }
-                                    }
-                                }
-
-                                // For each edited model instance
-                                for (var i = 0; i < self.edited[modelConfig.key].length; i++) {
-                                    var modelInstance = self.edited[modelConfig.key][i];
-
-                                    // instantiate fields based off config
-                                    for (var j = 0; j < modelConfig.fields.length; j++) {
-                                        var modelFieldConfig = modelConfig.fields[j];
-                                        modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || (modelFieldConfig.placeholder || "");
-                                    }
-                                }
-                            });
-
-                            angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
-                                // Initialize on root level for dimensional filtering
-                                if (!attr.nested) {
-                                    if (self.hasOwnProperty(attrID)) {
-                                        self[attrID] = self[attrID] || (self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || "")));
-                                    } else if (self.raw.hasOwnProperty(attrID)) {
-                                        self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
-                                    } else {
-                                        throw new Error(attrID + " is not defined in $collection");
-                                    }
-                                } else {
-                                    if (self.raw.hasOwnProperty(attr.nested)) {
-                                        if (self.raw[attr.nested].hasOwnProperty(attrID)) {
-                                            self[attrID] = self.edited[attr.nested][attrID] || (self.raw[attr.nested][attrID].value || (attr.placeholder || ""));
-                                        } else {
-                                            throw new Error(attr.nested + " has no property " + attrID);
-                                        }
-                                    } else {
-                                        throw new Error(attr.nested + " is not defined in $collection");
-                                    }
-                                }
-
-                            });
-
-                            angular.forEach(collection.dimensions.range, function (attr, attrID) {
-                                // Initialize on root level for dimensional filtering
-                                self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
-                            });
-                        } else {
-                            throw new Error("No collection defined");
-                        }
-
                         if (!this.edited.title) {
                             this.title = this.raw.title.value || 'Untitled';
                         } else {
                             this.title = this.edited.title;
                         }
-
-                        if (_.contains(self.tags, 'edited')) {
-                            self.isEdited = true;
+                        self.checkStateAbbreviation();
+                    } else if (collection.key === 'contacts') {
+                        if (!this.edited.title) {
+                            this.title = this.raw.name.value || 'Unnamed';
+                        } else {
+                            this.title = this.edited.name;
                         }
                     } else if (collection.key === 'news') {
-                        if (collection) {
-                            angular.forEach(collection.fields, function (fieldConfig) {
-                                // Initialize raw fields based off config
-                                if (fieldConfig.fields) {
-                                    var _field = self[fieldConfig.key] = self[fieldConfig.key] || {};
+                        self.checkStateAbbreviation();
+                    }
 
-                                    for (var i = 0; i < fieldConfig.fields.length; i++) {
-                                        var subFieldConfig = fieldConfig.fields[i];
-                                        _field[subFieldConfig.key] = _field[subFieldConfig.key] || (fieldConfig.placeholder || null);
+                    if (data.edited && data.raw) {
+                        self.raw = self.raw || {};
+                        self.edited = self.edited || {};
 
-                                        // Initialize dates
-                                        if (subFieldConfig.type === 'date') {
-                                            _field[subFieldConfig.key] = _field[subFieldConfig.key] ? new Date(_field[subFieldConfig.key]) : null;
-                                        }
+                        angular.forEach(collection.fields, function (fieldConfig) {
+                            var rawDefault = {
+                                value: null,
+                                status: null
+                            };
+
+                            // Initialize raw fields based off config
+                            if (fieldConfig.fields) {
+                                var _rawField = self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || {} ,
+                                    _editedField = self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || {};
+
+                                for (var i = 0; i < fieldConfig.fields.length; i++) {
+                                    var subFieldConfig = fieldConfig.fields[i];
+                                    _rawField[subFieldConfig.key] = _rawField[subFieldConfig.key] || rawDefault;
+                                    _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] || (fieldConfig.placeholder || null);
+
+                                    if (_rawField[subFieldConfig.key].status == 2) {
+                                        self.isConflict = true;
                                     }
-                                } else {
-                                    self[fieldConfig.key] = self[fieldConfig.key] || (fieldConfig.placeholder || null);
 
                                     // Initialize dates
-                                    if (fieldConfig.type === 'date') {
-                                        self[fieldConfig.key] = self[fieldConfig.key] ? new Date(self[fieldConfig.key]) : null;
+                                    if (subFieldConfig.type === 'date') {
+                                        _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] ? new Date(_editedField[subFieldConfig.key]) : null;
+                                        _editedField[subFieldConfig.key].value = _editedField[subFieldConfig.key].value ? new Date(_editedField[subFieldConfig.key].value) : null;
                                     }
                                 }
-                            });
+                            } else {
+                                self.raw[fieldConfig.key] = self.raw[fieldConfig.key] || rawDefault;
 
-                            angular.forEach(collection.models, function (modelConfig) {
-                                // Initialize raw fields based off config
-                                self[modelConfig.key] = self[modelConfig.key] || [];
-                            });
+                                // Initialize edited fields based off config, falling back to placeholders
+                                self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
 
-                            angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
-                                // Initialize on root level for dimensional filtering
-                                if (!attr.nested) {
-                                    if (self.hasOwnProperty(attrID)) {
-                                        self[attrID] = self[attrID] || (attr.placeholder || "");
+                                // Initialize dates
+                                if (fieldConfig.type === 'date') {
+                                    self.edited[fieldConfig.key] = self.edited[fieldConfig.key] ? new Date(self.edited[fieldConfig.key]) : null;
+                                    self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(self.raw[fieldConfig.key].value) : null;
+                                }
+                            }
+                        });
+
+                        angular.forEach(collection.models, function (modelConfig) {
+                            // Initialize raw fields based off config
+                            self.raw[modelConfig.key] = self.raw[modelConfig.key] || [];
+                            self.edited[modelConfig.key] = self.edited[modelConfig.key] || [];
+
+                            // For each raw model instance
+                            for (var i = 0; i < self.raw[modelConfig.key].length; i++) {
+                                var modelInstance = self.raw[modelConfig.key][i];
+
+                                // instantiate fields based off config
+                                for (var j = 0; j < modelConfig.fields.length; j++) {
+                                    var modelFieldConfig = modelConfig.fields[j];
+                                    modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || {
+                                        value: null,
+                                        status: null
+                                    }
+                                    if (modelInstance[modelFieldConfig.key].status == 2) {
+                                        self.isConflict = true;
+                                    }
+                                }
+                            }
+
+                            // For each edited model instance
+                            for (var i = 0; i < self.edited[modelConfig.key].length; i++) {
+                                var modelInstance = self.edited[modelConfig.key][i];
+
+                                // instantiate fields based off config
+                                for (var j = 0; j < modelConfig.fields.length; j++) {
+                                    var modelFieldConfig = modelConfig.fields[j];
+                                    modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || (modelFieldConfig.placeholder || "");
+                                }
+                            }
+                        });
+
+                        angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
+                            // Initialize on root level for dimensional filtering
+                            if (!attr.nested) {
+                                if (self.hasOwnProperty(attrID)) {
+                                    self[attrID] = self[attrID] || (self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || "")));
+                                } else if (self.raw.hasOwnProperty(attrID)) {
+                                    self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
+                                } else {
+                                    throw new Error(attrID + " is not defined in $collection");
+                                }
+                            } else {
+                                if (self.raw.hasOwnProperty(attr.nested)) {
+                                    if (self.raw[attr.nested].hasOwnProperty(attrID)) {
+                                        self[attrID] = self.edited[attr.nested][attrID] || (self.raw[attr.nested][attrID].value || (attr.placeholder || ""));
                                     } else {
-                                        throw new Error(attrID + " is not defined in $collection");
+                                        throw new Error(attr.nested + " has no property " + attrID);
                                     }
                                 } else {
-                                    if (self.hasOwnProperty(attr.nested)) {
-                                        if (self[attr.nested].hasOwnProperty(attrID)) {
-                                            self[attrID] = self[attr.nested][attrID] || (attr.placeholder || "");
-                                        } else {
-                                            throw new Error(attr.nested + " has no property " + attrID);
-                                        }
-                                    } else {
-                                        throw new Error(attr.nested + " is not defined in $collection");
+                                    throw new Error(attr.nested + " is not defined in $collection");
+                                }
+                            }
+
+                        });
+
+                        angular.forEach(collection.dimensions.range, function (attr, attrID) {
+                            // Initialize on root level for dimensional filtering
+                            self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
+                        });
+                    } else {
+                        angular.forEach(collection.fields, function (fieldConfig) {
+                            // Initialize raw fields based off config
+                            if (fieldConfig.fields) {
+                                var _field = self[fieldConfig.key] = self[fieldConfig.key] || {};
+
+                                for (var i = 0; i < fieldConfig.fields.length; i++) {
+                                    var subFieldConfig = fieldConfig.fields[i];
+                                    _field[subFieldConfig.key] = _field[subFieldConfig.key] || (fieldConfig.placeholder || null);
+
+                                    // Initialize dates
+                                    if (subFieldConfig.type === 'date') {
+                                        _field[subFieldConfig.key] = _field[subFieldConfig.key] ? new Date(_field[subFieldConfig.key]) : null;
                                     }
                                 }
-                            });
-                        } else {
-                            throw new Error("No collection defined");
-                        }
+                            } else {
+                                self[fieldConfig.key] = self[fieldConfig.key] || (fieldConfig.placeholder || null);
+
+                                // Initialize dates
+                                if (fieldConfig.type === 'date') {
+                                    self[fieldConfig.key] = self[fieldConfig.key] ? new Date(self[fieldConfig.key]) : null;
+                                }
+                            }
+                        });
+
+                        angular.forEach(collection.models, function (modelConfig) {
+                            // Initialize raw fields based off config
+                            self[modelConfig.key] = self[modelConfig.key] || [];
+                        });
+
+                        angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
+                            // Initialize on root level for dimensional filtering
+                            if (!attr.nested) {
+                                if (self.hasOwnProperty(attrID)) {
+                                    self[attrID] = self[attrID] || (attr.placeholder || "");
+                                } else {
+                                    throw new Error(attrID + " is not defined in $collection");
+                                }
+                            } else {
+                                if (self.hasOwnProperty(attr.nested)) {
+                                    if (self[attr.nested].hasOwnProperty(attrID)) {
+                                        self[attrID] = self[attr.nested][attrID] || (attr.placeholder || "");
+                                    } else {
+                                        throw new Error(attr.nested + " has no property " + attrID);
+                                    }
+                                } else {
+                                    throw new Error(attr.nested + " is not defined in $collection");
+                                }
+                            }
+                        });
                     }
+
                 };
 
                 Item.collection = collection;
@@ -336,7 +336,7 @@ angular.module('roomba.app',
                     if (address.street1 && address.city && address.state) {
                         geocoder.geocode({
                             address: address.street1 + ',' + address.city + ',' + address.state
-                        }, function(results, status){
+                        }, function (results, status) {
                             if (!$rootScope.$$phase) {
                                 $rootScope.$apply(function () {
                                     if (results) {
@@ -371,7 +371,6 @@ angular.module('roomba.app',
                     } else {
                         defer.resolve({status: 0, message: "No address provided."})
                     }
-
 
                     return defer.promise;
                 };
@@ -688,7 +687,7 @@ angular.module('roomba.app',
             $scope.globalAlerts = [];
 
             $scope.setGlobalAlert = function (alert) {
-                if (angular.isArray(alert) ) {
+                if (angular.isArray(alert)) {
                     $scope.globalAlerts = alert;
                 } else {
                     $scope.globalAlerts = [alert];
