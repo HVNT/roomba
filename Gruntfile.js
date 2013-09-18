@@ -92,6 +92,8 @@ module.exports = function (grunt) {
                     src: [
                         '<%= yeoman.stage %>',
                         '<%= yeoman.dist %>/demo/*',
+                        '<%= yeoman.dist %>/dev/*',
+                        '<%= yeoman.dist %>/prod/*',
                         '!<%= yeoman.dist %>/.git*'
                     ]
                 }]
@@ -100,6 +102,8 @@ module.exports = function (grunt) {
                 files: [{
                     src: [
                         '<%= yeoman.stage %>',
+                        '<%= yeoman.dist %>/demo/*',
+                        '<%= yeoman.dist %>/dev/*',
                         '<%= yeoman.dist %>/prod/*',
                         '!<%= yeoman.dist %>/.git*'
                     ]
@@ -109,7 +113,9 @@ module.exports = function (grunt) {
                 files: [{
                     src: [
                         '<%= yeoman.stage %>',
+                        '<%= yeoman.dist %>/demo/*',
                         '<%= yeoman.dist %>/dev/*',
+                        '<%= yeoman.dist %>/prod/*',
                         '!<%= yeoman.dist %>/.git*'
                     ]
                 }]
