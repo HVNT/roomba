@@ -11,7 +11,7 @@
 angular.module('rescour.config', [])
     .factory('$_api', function () {
         var url = {
-                prod: "https://api.maasive.net/v2/rescour"
+                prod: "http://roomba.rescour.com/"
             },
             stripeTokens = {
                 test: 'pk_test_wSAqQNQKI7QqPmBpDcQLgGM7',
