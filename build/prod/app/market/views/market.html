@@ -4,6 +4,7 @@
             <li class="navbar-brand"><img src="/img/favicon.png" height="30" alt=""/></li>
             <li ng-class="{'active': collection.key  == 'listings'}"><a href="/market/listings">Listings</a></li>
             <li ng-class="{'active': collection.key == 'news'}"><a href="/market/news">News</a></li>
+            <li ng-class="{'active': collection.key == 'contacts'}"><a href="/market/contacts">Contacts</a></li>
             <li></li>
         </ul>
 
@@ -93,16 +94,23 @@
                                 ng-click="publishSelected()">
                             <i class="icon-cloud-upload"></i>
                         </button>
-                        <button class="btn btn-success hint--bottom hint--success hint--bounce"
+                        <button class="btn btn-danger hint--bottom hint--error hint--bounce"
+                                ng-click="unpublishSelected()"
+                                data-hint="Un Publish Selected">
+                            <i class="icon-cloud"></i>
+                        </button>
+                        <button class="btn btn-success hint--top hint--success hint--bounce"
                                 data-hint="Save Selected"
                                 ng-click="saveSelected()">
                             <i class="icon-save"></i>
                         </button>
-                        <button class="btn btn-danger hint--top hint--error hint--bounce"
-                                data-hint="Un Publish Selected">
-                            <i class="icon-cloud"></i>
+                        <button class="btn btn-danger hint--bottom hint--error hint--bounce"
+                                ng-click="flagSelected()"
+                                data-hint="Flag Selected">
+                            <i class="icon-flag"></i>
                         </button>
                     </div>
+
                 </div>
             </div>
             <div class="scroll-container">
@@ -116,9 +124,9 @@
                     <div class="row listing-list-item" ng-class="{'active': item.isActive}" ng-repeat="item in chunk">
                         <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox" ng-model="item.isSelected"/></div>
 
-                        <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'bold': item.isEdited}"
+                        <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'bold': hasTag(item, 'edited')}"
                              ng-click="openDetails(item)">
-                            {{item.title}}
+                            {{item.title}}  <i class="icon-flag status-text-error" ng-show="hasTag(item, 'flagged')"></i>
 
                         </div>
                         <div class="col-lg-2 col-sm-3 col-3">
@@ -135,10 +143,14 @@
              ng-controller="DetailsCtrl">
             <div class="row">
                 <div class="col-lg-12 header-actions">
-                    <div class="btn-group pull-left">
+                    <div class="btn-group pull-left" ui-if="collection.key  == 'listings'">
                         <a class="btn btn-inverse" target="_blank" ng-href="{{activeItem.raw.pages[0].url.value}}"
                            ng-class="{'disabled': !activeItem}">
                             Open
+                        </a>
+                        <a class="btn btn-info hint--bottom hint--info" data-hint="Open Join Dialog" ng-click="openJoinDialog()"
+                           ng-class="{'disabled': !activeItem}">
+                            <i class="icon-exchange"></i>
                         </a>
                     </div>
                     <div class="btn-group pull-right">

@@ -2,7 +2,6 @@
     "listings": {
         "title": "Listings",
         "key": "listings",
-        "tags": ["raw", "edited", "published"],
         "path": "/listings/",
         "dimensions": {
             "discreet": {
@@ -13,7 +12,7 @@
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
-                    "restrict": ["edited", "published", "raw"]
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
                 },
                 "propertyStatus": {
                     "title": "Property Status",
@@ -196,17 +195,6 @@
                 ]
             },
             {
-                "title": "Parking Spots",
-                "key": "parking",
-                "weight": 10,
-                "fields": [
-                    {
-                        "key": "title",
-                        "title": "Title"
-                    }
-                ]
-            },
-            {
                 "title": "Comps",
                 "weight": 9,
                 "key": "comps",
@@ -274,10 +262,20 @@
     "news": {
         "title": "News",
         "key": "news",
-        "tags": [],
         "path": "/news/",
         "dimensions": {
-            "discreet": {},
+            "discreet": {
+                "tags": {
+                    "title": "Tags",
+                    "weight": 10,
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
+                },
+                "category": {
+                    "title": "Category",
+                    "weight": 10,
+                    "restrict": ["Under Construction", "Future Development", "Transactions"]
+                }
+            },
             "range": {}
         },
         "fields": [
@@ -346,6 +344,40 @@
                         "readonly": true
                     }
                 ]
+            }
+        ],
+        "models": [],
+        "resources": []
+    },
+    "contacts": {
+        "title": "Contacts",
+        "key": "contacts",
+        "path": "/contacts/",
+        "dimensions": {
+            "discreet": {
+                "tags": {
+                    "title": "Tags",
+                    "weight": 10,
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
+                }
+            },
+            "range": {}
+        },
+        "fields": [
+            {
+                "title": "Name",
+                "weight": 5000,
+                "key": "name"
+            },
+            {
+                "title": "Email",
+                "weight": 4000,
+                "key": "email"
+            },
+            {
+                "title": "Phone",
+                "weight": 8,
+                "key": "phone"
             }
         ],
         "models": [],

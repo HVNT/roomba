@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="close()">&times;</button>
+    <h4 id="myModalLabel">Join this Property with:</h4>
+</div>
+<div class="modal-body">
+    <div class="header-search col-lg-12">
+        <input type="text" placeholder="Search by Any"
+               ng-model="searchBy.$"/>
+        <i class="icon-search"></i>
+    </div>
+    <div class="market-list col-lg-12">
+        <div class="row listing-list-item" ng-repeat="item in joinItems | filter:searchBy"
+             ng-click="selectItem(item)"
+             ng-class="{'active': selectedItem.$$hashKey == item.$$hashKey}">
+            <div class="col-lg-1"><i class="icon-exchange status-text-success"
+                                     ng-show="selectedItem.$$hashKey == item.$$hashKey"></i></div>
+            <div class="col-lg-11">
+                {{ item.title }}
+                <i class="icon-flag status-text-error" style="margin-left:5px" ng-show="hasTag(item, 'flagged')"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-glossy" ng-click="close()">Close</button>
+    <button class="btn btn-glossy" ng-click="join(selectedItem)">Join</button>
+</div>
