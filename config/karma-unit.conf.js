@@ -33,7 +33,7 @@ exclude = [];
 reporters = ['dots', 'junit'];
 
 // web server port
-port = 8080;
+port = 8079;
 
 // cli runner port
 //runnerPort = 9100;
