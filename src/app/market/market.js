@@ -25,7 +25,7 @@ angular.module('roomba.app')
                                     return _Item.query();
                                 })
                                 .then(function (response) {
-                                    Market.initialize(response.data, _Item.dimensions, _Item);
+                                    Market.initialize(response, _Item.dimensions, _Item);
                                     defer.resolve(_Item);
                                 });
 

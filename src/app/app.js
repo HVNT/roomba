@@ -282,22 +282,32 @@ angular.module('roomba.app',
 
                 Item.query = function (tag) {
                     // if collection is undefined, just query
-                    var defer = $q.defer(),
+                    var items = [],
+                        defer = $q.defer(),
                         config = angular.extend({
                             transformRequest: function (data) {
                                 return data;
                             }
                         }, $_api.config),
-                        path = tag ? $_api.path + Item.path + tag : $_api.path + Item.path;
+                        batchLimit = 50;
 
-                    path += "?limit=5000";
+                    (function batchItems(limit, offset) {
+                        var path = tag ? $_api.path + Item.path + tag : $_api.path + Item.path + "?limit=" + limit + (offset ? "&offset=" + offset : "");
+                        
+                        $http.get(path, config).then(function (response) {
+                            items = items.concat(response.data);
 
-                    $http.get(path, config).then(function (response) {
-                        console.log(path);
-                        defer.resolve(response);
-                    }, function (response) {
-                        defer.reject(response);
-                    });
+                            if (response.data.length < limit) {
+                                console.log(items.length);
+                                defer.resolve(items);
+                            } else {
+                                batchItems(limit, response.data[response.data.length - 1].id);
+                            }
+                        }, function (response) {
+                            defer.reject(response);
+                        });
+
+                    })(batchLimit)
 
                     return defer.promise;
                 };
