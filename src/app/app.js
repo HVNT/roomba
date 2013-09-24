@@ -120,8 +120,6 @@ angular.module('roomba.app',
 
                                     if (_rawField[subFieldConfig.key].status == 2) {
                                         self.isConflict = true;
-                                        console.log('field');
-                                        console.log(subFieldConfig.key);
                                     }
 
                                     // Initialize dates
@@ -163,7 +161,6 @@ angular.module('roomba.app',
 
                                     if (modelInstance[modelFieldConfig.key].status == 2 && modelConfig.key != 'pages') {
                                         self.isConflict = true;
-                                        console.log('model');
                                     }
                                 }
                             }
