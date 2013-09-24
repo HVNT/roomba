@@ -11,7 +11,7 @@
 angular.module('rescour.config', [])
     .factory('$_api', function ($http) {
         var url = {
-                dev: 'http://dev.maasive.net/v2/rescour'
+                dev: 'http://dev.maasive.net/v2/51afcfaa53d4c904b173923d'
             },
             stripeTokens = {
                 test: 'pk_test_wSAqQNQKI7QqPmBpDcQLgGM7',
