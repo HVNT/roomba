@@ -158,7 +158,8 @@ angular.module('roomba.app',
                                         value: null,
                                         status: null
                                     }
-                                    if (modelInstance[modelFieldConfig.key].status == 2) {
+
+                                    if (modelInstance[modelFieldConfig.key].status == 2 && modelConfig.key != 'pages') {
                                         self.isConflict = true;
                                     }
                                 }
@@ -298,7 +299,6 @@ angular.module('roomba.app',
                             items = items.concat(response.data);
 
                             if (response.data.length < limit) {
-                                console.log(items.length);
                                 defer.resolve(items);
                             } else {
                                 batchItems(limit, response.data[response.data.length - 1].id);
@@ -572,7 +572,6 @@ angular.module('roomba.app',
                                     recursive(value);
                                 });
                             } else if (obj != null && obj != '' && !angular.isArray(obj) && !angular.isObject(obj)) {
-                                console.log(obj);
                                 _isNull = false;
                                 return;
                             }
@@ -690,9 +689,9 @@ angular.module('roomba.app',
                                     throw new Error("Raw field is not in recognized format");
                                 }
                             });
-                            self.progressClass = self.isConflict ? "progress-bar-danger" : "";
+                            self.progressClass = self.isConflict ? "progress-bar-warning" : "";
                         } else {
-                            self.progressClass = self.isConflict ? "progress-bar-danger" : "progress-bar-success";
+                            self.progressClass = self.isConflict ? "progress-bar-warning" : "progress-bar-success";
                         }
                     } else {
                         fieldCounter.total = 0;
@@ -736,6 +735,20 @@ angular.module('roomba.app',
                         }
                     }
                 };
+
+                Item.prototype.hasPageConflict = function() {
+                    var hasPageConflict = false;
+
+                    if (this.raw && this.raw.pages) {
+                        angular.forEach(this.raw.pages, function(page) {
+                            if (page.url.status == 2) {
+                                hasPageConflict = true;
+                            }
+                        });
+                    } 
+
+                    return hasPageConflict;
+                }
 
                 return Item;
             }

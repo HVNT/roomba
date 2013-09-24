@@ -126,8 +126,9 @@
 
                         <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'bold': hasTag(item, 'edited')}"
                              ng-click="openDetails(item)">
-                            {{item.title}}  <i class="icon-flag status-text-error" ng-show="hasTag(item, 'flagged')"></i>
-
+                             {{item.title}}  
+                             <i class="icon-flag status-text-error" ng-show="hasTag(item, 'flagged')"></i>
+                             <i class="icon-warning-sign status-text-warning" ng-show="item.hasPageConflict()"></i>
                         </div>
                         <div class="col-lg-2 col-sm-3 col-3">
                             <div class="progress progress-striped">

@@ -121,6 +121,8 @@ angular.module('roomba.app')
                     case 1:
                         return 'status-' + type + '-success';
                     case 2:
+                        return 'status-' + type + '-warning';
+                    case 3:
                         return 'status-' + type + '-error';
                     default:
                         return 'status-' + type + '-unknown';
