@@ -735,6 +735,20 @@ angular.module('roomba.app',
                     }
                 };
 
+                Item.prototype.checkPageConflict = function() {
+                    var hasPageConflict = false;
+
+                    if (this.raw && this.raw.pages) {
+                        angular.forEach(this.raw.pages, function(page) {
+                            if (page.status == 2) {
+                                hasPageConflict = true;
+                            }
+                        });
+                    } 
+
+                    return hasPageConflict;
+                }
+
                 return Item;
             }
 
