@@ -120,6 +120,8 @@ angular.module('roomba.app',
 
                                     if (_rawField[subFieldConfig.key].status == 2) {
                                         self.isConflict = true;
+                                        console.log('field');
+                                        console.log(subFieldConfig.key);
                                     }
 
                                     // Initialize dates
@@ -161,6 +163,7 @@ angular.module('roomba.app',
 
                                     if (modelInstance[modelFieldConfig.key].status == 2 && modelConfig.key != 'pages') {
                                         self.isConflict = true;
+                                        console.log('model');
                                     }
                                 }
                             }
@@ -689,9 +692,9 @@ angular.module('roomba.app',
                                     throw new Error("Raw field is not in recognized format");
                                 }
                             });
-                            self.progressClass = self.isConflict ? "progress-bar-danger" : "";
+                            self.progressClass = self.isConflict ? "progress-bar-warning" : "";
                         } else {
-                            self.progressClass = self.isConflict ? "progress-bar-danger" : "progress-bar-success";
+                            self.progressClass = self.isConflict ? "progress-bar-warning" : "progress-bar-success";
                         }
                     } else {
                         fieldCounter.total = 0;
