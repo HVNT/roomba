@@ -158,7 +158,7 @@ angular.module('roomba.app',
                                         value: null,
                                         status: null
                                     }
-                                    if (modelInstance[modelFieldConfig.key].status == 2) {
+                                    if (modelInstance[modelFieldConfig.key].status == 2 && modelFieldConfig.key != 'pages') {
                                         self.isConflict = true;
                                     }
                                 }
@@ -298,7 +298,6 @@ angular.module('roomba.app',
                             items = items.concat(response.data);
 
                             if (response.data.length < limit) {
-                                console.log(items.length);
                                 defer.resolve(items);
                             } else {
                                 batchItems(limit, response.data[response.data.length - 1].id);
@@ -572,7 +571,6 @@ angular.module('roomba.app',
                                     recursive(value);
                                 });
                             } else if (obj != null && obj != '' && !angular.isArray(obj) && !angular.isObject(obj)) {
-                                console.log(obj);
                                 _isNull = false;
                                 return;
                             }
