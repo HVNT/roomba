@@ -158,7 +158,8 @@ angular.module('roomba.app',
                                         value: null,
                                         status: null
                                     }
-                                    if (modelInstance[modelFieldConfig.key].status == 2 && modelFieldConfig.key != 'pages') {
+
+                                    if (modelInstance[modelFieldConfig.key].status == 2 && modelConfig.key != 'pages') {
                                         self.isConflict = true;
                                     }
                                 }
@@ -740,7 +741,7 @@ angular.module('roomba.app',
 
                     if (this.raw && this.raw.pages) {
                         angular.forEach(this.raw.pages, function(page) {
-                            if (page.status == 2) {
+                            if (page.url.status == 2) {
                                 hasPageConflict = true;
                             }
                         });
