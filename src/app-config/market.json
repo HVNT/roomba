@@ -297,9 +297,9 @@
                 "type": "textarea"
             },
             {
-                "title": "Link",
+                "title": "Source",
                 "weight": 8,
-                "key": "link"
+                "key": "source"
             },
             {
                 "title": "Category",
