@@ -124,7 +124,7 @@
                     <div class="row listing-list-item" ng-class="{'active': item.isActive}" ng-repeat="item in chunk">
                         <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox" ng-model="item.isSelected"/></div>
 
-                        <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'bold': hasTag(item, 'edited')}"
+                        <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'edited': hasTag(item, 'edited')}"
                              ng-click="openDetails(item)">
                              {{item.title}}  
                              <i class="icon-flag status-text-error" ng-show="hasTag(item, 'flagged')"></i>

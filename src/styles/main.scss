@@ -402,8 +402,12 @@ $marketListBg: #333;
   color: $red !important;
 }
 
-.bold {
+.edited {
   font-weight: bold;
+  
+  &:before {
+    content: "* "
+  }
 }
 
 .modal {

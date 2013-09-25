@@ -14,7 +14,7 @@
                     "weight": 10,
                     "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
                 },
-                "propertyStatus": {
+                "status": {
                     "title": "Property Status",
                     "weight": 5
                 },
@@ -66,9 +66,11 @@
                 "key": "flyer"
             },
             {
-                "title": "Status",
+                "title": "Property Type",
                 "weight": 9,
-                "key": "status"
+                "key": "propertyType",
+                "type": "typeahead",
+                "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes", "Portfolio"]
             },
             {
                 "title": "Acres",
@@ -84,7 +86,7 @@
             {
                 "title": "Property Status",
                 "weight": 9,
-                "key": "propertyStatus",
+                "key": "status",
                 "type": "typeahead",
                 "typeahead": ["Marketing", "Under Contract", "Under LOI", "Sold"]
             },
