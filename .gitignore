@@ -8,3 +8,4 @@ app/components
 .gitattributes
 libpeerconnection.log
 dist
+build
