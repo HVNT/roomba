@@ -559,8 +559,11 @@ angular.module('roomba.app',
                 };
 
                 Item.prototype.$flag = function () {
-                    this.tags = _.without(this.tags, 'flagged');
-                    this.tags.push('flagged');
+                    if (_.contains(this.tags, 'flagged')) {
+                        this.tags = _.without(this.tags, 'flagged');
+                    } else {
+                        this.tags.push('flagged');
+                    }
 
                     return this.$update();
                 };
