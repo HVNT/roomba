@@ -125,7 +125,7 @@ angular.module('roomba.app',
                                     // Initialize dates
                                     if (subFieldConfig.type === 'date') {
                                         _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] ? new Date(_editedField[subFieldConfig.key]) : null;
-                                        _editedField[subFieldConfig.key].value = _editedField[subFieldConfig.key].value ? new Date(_editedField[subFieldConfig.key].value) : null;
+                                        _rawField[subFieldConfig.key].value = _rawField[subFieldConfig.key].value ? new Date(_rawField[subFieldConfig.key].value) : null;
                                     }
                                 }
                             } else {
@@ -133,6 +133,10 @@ angular.module('roomba.app',
 
                                 // Initialize edited fields based off config, falling back to placeholders
                                 self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
+
+                                if (self.raw[fieldConfig.key].status == 2) {
+                                    self.isConflict = true;
+                                }
 
                                 // Initialize dates
                                 if (fieldConfig.type === 'date') {

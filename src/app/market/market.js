@@ -97,6 +97,7 @@ angular.module('roomba.app')
                                     }
                                 }
                             }
+                            console.log($scope.activeItem);
                         });
                     }
                 }
