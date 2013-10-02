@@ -693,9 +693,9 @@ angular.module('roomba.app',
                                     throw new Error("Raw field is not in recognized format");
                                 }
                             });
-                            self.progressClass = self.isConflict ? "progress-bar-warning" : "";
-                        } else {
                             self.progressClass = self.isConflict ? "progress-bar-warning" : "progress-bar-success";
+                        } else {
+                            self.progressClass = self.isConflict ? "progress-bar-warning" : "progress-bar-info";
                         }
                     } else {
                         fieldCounter.total = 0;
