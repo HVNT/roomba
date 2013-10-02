@@ -16,6 +16,8 @@ angular.module('roomba.app')
                             var defer = $q.defer(),
                                 _Item;
 
+                            Market.setActive();
+
                             Models.request()
                                 .then(function (models) {
                                     _Item = models[$route.current.params.collection];
