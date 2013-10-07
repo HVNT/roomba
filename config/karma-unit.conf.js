@@ -50,7 +50,7 @@ autoWatch = true;
 singleRun = true;
 
 // break from module
-browsers = ['Chrome'];
+browsers = ['/usr/local/bin/chrome_jenkins.sh'];
 
 // customLaunchers = {
 //     Chrome_Jenkins: {
