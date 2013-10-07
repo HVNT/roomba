@@ -50,14 +50,14 @@ autoWatch = true;
 singleRun = true;
 
 // break from module
-browsers = ['Chrome', 'Chrome_Jenkins'];
+browsers = ['Chrome'];
 
-customLaunchers = {
-    Chrome_Jenkins: {
-        base: 'Chrome',
-        flags: ['--user-data-dir']
-    }
-}
+// customLaunchers = {
+//     Chrome_Jenkins: {
+//         base: 'Chrome',
+//         flags: ['--user-data-dir']
+//     }
+// }
 
 junitReporter = {
     outputFile: 'log/test-results.xml'
