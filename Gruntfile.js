@@ -417,7 +417,7 @@ module.exports = function (grunt) {
         'copy:local',
         'template:local',
         'clean:template',
-        // 'karma:unit'
+        'karma:unit'
     ]);
 
     grunt.registerTask('server', [

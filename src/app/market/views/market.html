@@ -18,7 +18,7 @@
 
 <div class="roomba-wrap">
     <div class="row">
-        <div ui-if="!marketView.collapseFilters" class="col-lg-2 market-filter" ng-controller="MarketFilterCtrl">
+        <div ui-if="!marketView.collapseFilters" class="col-lg-2 market-filter">
             <div class="row">
                 <div class="col-lg-12 header-actions">
                     <div class="btn-group">
@@ -115,7 +115,7 @@
             </div>
             <div class="scroll-container">
                 <div class="scroll-wrap"
-                     chunk="filteredItems = (items | filter:searchBy[activeSearch.key] | limitVisible | orderBy:sortBy)"
+                     chunk="filteredItems = (items | filter:searchBy[activeSearch.key] | orderBy:sortBy)"
                      chunk-size="100">
 
                     <div class="row label-list-item" ng-click="toggleSelectAll()">

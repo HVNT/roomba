@@ -12,11 +12,9 @@ angular.module('roomba.app')
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
                     resolve: {
-                        collection: function (Market, $route, $q, Models) {
+                        Market: function ($route, $q, Models) {
                             var defer = $q.defer(),
                                 _Item;
-
-                            Market.setActive();
 
                             Models.request()
                                 .then(function (models) {
@@ -27,8 +25,9 @@ angular.module('roomba.app')
                                     return _Item.query();
                                 })
                                 .then(function (response) {
+                                    var Market = new thotpod.Marketplace(_Item);
                                     Market.initialize(response, _Item.dimensions, _Item);
-                                    defer.resolve(_Item);
+                                    defer.resolve(Market);
                                 });
 
                             return defer.promise;
@@ -39,15 +38,15 @@ angular.module('roomba.app')
                     redirectTo: '/market'
                 });
         }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', 'collection', '$q', '$dialog',
-        function ($scope, Market, $routeParams, $location, collection, $q, $dialog) {
-            var Model = collection;
-            $scope.items = Market.getItems();
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', '$q', '$dialog',
+        function ($scope, Market, $routeParams, $location, $q, $dialog) {
+            var Model = Market.Model;
+            $scope.items = Market.visibleItems;
             $scope.dimensions = Market.getDimensions();
             $scope.activeItem = Market.getActive();
             $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
-            $scope.collection = collection.collection;
+            $scope.collection = Model.collection;
             $scope.srcListingDetails = '/app/market/partials/' + $scope.collection.key + '-details.html?v=' + Date.now();
             $scope.searchBy = {
                 $: ""
@@ -68,7 +67,7 @@ angular.module('roomba.app')
             });
 
             $scope.applyFilters = function () {
-                Market.apply();
+                $scope.items = Market.apply();
             };
 
             $scope.selectItem = function (item) {
@@ -89,6 +88,7 @@ angular.module('roomba.app')
                 if (id) {
                     $scope.selectItem(id);
 
+                    debugger;
                     if ($scope.activeItem) {
                         $scope.activeItem.$getResources().then(function (results) {
                             for (var i = results.length - 1; i >= 0; i--) {
@@ -290,6 +290,10 @@ angular.module('roomba.app')
             $scope.noop = function () {
                 return null;
             };
+
+            $scope.toggleDiscreet = function (discreet, value) {
+                $scope.items = Market.toggleDiscreet(discreet, value).apply();
+            };
         }])
     .
     controller('MarketListCtrl', ['$scope', '$location',
@@ -324,12 +328,6 @@ angular.module('roomba.app')
                     value.isSelected = selectToggle;
                 });
                 selectToggle = !selectToggle;
-            };
-        }])
-    .controller('MarketFilterCtrl', ['$scope', 'Market', '$routeParams', '$location',
-        function ($scope, Market, $routeParams, $location) {
-            $scope.toggleDiscreet = function (discreet, value) {
-                Market.apply(discreet, value);
             };
         }])
     .controller('DetailsCtrl', ['$scope', '$routeParams',

@@ -12,7 +12,8 @@
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
-                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"],
+                    "multi": true
                 },
                 "status": {
                     "title": "Property Status",
@@ -270,7 +271,8 @@
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
-                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"],
+                    "multi": true
                 },
                 "category": {
                     "title": "Category",
@@ -365,7 +367,8 @@
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
-                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"]
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"],
+                    "multi": true
                 }
             },
             "range": {}

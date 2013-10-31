@@ -16,7 +16,7 @@ angular.module('roomba.app',
             'rescour.auth',
             'rescour.user',
             'rescour.utility',
-            'rescour.marketplace',
+//            'rescour.marketplace',
             'thotpod.spinner',
             'ui'
         ])
@@ -207,7 +207,8 @@ angular.module('roomba.app',
 
                         angular.forEach(collection.dimensions.range, function (attr, attrID) {
                             // Initialize on root level for dimensional filtering
-                            self[attrID] = self.edited[attrID] || (self.raw[attrID].value || (attr.placeholder || ""));
+                            self[attrID] = parseFloat(self.edited[attrID])
+                                || parseFloat(self.raw[attrID].value);
                         });
                     } else {
                         angular.forEach(collection.fields, function (fieldConfig) {
@@ -259,6 +260,10 @@ angular.module('roomba.app',
                                 }
                             }
                         });
+
+                        angular.forEach(collection.dimensions.range, function (attr, attrID) {
+                            self[attrID] = parseFloat(self[attrID]);
+                        });
                     }
 
                     if (collection.key === 'listings') {
@@ -269,7 +274,7 @@ angular.module('roomba.app',
                             this.title = this.edited.title;
                         }
                     } else if (collection.key === 'contacts') {
-                        if (!this.edited.title) {
+                        if (!this.edited.name) {
                             this.title = this.raw.name.value || 'Unnamed';
                         } else {
                             this.title = this.edited.name;
