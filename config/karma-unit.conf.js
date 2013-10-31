@@ -50,7 +50,14 @@ autoWatch = true;
 singleRun = true;
 
 // break from module
-browsers = ['Chrome'];
+browsers = ['PhantomJS'];
+
+// customLaunchers = {
+//     Chrome_Jenkins: {
+//         base: 'Chrome',
+//         flags: ['--user-data-dir']
+//     }
+// }
 
 junitReporter = {
     outputFile: 'log/test-results.xml'
