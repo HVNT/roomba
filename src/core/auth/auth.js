@@ -17,9 +17,6 @@ angular.module('rescour.auth', [])
                 resolve: {
                     checkUser: function ($rootScope, $location) {
                         $rootScope.$broadcast('auth#logoutRequest');
-                        $rootScope.ping().then(function (response) {
-                            $location.path('/');
-                        });
                     }
                 }
             });
@@ -114,10 +111,10 @@ angular.module('rescour.auth', [])
                     }, $_api.config),
                     body = JSON.stringify({});
 
-                $http.post(path, body, config).then(function (response) {
-                    $rootScope.ping();
+                $http.get(path, body, config).then(function (response) {
+                    $location.path('/login');
                 }, function (response) {
-                    $rootScope.ping();
+                    $location.path('/login');
                 });
             });
         }])
@@ -158,6 +155,9 @@ angular.module('rescour.auth', [])
                             }
 
                             return defer.promise;
+                        case 403:
+                            $rootScope.$broadcast('auth#logoutRequest');
+                            break;
                         default:
                     }
 
