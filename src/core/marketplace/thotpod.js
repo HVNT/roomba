@@ -268,6 +268,12 @@ var thotpod = (function () {
             return activeItem;
         };
 
+        this.getItems = function () {
+            return _.map(this.items, function (val) {
+                return val;
+            })
+        };
+
         this.setActive = function (id) {
             if (_.isObject(id)) {
                 prevActive = activeItem;

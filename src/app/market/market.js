@@ -63,7 +63,12 @@ angular.module('roomba.app')
                 keyboard: true,
                 backdropClick: true,
                 dialogFade: true,
-                backdropFade: true
+                backdropFade: true,
+                resolve: {
+                    Market: function () {
+                        return Market;
+                    }
+                }
             });
 
             $scope.applyFilters = function () {
