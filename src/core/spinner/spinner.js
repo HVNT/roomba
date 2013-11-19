@@ -375,13 +375,18 @@ angular.module('thotpod.spinner', [])
                             }
                         },
                         ele = element[0],
-                        spinner = new $spinner(opts[attrs.spinnerSize || 'small']);
+                        userOpts = scope.$eval(attrs.spinnerOptions) || {},
+                        spinner = new $spinner(angular.extend({}, opts[attrs.spinnerSize || 'small'], userOpts)),
+                        isSpinning = false;
 
+                    console.log(attrs);
                     scope.$watch(function () {
-                        if (scope.$eval(attrs.spinner)) {
+                        if (scope.$eval(attrs.spinner) && isSpinning === false) {
                             spinner.spin(ele);
-                        } else {
+                            isSpinning = true;
+                        } else if (!scope.$eval(attrs.spinner)) {
                             spinner.stop();
+                            isSpinning = false;
                         }
                     });
                 }

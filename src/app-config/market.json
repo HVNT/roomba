@@ -315,7 +315,8 @@
                 "weight": 8,
                 "key": "category",
                 "type": "typeahead",
-                "typeahead": ["Under Construction", "Future Development", "Transactions"]
+                "typeahead": ["Under Construction", "Future Development", "Transactions", "Financing", "Renovations", "Newly Completed"],
+                "placeholder": "Other"
             },
             {
                 "title": "Address",

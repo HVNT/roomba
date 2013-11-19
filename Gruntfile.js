@@ -399,16 +399,11 @@ module.exports = function (grunt) {
         }
     });
 
-    /* Watches for changed template files and reprocesses them accordingly */
-    grunt.event.on('watch', function(action, filepath, target) {
-        if (filepath.match(/html.template/)) {
-            grunt.task.run('template:' + templateEnv);
-        }
-    });
+    // When template task is run, sets watch task of template to environment
     grunt.util.hooker.hook(grunt.task, function() {
         var task = grunt.task.current.nameArgs;
         if (task.split(':')[0] === 'template') {
-            templateEnv = task.split(':')[1];
+            grunt.config(['watch', 'template', 'tasks'], [task]);
         }
     });
 
