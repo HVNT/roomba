@@ -1,0 +1,237 @@
+<!--Begin Fields-->
+<div class="row">
+    <div class="details-header">
+        <h3 class="hint--bottom" data-hint="Copy all Raw" ng-click="copyAllRaw(activeItem, activeItemResources)">
+            {{ activeItem.title }}</h3>
+    </div>
+    <form class="form-horizontal fields-editor" ng-submit="noop()">
+        <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'" ng-hide="field.hidden">
+
+            <label class="col-lg-2 control-label">
+                {{ field.title }}
+            </label>
+
+            <!--Regular fields-->
+            <div class="col-lg-10" ui-if="!field.fields">
+                <div class="row">
+                    <div class="col-lg-10" ng-switch="field.type">
+                        <input ng-switch-default
+                               type="text" class="form-control"
+                               ng-hide="activeItem.raw[field.key].showRaw"
+                               ng-readonly="subfield.readonly"
+                               ng-model="activeItem.edited[field.key]"/>
+
+                        <input ng-switch-when="typeahead"
+                               type="text" class="form-control"
+                               ng-hide="activeItem.raw[field.key].showRaw"
+                               typeahead-editable="true"
+                               typeahead="option for option in field.typeahead | filter:$viewValue"
+                               ng-model="activeItem.edited[field.key]"/>
+
+                        <input ng-switch-when="date"
+                               type="text" class="form-control"
+                               ng-hide="activeItem.raw[field.key].showRaw"
+                               ng-model="activeItem.edited[field.key]" ui-date/>
+
+
+                        <textarea cols="30" rows="10" ng-switch-when="textarea"
+                                  class="form-control"
+                                  ng-hide="activeItem.raw[field.key].showRaw"
+                                  ng-model="activeItem.edited[field.key]"></textarea>
+
+                        <!--Raw Data-->
+                        <input type="text" class="form-control status-text-{{ activeItem.raw[field.key].status }}"
+                               ng-show="activeItem.raw[field.key].showRaw"
+                               ng-model="activeItem.raw[field.key].value"/>
+                    </div>
+
+                    <div class="btn col-lg-1 hint--left hint--bounce"
+                         ng-click="copyFromRaw(activeItem, field.key)"
+                         ng-class="classRawField(activeItem.raw[field.key])"
+                         ng-hide="isRawNull(activeItem.raw[field.key])"
+                         ng-mouseover="activeItem.raw[field.key].showRaw = true"
+                         ng-mouseleave="activeItem.raw[field.key].showRaw = false"
+                         data-hint="Copy">
+                        <i ng-hide="activeItem.raw[field.key].copied" class="icon-inbox"></i>
+                        <i ng-show="activeItem.raw[field.key].copied" class="icon-check-sign"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!--Address and other subfield-->
+            <div class="col-lg-10" ui-if="field.fields">
+                <div class="form-group" ng-repeat="subfield in field.fields" ng-hide="subfield.hidden">
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control"
+                               ng-hide="activeItem.raw[field.key][subfield.key].showRaw"
+                               ng-model="activeItem.edited[field.key][subfield.key]"
+                               ng-readonly="subfield.readonly"
+                               placeholder="{{ subfield.title }}"/>
+                        <input type="text"
+                               class="form-control status-text-{{ activeItem.raw[field.key][subfield.key].status }}"
+                               ng-show="activeItem.raw[field.key][subfield.key].showRaw"
+                               placeholder="{{ subfield.title }}"
+                               ng-model="activeItem.raw[field.key][subfield.key].value"/>
+                    </div>
+                    <button class="btn col-lg-1 hint--left hint--bounce"
+                            ng-class="classRawField(activeItem.raw[field.key][subfield.key])"
+                            ng-click="copySubfieldFromRaw(activeItem, field.key, subfield.key)"
+                            ng-hide="isRawNull(activeItem.raw[field.key][subfield.key])"
+                            ng-mouseover="activeItem.raw[field.key][subfield.key].showRaw = true"
+                            ng-mouseleave="activeItem.raw[field.key][subfield.key].showRaw = false"
+                            data-hint="Copy">
+                        <i ng-hide="activeItem.raw[field.key][subfield.key].copied" class="icon-inbox"></i>
+                        <i ng-show="activeItem.raw[field.key][subfield.key].copied" class="icon-check-sign"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--End Fields-->
+
+<!-- Begin Resources-->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="group-editor" ng-repeat="resourceConfig in collection.resources | orderBy: '-weight'"
+             ng-controller="ResourceCtrl">
+            <h4>{{ resourceConfig.title }}</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="table-icon-action table-icon-success"
+                        ng-click="addResource(resourceConfig.key, newResource)">
+
+                        <i class="icon-plus-sign"></i>
+                    </th>
+                    <th ng-repeat="resourceField in resourceConfig.fields">
+                        <input type="text" ng-model="newResource[resourceField.key]"
+                               placeholder="{{resourceField.title}}" focus-first-on="ResourceAdded"
+                               ui-keypress="{'enter': 'addResource(resourceConfig.key, newResource)'}"/>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="itemResource in activeItemResources[resourceConfig.key]">
+                    <td class="table-icon-action table-icon-error"
+                        ng-click="removeResource(resourceConfig.key, itemResource)">
+                        <i class="icon-remove-sign"></i>
+                    </td>
+                    <td ng-repeat="resourceField in resourceConfig.fields">
+
+                        <div class="cell-view" ng-hide="itemResource.raw[resourceField.key].showRaw">
+                            <input type="text" ng-model="itemResource.edited[resourceField.key]"/>
+                            <img ui-if="resourceConfig.key == 'images' && resourceField.key == 'url'"
+                                 ng-src="{{ itemResource.edited[resourceField.key] }}" alt=""/>
+                        </div>
+
+                        <div class="cell-view" ng-show="itemResource.raw[resourceField.key].showRaw">
+                            <input class="input-overlay status-text-{{itemResource.raw[resourceField.key].status}}"
+                                   type="text" ng-model="itemResource.raw[resourceField.key].value"/>
+                            <img ui-if="resourceConfig.key == 'images' && resourceField.key == 'url'"
+                                 ng-src="{{ itemResource.raw[resourceField.key].value }}" alt=""/>
+                        </div>
+
+                        <div class="table-input-action hint--top hint--bounce"
+                             ng-class="classRawField(itemResource.raw[resourceField.key])"
+                             ng-hide="isRawNull(itemResource.raw[resourceField.key])"
+                             ng-mouseover="itemResource.raw[resourceField.key].showRaw = true"
+                             ng-mouseleave="itemResource.raw[resourceField.key].showRaw = false"
+                             ng-click="copyFromRaw(itemResource, resourceField.key)"
+                             data-hint="Copy">
+                            <i ng-hide="itemResource.raw[resourceField.key].copied" class="icon-inbox"></i>
+                            <i ng-show="itemResource.raw[resourceField.key].copied" class="icon-check-sign"></i>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- End Resources-->
+
+<!-- Begin Models-->
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="group-editor model-editor"
+             ng-repeat="modelConfig in collection.models | orderBy: '-weight'"
+             ng-controller="ModelCtrl">
+            <h4 ui-if="activeItem.raw[modelConfig.key].length" ng-click="showRaw()"
+                class="hint--right action" data-hint="Show {{ (modelView.showRaw && 'Edited' || 'Raw') }}">
+                <span ng-show="modelView.showRaw">Raw</span>
+                {{ modelConfig.title }}
+            </h4>
+            <h4 ui-if="!activeItem.raw[modelConfig.key].length">
+                {{ modelConfig.title }}
+            </h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="table-icon-action table-icon-success"
+                        ng-click="addModel(activeItem, modelConfig.key, newModel)">
+                        <i class="icon-plus-sign"></i>
+                    </th>
+                    <th ng-repeat="modelFieldConfig in modelConfig.fields" ng-switch="modelFieldConfig.type">
+                        <input ng-switch-default
+                               focus-first-on="ModelAdded" type="text" ng-model="newModel[modelFieldConfig.key]"
+                               placeholder="{{modelFieldConfig.title}}"
+                               ui-keypress="{'enter': 'addModel(activeItem, modelConfig.key, newModel)'}"/>
+
+                        <input ng-switch-when="date" ui-date
+                               focus-first-on="ModelAdded" type="text" ng-model="newModel[modelFieldConfig.key]"
+                               placeholder="{{modelFieldConfig.title}}"
+                               ui-keypress="{'enter': 'addModel(activeItem, modelConfig.key, newModel)'}"/>
+
+                        <input ng-switch-when="typeahead"
+                               focus-first-on="ModelAdded" type="text" ng-model="newModel[modelFieldConfig.key]"
+                               placeholder="{{modelFieldConfig.title}}"
+                               typeahead-editable="true"
+                               typeahead="option for option in modelFieldConfig.typeahead | filter:$viewValue"
+                               ui-keypress="{'enter': 'addModel(activeItem, modelConfig.key, newModel)'}"/>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <!--Edited-->
+                <tr ng-repeat="editedModel in activeItem.edited[modelConfig.key]"
+                    ng-hide="modelView.showRaw">
+                    <td class="table-icon-action table-icon-error hint--right"
+                        data-hint="Remove"
+                        ng-click="removeModel(activeItem, modelConfig.key, editedModel)">
+                        <i class="icon-remove-sign"></i>
+                    </td>
+                    <td ng-repeat="modelFieldConfig in modelConfig.fields" ng-switch="modelFieldConfig.type">
+                        <input ng-switch-default type="text" ng-model="editedModel[modelFieldConfig.key]"/>
+                        <input ng-switch-when="date" ui-date type="text" ng-model="editedModel[modelFieldConfig.key]"/>
+                    </td>
+                </tr>
+
+                <!--Raw-->
+                <tr ng-repeat="rawModel in activeItem.raw[modelConfig.key]"
+                    ng-show="modelView.showRaw">
+                    <td class="table-icon-action hint--right table-icon-info"
+                        ng-hide="rawModel.copied"
+                        data-hint="Copy"
+                        ng-click="copyModelFromRaw(activeItem, modelConfig.key, rawModel)">
+                        <i class="icon-inbox"></i>
+                    </td>
+                    <td class="table-icon-action hint--right"
+                        data-hint="Copied!"
+                        ng-show="rawModel.copied">
+                        <i class="icon-check-sign"></i>
+                    </td>
+                    <td ng-repeat="modelFieldConfig in modelConfig.fields"
+                        class="status-text-{{ rawModel[modelFieldConfig.key].status }}">
+                        {{ rawModel[modelFieldConfig.key].value }}
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- End Models-->
