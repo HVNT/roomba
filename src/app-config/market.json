@@ -328,10 +328,6 @@
                         "key": "street1"
                     },
                     {
-                        "title": "Street 2",
-                        "key": "street2"
-                    },
-                    {
                         "title": "City",
                         "key": "city"
                     },
