@@ -277,7 +277,7 @@
                 "category": {
                     "title": "Category",
                     "weight": 10,
-                    "restrict": ["Under Construction", "Future Development", "Transactions"]
+                    "restrict": ["Under Construction", "Future Development", "Transactions", "Financing", "Renovations", "Newly Completed"]
                 }
             },
             "range": {}

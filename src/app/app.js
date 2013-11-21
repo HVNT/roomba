@@ -550,7 +550,7 @@ angular.module('roomba.app',
                 };
 
                 Item.prototype.$publish = function () {
-                    this.tags = _.without(this.tags, 'edited', 'raw', 'published', 'unpublished');
+                    this.tags = _.without(this.tags, 'raw', 'published', 'unpublished');
                     this.tags.push('published');
 
                     return this.$update();
