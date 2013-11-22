@@ -257,6 +257,10 @@
                     {
                         "key": "url",
                         "title": "URL"
+                    },
+                    {
+                        "key": "weight",
+                        "title": "Weight"
                     }
                 ]
             }
