@@ -85,6 +85,12 @@
                 "type": "date"
             },
             {
+                "title": "Date Posted",
+                "weight": 9,
+                "key": "datePosted",
+                "type": "date"
+            },
+            {
                 "title": "Property Status",
                 "weight": 9,
                 "key": "status",
