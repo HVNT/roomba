@@ -541,8 +541,8 @@ angular.module('roomba.app')
         }])
     .controller('JoinDialogCtrl', ['$scope', 'Market', 'dialog', 'Models',
         function ($scope, Market, dialog, Models) {
-            $scope.joinItems = Market.getItems();
             $scope.activeItem = Market.getActive();
+            $scope.joinItems = _.without(Market.getItems(), $scope.activeItem);
             $scope.selectedItem = {};
             $scope.collection = Models.getActive().collection;
             $scope.searchBy = {};
