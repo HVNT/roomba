@@ -9,7 +9,7 @@
         <i class="icon-search"></i>
     </div>
     <div class="market-list col-lg-12">
-        <div class="row listing-list-item" ng-repeat="item in joinItems | filter:searchBy"
+        <div class="row listing-list-item" ng-repeat="item in joinItems | filter:searchBy | limitTo: 10"
              ng-click="selectItem(item)"
              ng-class="{'active': selectedItem.$$hashKey == item.$$hashKey}">
             <div class="col-lg-1"><i class="icon-exchange status-text-success"
