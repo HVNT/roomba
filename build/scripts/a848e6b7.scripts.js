@@ -22013,6 +22013,534 @@ angular.module('template/typeahead/typeahead.html', []).run([
     i = a(m, 'animation');
   return c;
 }));
+var thotpod = function () {
+    var toString = Object.prototype.toString;
+    function isArray(value) {
+      return toString.apply(value) == '[object Array]';
+    }
+    function isDate(value) {
+      return toString.apply(value) == '[object Date]';
+    }
+    function isObject(value) {
+      return value != null && typeof value == 'object';
+    }
+    function copy(source, destination) {
+      if (!destination) {
+        destination = source;
+        if (source) {
+          if (isArray(source)) {
+            destination = copy(source, []);
+          } else if (isDate(source)) {
+            destination = new Date(source.getTime());
+          } else if (isObject(source)) {
+            destination = copy(source, {});
+          }
+        }
+      } else {
+        if (source === destination)
+          throw Error('Can\'t copy equivalent objects or arrays');
+        if (isArray(source)) {
+          while (destination.length) {
+            destination.pop();
+          }
+          for (var i = 0; i < source.length; i++) {
+            destination.push(copy(source[i]));
+          }
+        } else {
+          _.forEach(destination, function (value, key) {
+            delete destination[key];
+          });
+          for (var key in source) {
+            destination[key] = copy(source[key]);
+          }
+        }
+      }
+      return destination;
+    }
+    function setBit(idPos, bitSet) {
+      var bitSetIndex = parseInt(idPos / 32, 10);
+      bitSet = bitSet || [];
+      while (bitSet.length <= bitSetIndex) {
+        bitSet.push(0);
+      }
+      bitSet[bitSetIndex] = bitSet[bitSetIndex] | 1 << idPos % 32;
+      return bitSet;
+    }
+    function popcount(x) {
+      var m1 = 1431655765;
+      var m2 = 858993459;
+      var m4 = 252645135;
+      x -= x >> 1 & m1;
+      x = (x & m2) + (x >> 2 & m2);
+      x = x + (x >> 4) & m4;
+      x += x >> 8;
+      x += x >> 16;
+      return x & 127;
+    }
+    function Dimensions(dimensions) {
+      var defaults = _.extend({
+          title: '',
+          discreet: {},
+          range: {},
+          visibleIds: [],
+          idMap: []
+        }), discreetDefaults = {
+          values: {},
+          selected: 0,
+          visibleIds: []
+        }, rangeDefaults = {
+          excludeNA: false,
+          high: null,
+          low: null
+        }, self = this;
+      copy(defaults, this);
+      for (var attrID in dimensions.discreet) {
+        if (dimensions.discreet.hasOwnProperty(attrID)) {
+          var _attr = dimensions.discreet[attrID], _discreet = _.extend(_attr, discreetDefaults);
+          self.discreet[attrID] = {};
+          copy(_discreet, self.discreet[attrID]);
+        }
+      }
+      for (var attrID in dimensions.range) {
+        if (dimensions.range.hasOwnProperty(attrID)) {
+          var _attr = dimensions.range[attrID], _range = _.extend(_attr, rangeDefaults);
+          self.range[attrID] = {};
+          copy(_range, self.range[attrID]);
+        }
+      }
+    }
+    Dimensions.prototype.pushDiscreetId = function (attrID, idPosition, value) {
+      var _discreet = this.discreet[attrID];
+      if (_discreet) {
+        value = value || 'Unknown';
+        if (_discreet.values.hasOwnProperty(value)) {
+          _discreet.values[value].ids = setBit(idPosition, _discreet.values[value].ids);
+        } else {
+          _discreet.values[value] = {
+            ids: [0],
+            title: value,
+            isSelected: false
+          };
+          _discreet.values[value].ids = setBit(idPosition, _discreet.values[value].ids);
+        }
+      }
+    };
+    Dimensions.prototype.load = function (search) {
+      var self = this;
+      var _search = _.extend({
+          title: '',
+          discreet: {},
+          range: {}
+        }, search);
+      self.id = _search.id || undefined;
+      self.title = _search.title || '';
+      for (var rangeID in self.range) {
+        if (_search.range.hasOwnProperty(rangeID)) {
+          var withinLowBound = _search.range[rangeID].lowSelected >= self.range[rangeID].low, withinHighBound = _search.range[rangeID].highSelected <= self.range[rangeID].high;
+          if (withinLowBound && withinHighBound) {
+            self.range[rangeID].lowSelected = _search.range[rangeID].lowSelected;
+            self.range[rangeID].highSelected = _search.range[rangeID].highSelected;
+          } else if (!withinLowBound && withinHighBound) {
+            self.range[rangeID].lowSelected = self.range[rangeID].low;
+            self.range[rangeID].highSelected = _search.range[rangeID].highSelected;
+          } else if (withinLowBound && !withinHighBound) {
+            self.range[rangeID].lowSelected = _search.range[rangeID].lowSelected;
+            self.range[rangeID].highSelected = self.range[rangeID].high;
+          } else {
+            self.range[rangeID].lowSelected = self.range[rangeID].low;
+            self.range[rangeID].highSelected = self.range[rangeID].high;
+          }
+        } else {
+          if (self.range.hasOwnProperty(rangeID)) {
+            self.range[rangeID].lowSelected = self.range[rangeID].low;
+            self.range[rangeID].highSelected = self.range[rangeID].high;
+          }
+        }
+      }
+      for (var discreetID in self.discreet) {
+        if (_search.discreet.hasOwnProperty(discreetID)) {
+          for (var attrID in _search.discreet[discreetID].values) {
+            if (self.discreet[discreetID].values.hasOwnProperty(attrID)) {
+              if (_search.discreet[discreetID].values[attrID].isSelected && !self.discreet[discreetID].values[attrID].isSelected) {
+                self.discreet[discreetID].values[attrID].isSelected = true;
+                self.discreet[discreetID].selected++;
+              } else if (!_search.discreet[discreetID].values[attrID].isSelected && self.discreet[discreetID].values[attrID].isSelected) {
+                self.discreet[discreetID].values[attrID].isSelected = false;
+                self.discreet[discreetID].selected--;
+              }
+            }
+          }
+        } else {
+          if (self.discreet.hasOwnProperty(discreetID)) {
+            for (var attrID in self.discreet[discreetID].values) {
+              if (self.discreet[discreetID].values.hasOwnProperty(attrID)) {
+                if (self.discreet[discreetID].values[attrID].isSelected) {
+                  self.discreet[discreetID].values[attrID].isSelected = false;
+                  self.discreet[discreetID].selected--;
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+    Dimensions.prototype.toArray = function () {
+      var dimensionsArr = _.extend({}, this, {
+          discreet: _.map(this.discreet, function (val) {
+            return val;
+          }),
+          range: _.map(this.range, function (val) {
+            return val;
+          })
+        });
+      return dimensionsArr;
+    };
+    Dimensions.prototype.getDiscreet = function () {
+      return _.map(this.discreet, function (val) {
+        return val;
+      });
+    };
+    Dimensions.prototype.getRange = function () {
+      return _.map(this.range, function (val) {
+        return val;
+      });
+    };
+    Dimensions.prototype.reset = function () {
+      this.title = '';
+      this.id = undefined;
+      this.discreet = {};
+      this.range = {};
+      return this;
+    };
+    function Market(Model, opts) {
+      var activeItem = null, prevActive = null;
+      _.extend(this, { sortBy: {} }, opts);
+      this.Model = Model;
+      this.dimensions = {};
+      this.items = {};
+      this.visibleIds = [];
+      this.visibleItems = [];
+      this.subsetIds = [];
+      this.initialized = false;
+      this.populated = false;
+      this.getActive = function () {
+        return activeItem;
+      };
+      this.getItems = function () {
+        return _.map(this.items, function (val) {
+          return val;
+        });
+      };
+      this.setActive = function (id) {
+        if (_.isObject(id)) {
+          prevActive = activeItem;
+          activeItem = id;
+          activeItem.isActive = true;
+        } else if (this.items[id]) {
+          prevActive = activeItem;
+          activeItem = this.items[id];
+          activeItem.isActive = true;
+        } else {
+          activeItem = null;
+        }
+        if (prevActive) {
+          prevActive.isActive = false;
+        }
+        return activeItem;
+      };
+      this.getDimensions = function () {
+        return this.dimensions;
+      };
+      this.load = function (search) {
+        this.dimensions.load(search);
+        return this;
+      };
+    }
+    Market.prototype.addModels = function (models) {
+      for (var _model in models) {
+        if (models.hasOwnProperty(_model)) {
+          var model = models[_model];
+          try {
+            this.mapModel(model);
+          } catch (e) {
+            console.log(e.message);
+          }
+        }
+      }
+    };
+    Market.prototype.mapModel = function (model) {
+      var self = this, _item = self.items[model.id] = self.Model ? new self.Model(model) : model, idPosition = self.dimensions.idMap.length, dimensions = self.dimensions;
+      dimensions.idMap.push(model.id);
+      for (var _discreetKey in dimensions.discreet) {
+        if (dimensions.discreet.hasOwnProperty(_discreetKey)) {
+          var _discreetAttr = dimensions.discreet[_discreetKey];
+          if (typeof _item[_discreetKey] !== 'undefined') {
+            if (_discreetAttr.multi) {
+              if (_item[_discreetKey].length) {
+                for (var i = 0; i < _item[_discreetKey].length; i++) {
+                  var _itemAttr = _item[_discreetKey][i] = _item[_discreetKey][i] || 'Unknown', _discreetVal;
+                  if (_discreetAttr.restrict) {
+                    _discreetVal = _.contains(_discreetAttr.restrict, _itemAttr) ? _itemAttr : 'Other';
+                  } else {
+                    _discreetVal = _itemAttr;
+                  }
+                  self.dimensions.pushDiscreetId(_discreetKey, idPosition, _discreetVal);
+                }
+              } else {
+                self.dimensions.pushDiscreetId(_discreetKey, idPosition, 'None');
+              }
+            } else {
+              var _discreetVal;
+              _item[_discreetKey] = _item[_discreetKey] || 'Unknown';
+              if (_discreetAttr.restrict) {
+                _discreetVal = _.contains(_discreetAttr.restrict, _item[_discreetKey]) ? _item[_discreetKey] : 'Other';
+              } else {
+                _discreetVal = _item[_discreetKey];
+              }
+              self.dimensions.pushDiscreetId(_discreetKey, idPosition, _discreetVal);
+            }
+          } else {
+            throw new Error('Cannot find discreet attribute: ' + _discreetKey);
+          }
+        }
+      }
+      for (var _rangeKey in dimensions.range) {
+        if (dimensions.range.hasOwnProperty(_rangeKey)) {
+          var _rangeAttr = self.dimensions.range[_rangeKey], _itemAttr;
+          if (typeof _item[_rangeKey] !== 'undefined') {
+            _itemAttr = _item[_rangeKey] = isNaN(parseFloat(_item[_rangeKey])) ? 'NA' : parseFloat(_item[_rangeKey]);
+            if (!_rangeAttr.highBound) {
+              if ((_itemAttr >= _rangeAttr.high || _rangeAttr.high == null) && _itemAttr !== 'NA') {
+                _rangeAttr.high = _rangeAttr.highSelected = _itemAttr;
+              }
+            } else {
+              _rangeAttr.high = _rangeAttr.highSelected = _rangeAttr.highBound;
+            }
+            if (!_rangeAttr.lowBound) {
+              if ((_itemAttr <= _rangeAttr.low || _rangeAttr.low == null) && _itemAttr !== 'NA') {
+                _rangeAttr.low = _rangeAttr.lowSelected = _itemAttr;
+              }
+            } else {
+              _rangeAttr.low = _rangeAttr.lowSelected = _rangeAttr.lowBound;
+            }
+          } else {
+            throw new Error('Cannot find range attribute: ' + _rangeKey);
+          }
+        }
+      }
+    };
+    Market.prototype.initialize = function (dimensions, models) {
+      if (!dimensions && !this.dimensions) {
+        throw new Error('Dimensions must be defined in order to initialize Marketplace');
+      }
+      this.items = {};
+      this.dimensions = dimensions ? new Dimensions(dimensions) : this.dimensions;
+      if (models) {
+        this.addModels(models);
+        this.populated = true;
+        this.apply();
+        this.predict();
+      }
+      this.initialized = true;
+      return this.items;
+    };
+    Market.prototype.apply = function (opts) {
+      var dimensions = this.dimensions, items = this.items;
+      this.subsetIds = [];
+      this.visibleIds = [];
+      this.visibleItems = [];
+      dimensions.visibleIds = [];
+      var BIT_SET_LENGTH = Math.ceil(dimensions.idMap.length / 32), bitSet = [], i;
+      for (i = 0; i < BIT_SET_LENGTH; i++) {
+        bitSet.push(~0);
+        for (var attrId in dimensions.discreet) {
+          if (dimensions.discreet.hasOwnProperty(attrId)) {
+            var _discreet = dimensions.discreet[attrId], union = _discreet.multi ? ~0 : 0;
+            for (var valueId in _discreet.values) {
+              if (_discreet.values.hasOwnProperty(valueId)) {
+                var _value = _discreet.values[valueId];
+                if (_discreet.multi) {
+                  if (_discreet.selected === 0) {
+                    break;
+                  } else if (_value.isSelected) {
+                    union = union & _value.ids[i];
+                  }
+                } else {
+                  if (_value.isSelected || _discreet.selected === 0) {
+                    union = union | _value.ids[i];
+                  }
+                }
+              }
+            }
+            _discreet.visibleIds[i] = union;
+            bitSet[i] = bitSet[i] & union;
+          }
+        }
+        for (var p = 0; p < 32; p++) {
+          var itemIndex = i * 32 + p;
+          if (dimensions.idMap[itemIndex]) {
+            var _currItem = items[dimensions.idMap[itemIndex]];
+            if (!_.isEmpty(dimensions.range)) {
+              for (var _rangeKey in dimensions.range) {
+                if (dimensions.range.hasOwnProperty(_rangeKey)) {
+                  var _rangeAttr = dimensions.range[_rangeKey], _currItemAttr = _currItem[_rangeKey], _isWithinLow = _currItemAttr >= _rangeAttr.lowSelected || _rangeAttr.lowSelected == _rangeAttr.lowBound, _isWithinHigh = _currItemAttr <= _rangeAttr.highSelected || _rangeAttr.highSelected == _rangeAttr.highBound;
+                  if (_isWithinLow && _isWithinHigh || _currItemAttr === 'NA' && !_rangeAttr.excludeNA) {
+                    _currItem.isVisible = !!(1 & bitSet[i]);
+                  } else {
+                    _currItem.isVisible = false;
+                    for (var _discreetKey in dimensions.discreet) {
+                      if (dimensions.discreet.hasOwnProperty(_discreetKey)) {
+                        var _discreetAttr = dimensions.discreet[_discreetKey], _mask = ~(1 << p);
+                        _discreetAttr.visibleIds[i] = _discreetAttr.visibleIds[i] & _mask;
+                      }
+                    }
+                    break;
+                  }
+                }
+              }
+              if (!this.subset || this.subset === 'all') {
+                _currItem.isVisible = _currItem.isVisible && !_currItem.hidden;
+                if (!_currItem.hidden) {
+                  this.subsetIds = setBit(itemIndex, this.subsetIds);
+                }
+              } else {
+                _currItem.isVisible = _currItem.isVisible && _currItem[this.subset];
+                if (_currItem[this.subset]) {
+                  this.subsetIds = setBit(itemIndex, this.subsetIds);
+                }
+              }
+              if (_currItem.isVisible) {
+                dimensions.visibleIds = setBit(itemIndex, dimensions.visibleIds);
+                this.visibleIds.push(dimensions.idMap[itemIndex]);
+                this.visibleItems.push(_currItem);
+              }
+            } else {
+              _currItem.isVisible = !!(1 & bitSet[i]);
+              if (_currItem.isVisible) {
+                dimensions.visibleIds = setBit(itemIndex, dimensions.visibleIds);
+                this.visibleIds.push(dimensions.idMap[itemIndex]);
+                this.visibleItems.push(_currItem);
+              }
+            }
+          }
+          bitSet[i] = bitSet[i] >> 1;
+        }
+      }
+      return this.sortVisibleItems();
+    };
+    Market.prototype.predict = function () {
+      var dimensions = this.dimensions;
+      var BIT_SET_LENGTH = Math.ceil(dimensions.idMap.length / 32);
+      for (var attrId in dimensions.discreet) {
+        if (dimensions.discreet.hasOwnProperty(attrId)) {
+          var _discreet = dimensions.discreet[attrId];
+          for (var valueId in _discreet.values) {
+            if (_discreet.values.hasOwnProperty(valueId)) {
+              var _value = _discreet.values[valueId];
+              if (!_value.isSelected && _discreet.selected > 0) {
+                var predictLength = 0, predictBitSet = [];
+                for (var i = 0; i < BIT_SET_LENGTH; i++) {
+                  var predictedUnion = _discreet.visibleIds[i] | _value.ids[i];
+                  predictBitSet.push(~0);
+                  for (var predictAttrId in dimensions.discreet) {
+                    if (dimensions.discreet.hasOwnProperty(predictAttrId)) {
+                      var _predictDiscreet = dimensions.discreet[predictAttrId];
+                      if (predictAttrId === attrId) {
+                        predictBitSet[i] = predictBitSet[i] & predictedUnion;
+                      } else {
+                        predictBitSet[i] = predictBitSet[i] & _predictDiscreet.visibleIds[i];
+                      }
+                    }
+                  }
+                  predictLength += popcount(predictBitSet[i] & _value.ids[i] & this.subsetIds[i]);
+                }
+                if (predictLength) {
+                  _value.badge = 'badge-success';
+                  _value.predict = '+' + predictLength;
+                } else {
+                  _value.badge = null;
+                  _value.predict = 0;
+                }
+              } else {
+                _value.predict = 0;
+                for (var i = 0; i < BIT_SET_LENGTH; i++) {
+                  _value.predict += popcount(dimensions.visibleIds[i] & _value.ids[i]);
+                }
+                _value.badge = _value.predict ? 'badge-info' : '';
+              }
+            }
+          }
+        }
+      }
+    };
+    Market.prototype.sortVisibleItems = function (predicate, reverse) {
+      var _predicate = predicate || this.sortBy.predicate, _reverse = typeof reverse == 'undefined' ? this.sortBy.reverse : reverse, _items = [], _naItems = [];
+      if (!_predicate) {
+        return this.visibleItems;
+      }
+      function compare(a, b) {
+        var v1 = a[_predicate] || a[_predicate] || null;
+        var v2 = b[_predicate] || b[_predicate] || null;
+        var t1 = typeof v1;
+        var t2 = typeof v2;
+        if (t1 == t2) {
+          if (t1 == 'string')
+            v1 = v1.toLowerCase();
+          if (t1 == 'string')
+            v2 = v2.toLowerCase();
+          if (v1 === v2)
+            return 0;
+          return v1 < v2 ? -1 : 1;
+        } else {
+          return v1 < v2 ? -1 : 1;
+        }
+      }
+      for (var i = this.visibleItems.length - 1; i >= 0; i--) {
+        var _item = this.visibleItems[i];
+        var _attr = _item[_predicate] || _item[_predicate] || null;
+        if (_attr == 'NA') {
+          _naItems.push(_item);
+        } else {
+          _items.push(_item);
+        }
+      }
+      _items.sort(_reverse ? compare : function (a, b) {
+        return compare(b, a);
+      });
+      this.visibleItems = _items.concat(_naItems);
+      this.sortBy = {
+        predicate: _predicate,
+        reverse: _reverse
+      };
+      return this.visibleItems;
+    };
+    Market.prototype.toggleDiscreet = function (discreet, value) {
+      if (discreet && value) {
+        value.isSelected = !value.isSelected;
+        value.isSelected ? discreet.selected++ : discreet.selected--;
+      }
+      return this;
+    };
+    Market.prototype.applyRange = function (rangeKey, low, high) {
+      if (this.dimensions.range.hasOwnProperty(rangeKey)) {
+        var _range = this.dimensions.range[rangeKey];
+        _range.lowSelected = low;
+        _range.highSelected = high;
+      } else {
+        throw new Error('Cannot find range dimension ' + rangeKey);
+      }
+      return this;
+    };
+    Market.prototype.excludeNA = function (rangeKey) {
+      this.dimensions.range[rangeKey].excludeNA = true;
+      return this;
+    };
+    Market.prototype.includeNA = function (rangeKey) {
+      this.dimensions.range[rangeKey].excludeNA = false;
+      return this;
+    };
+    return { Marketplace: Market };
+  }();
 angular.module('rescour.user', []).service('User', [
   '$http',
   '$q',
@@ -23471,7 +23999,6 @@ angular.module('thotpod.spinner', []).factory('$spinner', function () {
               left: 'auto'
             }
           }, ele = element[0], userOpts = scope.$eval(attrs.spinnerOptions) || {}, spinner = new $spinner(angular.extend({}, opts[attrs.spinnerSize || 'small'], userOpts)), isSpinning = false;
-        console.log(attrs);
         scope.$watch(function () {
           if (scope.$eval(attrs.spinner) && isSpinning === false) {
             spinner.spin(ele);
@@ -23898,6 +24425,9 @@ angular.module('roomba.app', [
                 if (modelInstance[modelFieldConfig.key].status == 2 && modelConfig.key != 'pages') {
                   self.isConflict = true;
                 }
+                if (modelFieldConfig.type === 'date') {
+                  modelInstance[modelFieldConfig.key].value = modelInstance[modelFieldConfig.key].value ? new Date(modelInstance[modelFieldConfig.key]) : null;
+                }
               }
             }
             for (var i = 0; i < self.edited[modelConfig.key].length; i++) {
@@ -23905,6 +24435,9 @@ angular.module('roomba.app', [
               for (var j = 0; j < modelConfig.fields.length; j++) {
                 var modelFieldConfig = modelConfig.fields[j];
                 modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || (modelFieldConfig.placeholder || '');
+                if (modelFieldConfig.type === 'date') {
+                  modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] ? new Date(modelInstance[modelFieldConfig.key]) : null;
+                }
               }
             }
           });
@@ -24254,12 +24787,14 @@ angular.module('roomba.app', [
           }, function (response) {
             defer.reject(response);
           }).then(function (response) {
-            defer.resolve(response);
+            defer.resolve(_oldItem);
           }, function (response) {
             defer.reject(response);
           });
         } else {
-          throw new Error('Items are not compatible to join');
+          console.log('Old: ', _oldItem, this);
+          console.log('New: ', _newItem, selectedItem);
+          defer.reject({ message: 'Items are not compatible to join' });
         }
         return defer.promise;
       };
@@ -24450,7 +24985,7 @@ angular.module('roomba.app').config([
             return _Item.query();
           }).then(function (response) {
             var Market = new thotpod.Marketplace(_Item);
-            Market.initialize(response, _Item.dimensions, _Item);
+            Market.initialize(_Item.dimensions, response);
             defer.resolve(Market);
           });
           return defer.promise;
@@ -24522,7 +25057,6 @@ angular.module('roomba.app').config([
                 }
               }
             }
-            console.log($scope.activeItem);
           });
         }
       }
@@ -24687,7 +25221,12 @@ angular.module('roomba.app').config([
     };
     $scope.openJoinDialog = function () {
       $scope.joinDialog.open().then(function (response) {
-        console.log(response);
+        if (response) {
+          $scope.setGlobalAlert({
+            type: response.status,
+            text: response.message
+          });
+        }
       });
     };
     $scope.noop = function () {
@@ -24918,24 +25457,24 @@ angular.module('roomba.app').config([
   'dialog',
   'Models',
   function ($scope, Market, dialog, Models) {
-    $scope.joinItems = Market.getItems();
     $scope.activeItem = Market.getActive();
+    $scope.joinItems = _.without(Market.getItems(), $scope.activeItem);
     $scope.selectedItem = {};
     $scope.collection = Models.getActive().collection;
     $scope.searchBy = {};
     $scope.join = function (selectedItem) {
-      $scope.activeItem.$join(selectedItem).then(function () {
+      console.log('sup');
+      $scope.activeItem.$join(selectedItem).then(function (deletedItem) {
         dialog.close({
           status: 'success',
           message: $scope.activeItem.title + ' and ' + selectedItem.title + ' successfully joined!'
         });
-      }, function () {
+      }, function (response) {
         dialog.close({
-          status: 0,
-          message: 'Join failed.'
+          status: 'danger',
+          message: response.message || 'Join failed.'
         });
       });
-      console.log(selectedItem, $scope.activeItem);
     };
     $scope.selectItem = function (item) {
       $scope.selectedItem = item;

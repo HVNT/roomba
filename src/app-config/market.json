@@ -12,7 +12,7 @@
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
-                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"],
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged", "conflict"],
                     "multi": true
                 },
                 "status": {
@@ -281,7 +281,7 @@
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
-                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"],
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged", "conflict"],
                     "multi": true
                 },
                 "category": {
@@ -374,7 +374,7 @@
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
-                    "restrict": ["edited", "published", "raw", "unpublished", "flagged"],
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged", "conflict"],
                     "multi": true
                 }
             },

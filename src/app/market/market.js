@@ -26,7 +26,7 @@ angular.module('roomba.app')
                                 })
                                 .then(function (response) {
                                     var Market = new thotpod.Marketplace(_Item);
-                                    Market.initialize(response, _Item.dimensions, _Item);
+                                    Market.initialize(_Item.dimensions, response);
                                     defer.resolve(Market);
                                 });
 
@@ -104,7 +104,6 @@ angular.module('roomba.app')
                                     }
                                 }
                             }
-                            console.log($scope.activeItem);
                         });
                     }
                 }
@@ -160,6 +159,7 @@ angular.module('roomba.app')
             $scope.hasTag = function (item, tag) {
                 return _.contains(item.tags, tag);
             };
+
 
             $scope.setSearchCriteria = function (field) {
                 $scope.activeSearch = {};
@@ -288,7 +288,12 @@ angular.module('roomba.app')
 
             $scope.openJoinDialog = function () {
                 $scope.joinDialog.open().then(function (response) {
-                    console.log(response);
+                    if (response) {
+                        $scope.setGlobalAlert({
+                            type: response.status,
+                            text: response.message
+                        });
+                    }
                 });
             }
 
@@ -548,13 +553,13 @@ angular.module('roomba.app')
             $scope.searchBy = {};
 
             $scope.join = function (selectedItem) {
+                console.log("sup");
                 $scope.activeItem.$join(selectedItem)
-                    .then(function () {
-                        dialog.close({status: "success", message: $scope.activeItem.title + ' and ' + selectedItem.title + ' successfully joined!'})
-                    }, function () {
-                        dialog.close({status: 0, message: 'Join failed.'})
+                    .then(function (deletedItem) {
+                        dialog.close({status: 'success', message: $scope.activeItem.title + ' and ' + selectedItem.title + ' successfully joined!'})
+                    }, function (response) {
+                        dialog.close({status: 'danger', message: response.message || 'Join failed.'})
                     });
-                console.log(selectedItem, $scope.activeItem);
             };
 
             $scope.selectItem = function (item) {

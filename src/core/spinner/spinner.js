@@ -379,7 +379,6 @@ angular.module('thotpod.spinner', [])
                         spinner = new $spinner(angular.extend({}, opts[attrs.spinnerSize || 'small'], userOpts)),
                         isSpinning = false;
 
-                    console.log(attrs);
                     scope.$watch(function () {
                         if (scope.$eval(attrs.spinner) && isSpinning === false) {
                             spinner.spin(ele);

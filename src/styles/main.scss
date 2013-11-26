@@ -281,6 +281,7 @@ $marketListBg: #333;
     img {
       margin: 15px;
       display: block;
+      height: 100px;
     }
   }
 
@@ -372,7 +373,11 @@ $marketListBg: #333;
 }
 
 .status-btn-error {
-  @include tpBtnBg($red);
+   @include tpBtnBg($red);
+ }
+
+.status-btn-warning {
+  @include tpBtnBg($orange);
 }
 
 .status-solid-info {
@@ -387,6 +392,10 @@ $marketListBg: #333;
   background: $red;
 }
 
+.status-solid-warning {
+  background: $orange;
+}
+
 .status-text-info {
   color: $blue !important;
 }
@@ -395,11 +404,11 @@ $marketListBg: #333;
   color: $green !important;
 }
 
-.status-text-warning {
+.status-text-warning, .status-text-2 {
   color: $orange !important;
 }
 
-.status-text-error, .status-text-2 {
+.status-text-error {
   color: $red !important;
 }
 

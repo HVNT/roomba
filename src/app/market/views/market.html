@@ -116,7 +116,7 @@
             <div class="scroll-container">
                 <div class="scroll-wrap"
                      chunk="filteredItems = (items | filter:searchBy[activeSearch.key] | orderBy:sortBy)"
-                     chunk-size="100">
+                     chunk-size="100" spinner="loadingItemsSpinner">
 
                     <div class="row label-list-item" ng-click="toggleSelectAll()">
                         Select {{ filteredItems.length }} items
@@ -128,6 +128,7 @@
                              ng-click="openDetails(item)">
                              {{item.title}}  
                              <i class="icon-flag status-text-error" ng-show="hasTag(item, 'flagged')"></i>
+                             <i class="icon-cloud status-text-info" ng-show="hasTag(item, 'published')"></i>
                              <i class="icon-warning-sign status-text-warning" ng-show="item.hasPageConflict()"></i>
                         </div>
                         <div class="col-lg-2 col-sm-3 col-3">

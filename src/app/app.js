@@ -166,6 +166,10 @@ angular.module('roomba.app',
                                     if (modelInstance[modelFieldConfig.key].status == 2 && modelConfig.key != 'pages') {
                                         self.isConflict = true;
                                     }
+
+                                    if (modelFieldConfig.type === 'date') {
+                                        modelInstance[modelFieldConfig.key].value = modelInstance[modelFieldConfig.key].value ? new Date(modelInstance[modelFieldConfig.key]) : null;
+                                    }
                                 }
                             }
 
@@ -177,6 +181,10 @@ angular.module('roomba.app',
                                 for (var j = 0; j < modelConfig.fields.length; j++) {
                                     var modelFieldConfig = modelConfig.fields[j];
                                     modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] || (modelFieldConfig.placeholder || "");
+
+                                    if (modelFieldConfig.type === 'date') {
+                                        modelInstance[modelFieldConfig.key] = modelInstance[modelFieldConfig.key] ? new Date(modelInstance[modelFieldConfig.key]) : null;
+                                    }
                                 }
                             }
                         });
@@ -616,14 +624,18 @@ angular.module('roomba.app',
                             },function (response) {
                                 defer.reject(response);
                             }).then(function (response) {
-                                defer.resolve(response);
+                                defer.resolve(_oldItem);
                             }, function (response) {
                                 defer.reject(response);
                             });
 
                         // Save _newItem, delete _old
                     } else {
-                        throw new Error("Items are not compatible to join");
+                        console.log("Old: ", _oldItem, this);
+                        console.log("New: ", _newItem, selectedItem);
+                        defer.reject({
+                            message: 'Items are not compatible to join'
+                        });
                     }
 
                     return defer.promise;
