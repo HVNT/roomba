@@ -23663,6 +23663,7 @@ angular.module('roomba.app', [
           } else {
             this.title = this.edited.title;
           }
+          self.prodId = self.prodId || null;
         } else if (collection.key === 'contacts') {
           if (!this.edited.name) {
             this.title = this.raw.name.value || 'Unnamed';
@@ -23882,7 +23883,7 @@ angular.module('roomba.app', [
         return this.$update();
       };
       Item.prototype.$publish = function () {
-        this.tags = _.without(this.tags, 'raw', 'published', 'unpublished');
+        this.tags = _.without(this.tags, 'published', 'unpublished');
         this.tags.push('published');
         return this.$update();
       };
@@ -23929,6 +23930,7 @@ angular.module('roomba.app', [
         if (_oldItem && _newItem) {
           _newItem.edited = _oldItem.edited;
           _newItem.resources = _oldItem.resources;
+          _newItem.prodId = _oldItem.prodId;
           _newItem.$save().then(function (response) {
             return _oldItem.$delete();
           }, function (response) {
