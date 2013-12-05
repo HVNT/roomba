@@ -1,8 +1,15 @@
 <!--Begin Fields-->
 <div class="row">
     <div class="details-header">
-        <h3 class="hint--bottom" data-hint="Copy all Raw" ng-click="copyAllRaw(activeItem, activeItemResources)">
-            {{ activeItem.title }}</h3>
+        <div class="dropdown">
+            <h3 dropdown-toggle class="hint--right dropdown" data-hint="View Source Pages" ui-if="activeItem.raw.pages.length">{{ activeItem.title }}</h3>
+            <span ui-if="!activeItem.raw.pages.length">{{ activeItem.title }}</span>
+
+            <ul class="dropdown-menu">
+                <li ng-repeat="rawPage in activeItem.raw.pages"><a ng-href="{{rawPage.url.value}}" target="_blank">{{rawPage.url.value}}</a></li>
+            </ul>
+        </div>
+        <div class="icon-btn-success hint--bottom" data-hint="Copy all Raw"><i class="icon-download-alt" ng-click="copyAllRaw(activeItem, activeItemResources)"></i></div>
     </div>
     <form class="form-horizontal fields-editor" ng-submit="noop()">
         <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'" ng-hide="field.hidden">

@@ -219,8 +219,17 @@ $marketListBg: #333;
   .details-header {
     margin: 0 0 15px 15px;
     text-align: center;
-    h4, h3 {
+
+    & > div {
+      position: relative;
+      display: inline-block;
+    }
+    h3 {
       @include header-button($blue);
+    }
+
+    span {
+      font-size: 24px;
     }
   }
 
@@ -427,4 +436,20 @@ $marketListBg: #333;
 
 .modal-footer {
   margin-top: 0;
+}
+
+.icon-btn-success {
+  display:inline-block;
+  position: relative;
+  vertical-align: middle;
+  margin: 5px;
+  padding: 10px;
+  color: $green;
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    background: $green;
+    color: white;
+  }
 }

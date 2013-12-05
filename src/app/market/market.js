@@ -342,6 +342,8 @@ angular.module('roomba.app')
         }])
     .controller('DetailsCtrl', ['$scope', '$routeParams',
         function ($scope, $routeParams) {
+            console.log($scope.activeItem, $scope.activeItemResources);
+
             function copyRaw(obj) {
                 angular.forEach(obj.raw, function (rawValue, key) {
                     if (rawValue.hasOwnProperty('status') && rawValue.hasOwnProperty('value')) {
