@@ -153,7 +153,7 @@ angular.module('roomba.app')
             };
 
             $scope.isRawNull = function (field) {
-                return field ? (field.status == null || field.value === "" || field.value == null) : true;
+                return field ? (field.value === "" || field.value == null) : true;
             };
 
             $scope.hasTag = function (item, tag) {

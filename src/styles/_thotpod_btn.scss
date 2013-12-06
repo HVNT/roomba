@@ -60,6 +60,7 @@ $btnBorderRadius: 5px;
   @include border-radius($btnBorderRadius);
   @include box-sizing(border-box);
   @include tpBtnBg($color);
+  outline: 0;
 }
 
 
