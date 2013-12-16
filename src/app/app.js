@@ -453,8 +453,8 @@ angular.module('roomba.app',
                         var _resource = collection.resources[i],
                             _resourcePath = _resource.path;
 
-                        for (var i = 0; i < resources[_resource.key].length; i++) {
-                            var _resourceInstance = resources[_resource.key][i];
+                        for (var j = 0; j < resources[_resource.key].length; j++) {
+                            var _resourceInstance = resources[_resource.key][j];
                             var _defer = $q.defer();
                             var body = angular.toJson(_resourceInstance);
 
@@ -463,6 +463,7 @@ angular.module('roomba.app',
 
                             if (!_resourceInstance.id) {
                                 (function (defer, resourceKey) {
+                                    console.log("posting", _resourcePath);
                                     $http.post($_api.path + _resourcePath, body, config).then(function (response) {
                                         self.$spinner = false;
                                         var _id = response.data.id;
@@ -477,6 +478,7 @@ angular.module('roomba.app',
                                 })(_defer, _resource.key);
                             } else {
                                 (function (defer) {
+                                    console.log("putting", _resourcePath);
                                     $http.put($_api.path + _resourcePath + _resourceInstance.id, body, config).then(function (response) {
                                         self.$spinner = false;
                                         defer.resolve();
