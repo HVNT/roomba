@@ -320,7 +320,7 @@ angular.module('roomba.app',
                                 return data;
                             }
                         }, $_api.config),
-                        batchLimit = 50;
+                        batchLimit = 500;
 
                     (function batchItems(limit, offset) {
                         var path = tag ? $_api.path + Item.path + tag : $_api.path + Item.path + "?limit=" + limit + (offset ? "&offset=" + offset : "");
@@ -472,13 +472,12 @@ angular.module('roomba.app',
 
                             // If its a new property it won't have resources
                             self.resources[_resource.key] = self.resources[_resource.key] || [];
-
                             if (!_resourceInstance.id) {
-                                (function (defer, resourceKey) {
-                                    console.log("posting", _resourcePath);
+                                (function (defer, resourceKey, resourceInstance) {
                                     $http.post($_api.path + _resourcePath, body, config).then(function (response) {
                                         self.$spinner = false;
                                         var _id = response.data.id;
+                                        resourceInstance.id = _id;
                                         self.resources[resourceKey].push(_id);
                                         defer.resolve(response.data.id);
                                     }, function (response) {
@@ -487,10 +486,9 @@ angular.module('roomba.app',
                                     });
 
                                     promises.push(_defer.promise);
-                                })(_defer, _resource.key);
+                                })(_defer, _resource.key, _resourceInstance);
                             } else {
                                 (function (defer) {
-                                    console.log("putting", _resourcePath);
                                     $http.put($_api.path + _resourcePath + _resourceInstance.id, body, config).then(function (response) {
                                         self.$spinner = false;
                                         defer.resolve();

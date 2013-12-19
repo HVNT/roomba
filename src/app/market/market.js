@@ -515,6 +515,7 @@ angular.module('roomba.app')
 
             $scope.removeResource = function (resourceKey, itemResource) {
                 // Remove id from resource
+                console.log(resourceKey, itemResource);
                 $scope.activeItem.resources[resourceKey] = _.reject($scope.activeItem.resources[resourceKey], function (val) {
                     return val === itemResource.id;
                 });

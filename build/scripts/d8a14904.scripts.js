@@ -23690,7 +23690,7 @@ angular.module('roomba.app', [
             transformRequest: function (data) {
               return data;
             }
-          }, $_api.config), batchLimit = 50;
+          }, $_api.config), batchLimit = 500;
         (function batchItems(limit, offset) {
           var path = tag ? $_api.path + Item.path + tag : $_api.path + Item.path + '?limit=' + limit + (offset ? '&offset=' + offset : '');
           $http.get(path, config).then(function (response) {
@@ -23814,11 +23814,11 @@ angular.module('roomba.app', [
             var body = angular.toJson(_resourceInstance);
             self.resources[_resource.key] = self.resources[_resource.key] || [];
             if (!_resourceInstance.id) {
-              (function (defer, resourceKey) {
-                console.log('posting', _resourcePath);
+              (function (defer, resourceKey, resourceInstance) {
                 $http.post($_api.path + _resourcePath, body, config).then(function (response) {
                   self.$spinner = false;
                   var _id = response.data.id;
+                  resourceInstance.id = _id;
                   self.resources[resourceKey].push(_id);
                   defer.resolve(response.data.id);
                 }, function (response) {
@@ -23826,10 +23826,9 @@ angular.module('roomba.app', [
                   defer.reject();
                 });
                 promises.push(_defer.promise);
-              }(_defer, _resource.key));
+              }(_defer, _resource.key, _resourceInstance));
             } else {
               (function (defer) {
-                console.log('putting', _resourcePath);
                 $http.put($_api.path + _resourcePath + _resourceInstance.id, body, config).then(function (response) {
                   self.$spinner = false;
                   defer.resolve();
@@ -24582,6 +24581,7 @@ angular.module('roomba.app').config([
       }
     };
     $scope.removeResource = function (resourceKey, itemResource) {
+      console.log(resourceKey, itemResource);
       $scope.activeItem.resources[resourceKey] = _.reject($scope.activeItem.resources[resourceKey], function (val) {
         return val === itemResource.id;
       });
