@@ -23553,8 +23553,16 @@ angular.module('roomba.app', [
                 self.isConflict = true;
               }
               if (fieldConfig.type === 'date') {
-                self.edited[fieldConfig.key] = self.edited[fieldConfig.key] ? new Date(self.edited[fieldConfig.key]) : null;
-                self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(self.raw[fieldConfig.key].value) : null;
+                if (Date.parse(self.edited[fieldConfig.key])) {
+                  self.edited[fieldConfig.key] = new Date(self.edited[fieldConfig.key]);
+                } else {
+                  self.edited[fieldConfig.key] = self.edited[fieldConfig.key] ? new Date(parseInt(self.edited[fieldConfig.key], 10)) : null;
+                }
+                if (Date.parse(self.raw[fieldConfig.key].value)) {
+                  self.raw[fieldConfig.key].value = new Date(self.raw[fieldConfig.key].value);
+                } else {
+                  self.raw[fieldConfig.key].value = self.raw[fieldConfig.key].value ? new Date(parseInt(self.raw[fieldConfig.key].value, 10)) : null;
+                }
               }
             }
           });
