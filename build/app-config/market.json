@@ -46,6 +46,12 @@
                 "type": "text"
             },
             {
+                "title": "Page",
+                "weight": 1,
+                "key": "page",
+                "type": "text"
+            },
+            {
                 "title": "Description",
                 "weight": 8,
                 "key": "description",
@@ -107,10 +113,6 @@
                         "key": "street1"
                     },
                     {
-                        "title": "Street 2",
-                        "key": "street2"
-                    },
-                    {
                         "title": "City",
                         "key": "city"
                     },
@@ -162,21 +164,6 @@
                     {
                         "key": "rent",
                         "title": "Rent"
-                    },
-                    {
-                        "key": "rentpsqft",
-                        "title": "Rent / Sqft"
-                    }
-                ]
-            },
-            {
-                "title": "Pages",
-                "key": "pages",
-                "weight": 5000,
-                "fields": [
-                    {
-                        "key": "url",
-                        "title": "URL"
                     }
                 ]
             },
