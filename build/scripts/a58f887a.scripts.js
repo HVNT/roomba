@@ -23680,6 +23680,7 @@ angular.module('roomba.app', [
           }
         } else if (collection.key === 'news') {
           self.checkStateAbbreviation();
+          self.checkSource();
         }
       };
       Item.collection = collection;
@@ -24060,6 +24061,24 @@ angular.module('roomba.app', [
           }
         }
       };
+      Item.prototype.checkSource = function () {
+        var sources = {
+            'www.bizjournals.com': 'The Business Journals',
+            'www.rebusinessonline.com': 'REBusiness Online',
+            'www.globest.com': 'GlobeSt.com',
+            'www.multifamilybiz.com': 'MultifamilyBiz.com',
+            'www.multihousingnews.com': 'Multi-Housing News'
+          };
+        if (this.url) {
+          var sourceUrl = this.url.split(/^http:\/\//)[1];
+          if (sourceUrl) {
+            this.source = sources[sourceUrl.split(/\//)[0]] || '';
+          } else {
+            this.source = sources[this.url.split(/\//)[0]] || '';
+          }
+        }
+        ;
+      };
       Item.prototype.hasPageConflict = function () {
         if (this.raw) {
           if (this.raw.page) {
@@ -24204,7 +24223,6 @@ angular.module('roomba.app').config([
     function setActiveItem(id) {
       if (id) {
         $scope.selectItem(id);
-        debugger;
         if ($scope.activeItem) {
           $scope.activeItem.$getResources().then(function (results) {
             for (var i = results.length - 1; i >= 0; i--) {
@@ -24430,7 +24448,6 @@ angular.module('roomba.app').config([
   '$scope',
   '$routeParams',
   function ($scope, $routeParams) {
-    console.log($scope.activeItem, $scope.activeItemResources);
     function copyRaw(obj) {
       angular.forEach(obj.raw, function (rawValue, key) {
         if (rawValue.hasOwnProperty('status') && rawValue.hasOwnProperty('value')) {

@@ -73,6 +73,16 @@
                 "key": "flyer"
             },
             {
+                "title": "Price",
+                "weight": 8,
+                "key": "price"
+            },
+            {
+                "title": "Marketing URL",
+                "weight": 8,
+                "key": "marketingUrl"
+            },
+            {
                 "title": "Property Type",
                 "weight": 9,
                 "key": "propertyType",
@@ -176,6 +186,17 @@
                         "key": "date",
                         "title": "Date",
                         "type": "date"
+                    }
+                ]
+            },
+            {
+                "title": "Comments",
+                "key": "comments",
+                "weight": 10,
+                "fields": [
+                    {
+                        "key": "text",
+                        "title": "Text"
                     }
                 ]
             },
@@ -300,6 +321,8 @@
             {
                 "title": "Source",
                 "weight": 8,
+                "type": "typeahead",
+                "typeahead": ["The Business Journals", "REBusiness Online", "GlobeSt.com", "MultifamilyBiz.com", "Multi-Housing News"],
                 "key": "source"
             },
             {
