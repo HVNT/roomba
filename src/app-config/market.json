@@ -73,6 +73,11 @@
                 "key": "flyer"
             },
             {
+                "title": "Price",
+                "weight": 8,
+                "key": "price"
+            },
+            {
                 "title": "Property Type",
                 "weight": 9,
                 "key": "propertyType",
