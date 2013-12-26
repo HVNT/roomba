@@ -78,6 +78,11 @@
                 "key": "price"
             },
             {
+                "title": "Marketing URL",
+                "weight": 8,
+                "key": "marketingUrl"
+            },
+            {
                 "title": "Property Type",
                 "weight": 9,
                 "key": "propertyType",
@@ -181,6 +186,17 @@
                         "key": "date",
                         "title": "Date",
                         "type": "date"
+                    }
+                ]
+            },
+            {
+                "title": "Comments",
+                "key": "comments",
+                "weight": 10,
+                "fields": [
+                    {
+                        "key": "text",
+                        "title": "Text"
                     }
                 ]
             },
