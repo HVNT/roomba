@@ -300,6 +300,8 @@
             {
                 "title": "Source",
                 "weight": 8,
+                "type": "typeahead",
+                "typeahead": ["The Business Journals", "REBusiness Online", "GlobeSt.com", "MultifamilyBiz.com", "Multi-Housing News"],
                 "key": "source"
             },
             {

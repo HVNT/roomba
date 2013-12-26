@@ -302,6 +302,7 @@ angular.module('roomba.app',
                         }
                     } else if (collection.key === 'news') {
                         self.checkStateAbbreviation();
+                        self.checkSource();
                     }
                 };
 
@@ -324,7 +325,7 @@ angular.module('roomba.app',
 
                     (function batchItems(limit, offset) {
                         var path = tag ? $_api.path + Item.path + tag : $_api.path + Item.path + "?limit=" + limit + (offset ? "&offset=" + offset : "");
-                        
+
                         $http.get(path, config).then(function (response) {
                             items = items.concat(response.data);
 
@@ -774,7 +775,26 @@ angular.module('roomba.app',
                     }
                 };
 
-                Item.prototype.hasPageConflict = function() {
+                Item.prototype.checkSource = function () {
+                    var sources = {
+                        'www.bizjournals.com': 'The Business Journals',
+                        'www.rebusinessonline.com': 'REBusiness Online',
+                        'www.globest.com': 'GlobeSt.com',
+                        'www.multifamilybiz.com': 'MultifamilyBiz.com',
+                        'www.multihousingnews.com': 'Multi-Housing News'
+                    };
+
+                    if (this.url) {
+                        var sourceUrl = this.url.split(/^http:\/\//)[1];
+                        if (sourceUrl) {
+                            this.source = sources[sourceUrl.split(/\//)[0]] || '';
+                        } else {
+                            this.source = sources[this.url.split(/\//)[0]] || '';
+                        }
+                    };
+                };
+
+                Item.prototype.hasPageConflict = function () {
                     if (this.raw) {
                         if (this.raw.page) {
                             return this.raw.page.status == 2;
