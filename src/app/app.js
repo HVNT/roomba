@@ -542,6 +542,29 @@ angular.module('roomba.app',
                     return defer.promise;
                 };
 
+                Item.prototype.$updateTags = function () {
+                    var self = this,
+                        defer = $q.defer(),
+                        config = angular.extend({
+                            transformRequest: function (data) {
+                                self.$spinner = true;
+                                return data;
+                            }
+                        }, $_api.config),
+                        body = angular.toJson({tags: self.tags});
+
+                    $http.put($_api.path + Item.path + self.id, body, config)
+                        .then(function (response) {
+                            self.$spinner = false;
+                            defer.resolve(response);
+                        }, function (response) {
+                            self.$spinner = false;
+                            defer.reject(response);
+                        });
+
+                    return defer.promise;
+                };
+
                 Item.prototype.$delete = function () {
                     var self = this,
                         defer = $q.defer(),
@@ -575,14 +598,14 @@ angular.module('roomba.app',
                     this.tags = _.without(this.tags, 'published', 'unpublished');
                     this.tags.push('published');
 
-                    return this.$update();
+                    return this.$updateTags();
                 };
 
                 Item.prototype.$unpublish = function () {
                     this.tags = _.without(this.tags, 'published', 'unpublished');
                     this.tags.push('unpublished');
 
-                    return this.$update();
+                    return this.$updateTags();
                 };
 
                 Item.prototype.$flag = function () {
@@ -592,7 +615,7 @@ angular.module('roomba.app',
                         this.tags.push('flagged');
                     }
 
-                    return this.$update();
+                    return this.$updateTags();
                 };
 
                 Item.prototype.$join = function (selectedItem) {
