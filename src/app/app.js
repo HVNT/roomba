@@ -136,6 +136,8 @@ angular.module('roomba.app',
 
                                 if (self.raw[fieldConfig.key].status == 2) {
                                     self.isConflict = true;
+                                } else if (self.raw[fieldConfig.key].status == 3) {
+                                    self.isRemoved = true;
                                 }
 
                                 // Initialize dates
@@ -751,9 +753,9 @@ angular.module('roomba.app',
                                     throw new Error("Raw field is not in recognized format");
                                 }
                             });
-                            self.progressClass = self.isConflict ? "progress-bar-warning" : "progress-bar-success";
+                            self.progressClass = self.isRemoved ? "progress-bar-danger" : self.isConflict ? "progress-bar-warning" : "progress-bar-success";
                         } else {
-                            self.progressClass = self.isConflict ? "progress-bar-warning" : "progress-bar-info";
+                            self.progressClass = self.isRemoved ? "progress-bar-danger" : self.isConflict ? "progress-bar-warning" : "progress-bar-info";
                         }
                     } else {
                         fieldCounter.total = 0;
