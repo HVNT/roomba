@@ -118,7 +118,7 @@ angular.module('roomba.app',
                                     _rawField[subFieldConfig.key] = _rawField[subFieldConfig.key] || rawDefault;
                                     _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] || (fieldConfig.placeholder || null);
 
-                                    if (_rawField[subFieldConfig.key].status == 2 && subFieldConfig.key !== 'page') {
+                                    if (_rawField[subFieldConfig.key].status == 2) {
                                         self.isConflict = true;
                                     }
 
@@ -134,7 +134,7 @@ angular.module('roomba.app',
                                 // Initialize edited fields based off config, falling back to placeholders
                                 self.edited[fieldConfig.key] = self.edited[fieldConfig.key] || (fieldConfig.placeholder || null);
 
-                                if (self.raw[fieldConfig.key].status == 2) {
+                                if (self.raw[fieldConfig.key].status == 2 && fieldConfig.key !== 'page') {
                                     self.isConflict = true;
                                 } else if (self.raw[fieldConfig.key].status == 3) {
                                     self.isRemoved = true;
