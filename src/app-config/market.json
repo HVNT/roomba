@@ -4,7 +4,7 @@
         "key": "listings",
         "path": "/listings/",
         "dimensions": {
-            "discreet": {
+            "discrete": {
                 "broker": {
                     "title": "Broker",
                     "weight": 10
@@ -285,7 +285,7 @@
         "key": "news",
         "path": "/news/",
         "dimensions": {
-            "discreet": {
+            "discrete": {
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
@@ -298,7 +298,13 @@
                     "restrict": ["Under Construction", "Future Development", "Transactions", "Financing", "Renovations", "Newly Completed"]
                 }
             },
-            "range": {}
+            "range": {
+                "age": {
+                    "title": "Days Old",
+                    "weight": "10",
+                    "highBound": "1000"
+                }
+            }
         },
         "fields": [
             {
@@ -380,7 +386,7 @@
         "key": "contacts",
         "path": "/contacts/",
         "dimensions": {
-            "discreet": {
+            "discrete": {
                 "tags": {
                     "title": "Tags",
                     "weight": 10,

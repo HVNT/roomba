@@ -42,7 +42,8 @@ angular.module('roomba.app')
         function ($scope, Market, $routeParams, $location, $q, $dialog) {
             var Model = Market.Model;
             $scope.items = Market.visibleItems;
-            $scope.dimensions = Market.getDimensions();
+            $scope.dimensions = Market.dimensions;
+            console.log($scope.dimensions.getDiscrete());
             $scope.activeItem = Market.getActive();
             $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
@@ -95,6 +96,7 @@ angular.module('roomba.app')
 
                     if ($scope.activeItem) {
                         $scope.activeItem.$getResources().then(function (results) {
+                            console.log(results);
                             for (var i = results.length - 1; i >= 0; i--) {
                                 for (var _resource in results[i]) {
                                     if (results[i].hasOwnProperty(_resource)) {
@@ -300,8 +302,9 @@ angular.module('roomba.app')
                 return null;
             };
 
-            $scope.toggleDiscreet = function (discreet, value) {
-                $scope.items = Market.toggleDiscreet(discreet, value).apply();
+            $scope.toggleDiscrete = function (discrete, value) {
+                $scope.items = Market.toggleDiscrete(discrete, value).apply();
+                Market.predict();
             };
         }])
     .
@@ -652,5 +655,15 @@ angular.module('roomba.app')
                 setupSlider();
             }
         };
-    }]);
+    }])
+    .filter('checkHighBound', function () {
+        return function (input, limit, e) {
+            return input == limit ? input + "+" : input;
+        }
+    })
+    .filter('checkLowBound', function () {
+        return function (input, limit, e) {
+            return input == limit ? "< " + input : input;
+        }
+    });
 

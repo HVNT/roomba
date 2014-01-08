@@ -1,5 +1,5 @@
 <!--Begin Fields-->
-<div class="row">
+<div class="row details-container">
     <div class="details-header"><h3> {{ activeItem.title }}</h3></div>
     <form class="form-horizontal fields-editor" ng-submit="noop()">
         <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'" ng-hide="field.hidden">

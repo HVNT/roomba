@@ -118,7 +118,7 @@ angular.module('roomba.app',
                                     _rawField[subFieldConfig.key] = _rawField[subFieldConfig.key] || rawDefault;
                                     _editedField[subFieldConfig.key] = _editedField[subFieldConfig.key] || (fieldConfig.placeholder || null);
 
-                                    if (_rawField[subFieldConfig.key].status == 2) {
+                                    if (_rawField[subFieldConfig.key].status == 2 && subFieldConfig.key !== 'page') {
                                         self.isConflict = true;
                                     }
 
@@ -203,7 +203,7 @@ angular.module('roomba.app',
                             }
                         });
 
-                        angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
+                        angular.forEach(collection.dimensions.discrete, function (attr, attrID) {
                             // Initialize on root level for dimensional filtering
                             if (!attr.nested) {
                                 if (self.hasOwnProperty(attrID)) {
@@ -262,7 +262,7 @@ angular.module('roomba.app',
                             self[modelConfig.key] = self[modelConfig.key] || [];
                         });
 
-                        angular.forEach(collection.dimensions.discreet, function (attr, attrID) {
+                        angular.forEach(collection.dimensions.discrete, function (attr, attrID) {
                             // Initialize on root level for dimensional filtering
                             if (!attr.nested) {
                                 if (self.hasOwnProperty(attrID)) {
@@ -303,6 +303,12 @@ angular.module('roomba.app',
                             this.title = this.edited.name;
                         }
                     } else if (collection.key === 'news') {
+                        if (Date.parse(self.date)) {
+                            self.age = Math.ceil(Math.abs(Date.now() - (new Date(self.date))) / (1000 * 3600 * 24));
+                        } else {
+                            self.age = self.date ? new Date(parseInt(this.date, 10)) : new Date(parseInt(this.id.toString().slice(0, 8), 16) * 1000);
+                        }
+
                         self.checkStateAbbreviation();
                         self.checkSource();
                     }
@@ -439,6 +445,7 @@ angular.module('roomba.app',
                                     self.$spinner = false;
                                     var _resources = {};
                                     _resources[resourceKey] = response.data;
+                                    console.log(response);
                                     _defer.resolve(_resources);
                                 }, function (response) {
                                     self.$spinner = false;

@@ -82,12 +82,13 @@ var thotpod = (function () {
     function Dimensions(dimensions) {
         var defaults = _.extend({
                 title: "",
-                discreet: {},
+                discrete: {},
                 range: {},
                 visibleIds: [],
-                idMap: []
+                idMap: [],
+                excludedRangeMask: []
             }),
-            discreetDefaults = {
+            discreteDefaults = {
                 values: {},
                 selected: 0,
                 visibleIds: []
@@ -101,13 +102,13 @@ var thotpod = (function () {
 
         copy(defaults, this);
 
-        for (var attrID in dimensions.discreet) {
-            if (dimensions.discreet.hasOwnProperty(attrID)) {
-                var _attr = dimensions.discreet[attrID],
-                    _discreet = _.extend(_attr, discreetDefaults);
+        for (var attrID in dimensions.discrete) {
+            if (dimensions.discrete.hasOwnProperty(attrID)) {
+                var _attr = dimensions.discrete[attrID],
+                    _discrete = _.extend(_attr, discreteDefaults);
 
-                self.discreet[attrID] = {};
-                copy(_discreet, self.discreet[attrID]);
+                self.discrete[attrID] = {};
+                copy(_discrete, self.discrete[attrID]);
             }
         }
 
@@ -122,21 +123,21 @@ var thotpod = (function () {
         }
     }
 
-    Dimensions.prototype.pushDiscreetId = function (attrID, idPosition, value) {
-        var _discreet = this.discreet[attrID];
+    Dimensions.prototype.pushDiscreteId = function (attrID, idPosition, value) {
+        var _discrete = this.discrete[attrID];
 
-        if (_discreet) {
+        if (_discrete) {
             value = value || "Unknown";
 
-            if (_discreet.values.hasOwnProperty(value)) {
-                _discreet.values[value].ids = setBit(idPosition, _discreet.values[value].ids);
+            if (_discrete.values.hasOwnProperty(value)) {
+                _discrete.values[value].ids = setBit(idPosition, _discrete.values[value].ids);
             } else {
-                _discreet.values[value] = {
+                _discrete.values[value] = {
                     ids: [0],
                     title: value,
                     isSelected: false
                 };
-                _discreet.values[value].ids = setBit(idPosition, _discreet.values[value].ids);
+                _discrete.values[value].ids = setBit(idPosition, _discrete.values[value].ids);
             }
         }
 
@@ -147,7 +148,7 @@ var thotpod = (function () {
 
         var _search = _.extend({
             title: '',
-            discreet: {},
+            discrete: {},
             range: {}
         }, search);
 
@@ -182,31 +183,31 @@ var thotpod = (function () {
             }
         }
 
-        for (var discreetID in self.discreet) {
-            // Check if discreet attribute exists on current attributes
-            if (_search.discreet.hasOwnProperty(discreetID)) {
-                for (var attrID in _search.discreet[discreetID].values) {
+        for (var discreteID in self.discrete) {
+            // Check if discrete attribute exists on current attributes
+            if (_search.discrete.hasOwnProperty(discreteID)) {
+                for (var attrID in _search.discrete[discreteID].values) {
                     // If the saved search attribute exists
-                    if (self.discreet[discreetID].values.hasOwnProperty(attrID)) {
+                    if (self.discrete[discreteID].values.hasOwnProperty(attrID)) {
                         // Check to see if marked as true
-                        if (_search.discreet[discreetID].values[attrID].isSelected && !self.discreet[discreetID].values[attrID].isSelected) {
-                            self.discreet[discreetID].values[attrID].isSelected = true;
-                            self.discreet[discreetID].selected++;
-                        } else if (!_search.discreet[discreetID].values[attrID].isSelected && self.discreet[discreetID].values[attrID].isSelected) {
-                            self.discreet[discreetID].values[attrID].isSelected = false;
-                            self.discreet[discreetID].selected--;
+                        if (_search.discrete[discreteID].values[attrID].isSelected && !self.discrete[discreteID].values[attrID].isSelected) {
+                            self.discrete[discreteID].values[attrID].isSelected = true;
+                            self.discrete[discreteID].selected++;
+                        } else if (!_search.discrete[discreteID].values[attrID].isSelected && self.discrete[discreteID].values[attrID].isSelected) {
+                            self.discrete[discreteID].values[attrID].isSelected = false;
+                            self.discrete[discreteID].selected--;
                         }
                     }
                 }
             } else {
-                if (self.discreet.hasOwnProperty(discreetID)) {
-                    for (var attrID in self.discreet[discreetID].values) {
+                if (self.discrete.hasOwnProperty(discreteID)) {
+                    for (var attrID in self.discrete[discreteID].values) {
                         // If the saved search attribute exists
-                        if (self.discreet[discreetID].values.hasOwnProperty(attrID)) {
+                        if (self.discrete[discreteID].values.hasOwnProperty(attrID)) {
                             // Check to see if marked as true
-                            if (self.discreet[discreetID].values[attrID].isSelected) {
-                                self.discreet[discreetID].values[attrID].isSelected = false;
-                                self.discreet[discreetID].selected--;
+                            if (self.discrete[discreteID].values[attrID].isSelected) {
+                                self.discrete[discreteID].values[attrID].isSelected = false;
+                                self.discrete[discreteID].selected--;
                             }
                         }
                     }
@@ -217,7 +218,7 @@ var thotpod = (function () {
 
     Dimensions.prototype.toArray = function () {
         var dimensionsArr = _.extend({}, this, {
-            discreet: _.map(this.discreet, function (val) {
+            discrete: _.map(this.discrete, function (val) {
                 return val
             }),
             range: _.map(this.range, function (val) {
@@ -227,8 +228,8 @@ var thotpod = (function () {
         return dimensionsArr;
     };
 
-    Dimensions.prototype.getDiscreet = function () {
-        return  _.map(this.discreet, function (val) {
+    Dimensions.prototype.getDiscrete = function () {
+        return  _.map(this.discrete, function (val) {
             return val
         });
     };
@@ -242,7 +243,7 @@ var thotpod = (function () {
     Dimensions.prototype.reset = function () {
         this.title = "";
         this.id = undefined;
-        this.discreet = {};
+        this.discrete = {};
         this.range = {};
 
         return this;
@@ -327,40 +328,41 @@ var thotpod = (function () {
             dimensions = self.dimensions;
 
         dimensions.idMap.push(model.id);
-        for (var _discreetKey in dimensions.discreet) {
-            if (dimensions.discreet.hasOwnProperty(_discreetKey)) {
-                var _discreetAttr = dimensions.discreet[_discreetKey];
-                if (typeof _item[_discreetKey] !== 'undefined') {
-                    // If multiple discreet values per item (tags) need to treat as intersect
-                    if (_discreetAttr.multi) {
-                        if (_item[_discreetKey].length) {
-                            for (var i = 0; i < _item[_discreetKey].length; i++) {
-                                var _itemAttr = _item[_discreetKey][i] = _item[_discreetKey][i] || 'Unknown',
-                                    _discreetVal;
+
+        for (var _discreteKey in dimensions.discrete) {
+            if (dimensions.discrete.hasOwnProperty(_discreteKey)) {
+                var _discreteAttr = dimensions.discrete[_discreteKey];
+                if (typeof _item[_discreteKey] !== 'undefined') {
+                    // If multiple discrete values per item (tags) need to treat as intersect
+                    if (_discreteAttr.multi) {
+                        if (_item[_discreteKey].length) {
+                            for (var i = 0; i < _item[_discreteKey].length; i++) {
+                                var _itemAttr = _item[_discreteKey][i] = _item[_discreteKey][i] || 'Unknown',
+                                    _discreteVal;
                                 // check restrict
-                                if (_discreetAttr.restrict) {
-                                    _discreetVal = _.contains(_discreetAttr.restrict, _itemAttr) ? _itemAttr : 'Other';
+                                if (_discreteAttr.restrict) {
+                                    _discreteVal = _.contains(_discreteAttr.restrict, _itemAttr) ? _itemAttr : 'Other';
                                 } else {
-                                    _discreetVal = _itemAttr;
+                                    _discreteVal = _itemAttr;
                                 }
-                                self.dimensions.pushDiscreetId(_discreetKey, idPosition, _discreetVal);
+                                self.dimensions.pushDiscreteId(_discreteKey, idPosition, _discreteVal);
                             }
                         } else {
-                            self.dimensions.pushDiscreetId(_discreetKey, idPosition, "None");
+                            self.dimensions.pushDiscreteId(_discreteKey, idPosition, "None");
                         }
                     } else {
-                        var _discreetVal;
-                        _item[_discreetKey] = _item[_discreetKey] || 'Unknown';
+                        var _discreteVal;
+                        _item[_discreteKey] = _item[_discreteKey] || 'Unknown';
                         // check restrict
-                        if (_discreetAttr.restrict) {
-                            _discreetVal = _.contains(_discreetAttr.restrict, _item[_discreetKey]) ? _item[_discreetKey] : 'Other';
+                        if (_discreteAttr.restrict) {
+                            _discreteVal = _.contains(_discreteAttr.restrict, _item[_discreteKey]) ? _item[_discreteKey] : 'Other';
                         } else {
-                            _discreetVal = _item[_discreetKey];
+                            _discreteVal = _item[_discreteKey];
                         }
-                        self.dimensions.pushDiscreetId(_discreetKey, idPosition, _discreetVal);
+                        self.dimensions.pushDiscreteId(_discreteKey, idPosition, _discreteVal);
                     }
                 } else {
-                    throw new Error("Cannot find discreet attribute: " + _discreetKey);
+                    throw new Error("Cannot find discrete attribute: " + _discreteKey);
                 }
             }
         }
@@ -422,6 +424,7 @@ var thotpod = (function () {
         this.visibleIds = [];
         this.visibleItems = [];
         dimensions.visibleIds = [];
+        dimensions.excludedRangeMask = [];
 
         var BIT_SET_LENGTH = Math.ceil(dimensions.idMap.length / 32),
             bitSet = [],
@@ -429,31 +432,32 @@ var thotpod = (function () {
 
         for (i = 0; i < BIT_SET_LENGTH; i++) {
             bitSet.push(~0);
+            dimensions.excludedRangeMask.push(~0);
 
-            for (var attrId in dimensions.discreet) {
-                if (dimensions.discreet.hasOwnProperty(attrId)) {
-                    var _discreet = dimensions.discreet[attrId],
-                        union = _discreet.multi ? ~0 : 0;
+            for (var attrId in dimensions.discrete) {
+                if (dimensions.discrete.hasOwnProperty(attrId)) {
+                    var _discrete = dimensions.discrete[attrId],
+                        union = _discrete.multi ? ~0 : 0;
 
-                    for (var valueId in _discreet.values) {
-                        if (_discreet.values.hasOwnProperty(valueId)) {
-                            var _value = _discreet.values[valueId];
+                    for (var valueId in _discrete.values) {
+                        if (_discrete.values.hasOwnProperty(valueId)) {
+                            var _value = _discrete.values[valueId];
 
-                            if (_discreet.multi) {
-                                if (_discreet.selected === 0) {
+                            if (_discrete.multi) {
+                                if (_discrete.selected === 0) {
                                     break;
                                 } else if (_value.isSelected) {
                                     union = union & _value.ids[i];
                                 }
                             } else {
-                                if (_value.isSelected || _discreet.selected === 0) {
+                                if (_value.isSelected || _discrete.selected === 0) {
                                     union = union | _value.ids[i];
                                 }
                             }
                         }
                     }
 
-                    _discreet.visibleIds[i] = union;
+                    _discrete.visibleIds[i] = union;
                     bitSet[i] = bitSet[i] & union;
                 }
             }
@@ -479,13 +483,7 @@ var thotpod = (function () {
                                     _currItem.isVisible = !!(1 & bitSet[i]);
                                 } else {
                                     _currItem.isVisible = false;
-                                    for (var _discreetKey in dimensions.discreet) {
-                                        if (dimensions.discreet.hasOwnProperty(_discreetKey)) {
-                                            var _discreetAttr = dimensions.discreet[_discreetKey],
-                                                _mask = ~(1 << p);
-                                            _discreetAttr.visibleIds[i] = _discreetAttr.visibleIds[i] & _mask;
-                                        }
-                                    }
+                                    dimensions.excludedRangeMask[i] = dimensions.excludedRangeMask[i] & ~(1 << p);
                                     break;
                                 }
                             }
@@ -531,35 +529,35 @@ var thotpod = (function () {
 
         var BIT_SET_LENGTH = Math.ceil(dimensions.idMap.length / 32);
 
-        for (var attrId in dimensions.discreet) {
-            if (dimensions.discreet.hasOwnProperty(attrId)) {
-                var _discreet = dimensions.discreet[attrId];
+        for (var attrId in dimensions.discrete) {
+            if (dimensions.discrete.hasOwnProperty(attrId)) {
+                var _discrete = dimensions.discrete[attrId];
 
-                for (var valueId in _discreet.values) {
-                    if (_discreet.values.hasOwnProperty(valueId)) {
-                        var _value = _discreet.values[valueId];
+                for (var valueId in _discrete.values) {
+                    if (_discrete.values.hasOwnProperty(valueId)) {
+                        var _value = _discrete.values[valueId];
 
-                        if (!_value.isSelected && _discreet.selected > 0) {
+                        if (!_value.isSelected && _discrete.selected > 0) {
                             var predictLength = 0,
                                 predictBitSet = [];
 
                             for (var i = 0; i < BIT_SET_LENGTH; i++) {
-                                var predictedUnion = _discreet.visibleIds[i] | _value.ids[i];
+                                var predictedUnion = _discrete.visibleIds[i] | _value.ids[i];
                                 predictBitSet.push(~0);
 
-                                for (var predictAttrId in dimensions.discreet) {
-                                    if (dimensions.discreet.hasOwnProperty(predictAttrId)) {
-                                        var _predictDiscreet = dimensions.discreet[predictAttrId];
+                                for (var predictAttrId in dimensions.discrete) {
+                                    if (dimensions.discrete.hasOwnProperty(predictAttrId)) {
+                                        var _predictDiscrete = dimensions.discrete[predictAttrId];
                                         if (predictAttrId === attrId) {
                                             predictBitSet[i] = predictBitSet[i] & predictedUnion;
                                         } else {
-                                            predictBitSet[i] = predictBitSet[i] & _predictDiscreet.visibleIds[i];
+                                            predictBitSet[i] = predictBitSet[i] & _predictDiscrete.visibleIds[i];
                                         }
                                     }
                                 }
 
                                 // add length from intersected first int]
-                                predictLength += popcount(predictBitSet[i] & _value.ids[i] & this.subsetIds[i]);
+                                predictLength += popcount(predictBitSet[i] & _value.ids[i] & this.subsetIds[i] & dimensions.excludedRangeMask[i]);
                             }
                             if (predictLength) {
                                 _value.badge = 'badge-success';
@@ -633,10 +631,10 @@ var thotpod = (function () {
         return this.visibleItems;
     };
 
-    Market.prototype.toggleDiscreet = function (discreet, value) {
-        if (discreet && value) {
+    Market.prototype.toggleDiscrete = function (discrete, value) {
+        if (discrete && value) {
             value.isSelected = !value.isSelected;
-            value.isSelected ? discreet.selected++ : discreet.selected--;
+            value.isSelected ? discrete.selected++ : discrete.selected--;
         }
 
         return this;
@@ -645,8 +643,8 @@ var thotpod = (function () {
     Market.prototype.applyRange = function (rangeKey, low, high) {
         if (this.dimensions.range.hasOwnProperty(rangeKey)) {
             var _range = this.dimensions.range[rangeKey];
-            _range.lowSelected = low;
-            _range.highSelected = high;
+            _range.lowSelected = _.isNumber(low) ? low : _range.low;
+            _range.highSelected = _.isNumber(high) ? high: _range.high;
         } else {
             throw new Error("Cannot find range dimension " + rangeKey);
         }

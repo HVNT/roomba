@@ -3,17 +3,31 @@
 @import "compass_twitter_bootstrap/mixins";
 @import "compass_twitter_bootstrap/variables";
 @import "compass_twitter_bootstrap/modals";
-//@import "compass_twitter_bootstrap/scaffolding";
-//@import "rescour_variables";
-//@import "header";
-//@import "footer";
+@import "compass_twitter_bootstrap/component-animations";
+
+$monoLighter: $grayLighter;
+$monoLight: $grayLight;
+$mono: $gray;
+$monoDark: $grayDark;
+$monoDarker: $grayDarker;
+$borderRadius: 5px;
+$gutterWidth: 20px;
+
 @import "ngform";
-@import "ribbon_nav";
+@import "filter_list";
 @import "thotpod_btn";
+@import "input_dropdown";
+@import "badge";
 @import "login";
 @import "input";
 
 $bgColor: $grayLighter;
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
 @mixin icon-invert($iconColor) {
   &:hover {
@@ -111,33 +125,13 @@ body {
   font-family: 'Open Sans' !important;
 }
 
-header {
+.main-header {
   padding: 0 20px;
   .navbar {
     margin-bottom: 0;
     padding-right: 0;
     .navbar-brand {
       padding: 10px;
-    }
-  }
-}
-
-.header-search {
-  display: inline-block;
-  position: relative;
-  padding: 6px;
-  margin-bottom: 20px;
-  @include input-dropdown();
-
-  input {
-    @include flat-input(12px, 10px, 30px);
-    @include placeholder-style($white, 400, normal, 3px);
-
-    & + i {
-      color: white;
-      position: absolute;
-      top: 17px;
-      left: 15px;
     }
   }
 }
@@ -150,7 +144,6 @@ header {
   }
   .header-actions {
     position: relative;
-    margin-bottom: 15px;
     padding: 15px 25px;
     background: $grayDark;
   }
@@ -217,7 +210,7 @@ $marketListBg: #333;
 
 .market-details {
   .details-header {
-    margin: 0 0 15px 15px;
+    margin-bottom: $gutterWidth/2;
     text-align: center;
 
     & > div {
@@ -258,6 +251,10 @@ $marketListBg: #333;
   }
 }
 
+.details-container {
+  padding: 0 10px;
+}
+
 .scroll-container {
   position: relative;
 
@@ -272,7 +269,7 @@ $marketListBg: #333;
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
-    padding: 10px;
+    padding: 20px 10px;
   }
 }
 
