@@ -81,7 +81,7 @@
                             {{value.title | ellipsis:26}}
                         </a>
 
-                        <div class="badge pull-right {{value.badge}}">{{value.predict}}</div>
+                        <div class="badge pull-right {{value.badge}}" ui-if="!discrete.multi">{{value.predict}}</div>
                     </li>
                 </ul>
             </li>
