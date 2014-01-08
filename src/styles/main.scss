@@ -436,18 +436,28 @@ $marketListBg: #333;
   margin-top: 0;
 }
 
-.icon-btn-success {
+.icon-btn {
   display:inline-block;
   position: relative;
   vertical-align: middle;
   margin: 5px;
   padding: 10px;
-  color: $green;
+  color: $blue;
   background: transparent;
   cursor: pointer;
+  font-size: 13px !important;
+
+  &:hover {
+    text-decoration: none;
+    background: $blue;
+    color: white;
+  }
+}
+
+.icon-btn-success {
+  color: $green;
 
   &:hover {
     background: $green;
-    color: white;
   }
 }
