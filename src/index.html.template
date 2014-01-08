@@ -58,7 +58,7 @@
 <div class="loading-background" ng-show="loading || failure" ng-cloak>
 
     <div ng-show="loading" class="loading-container" spinner-size="large" spinner="loading" spinner-options="{'top': '70px', 'left': '160px'}">
-        <img src="/img/logo-medium.png" width="200" alt=""/>
+        <img src="/img/logo-fitted-small.png" width="200" alt=""/>
     </div>
     <div ng-show="failure" class="loading-container">
         <h4>OOPS!</h4>

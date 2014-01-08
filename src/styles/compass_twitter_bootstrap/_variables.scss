@@ -13,10 +13,9 @@ $black:                 #000 !default;
 $grayDarker:            #333 !default;
 $grayDark:              #555 !default;
 $gray:                  #777 !default;
-$grayLight:             #999 !default;
+$grayLight:             #ddd !default;
 $grayLighter:           #eee !default;
 $white:                 #fff !default;
-
 
 // Accent colors
 // -------------------------
@@ -86,8 +85,8 @@ $btnSuccessBackgroundHighlight:     darken($green, 5%)  !default;
 $btnWarningBackground:              lighten($orange, 5%) !default;
 $btnWarningBackgroundHighlight:     darken($orange, 5%) !default;
 
-$btnDangerBackground:               lighten($red, 5%) !default;
-$btnDangerBackgroundHighlight:      darken($red, 5%) !default;
+$btnDangerBackground:               $red !default;
+$btnDangerBackgroundHighlight:      darken(adjust-hue($red, 7%), 5%) !default;
 
 $btnInverseBackground:              lighten($grayDark, 5%) !default;
 $btnInverseBackgroundHighlight:     darken($grayDark, 5%) !default;

@@ -137,7 +137,6 @@ body {
 }
 
 .roomba-wrap {
-  -webkit-backface-visibility: hidden;
 
   & > .row {
     margin: 0;
@@ -145,7 +144,7 @@ body {
   .header-actions {
     position: relative;
     padding: 15px 25px;
-    background: $grayDark;
+    background: $grayDarker;
   }
 }
 
@@ -337,7 +336,6 @@ $marketListBg: #333;
 
   table {
     padding: 15px;
-    -webkit-backface-visibility: hidden;
 
     td {
       position: relative;

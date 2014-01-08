@@ -98,7 +98,7 @@ $btnBorderRadius: 5px;
   }
   // Inverse appears as dark gray
   &.btn-inverse {
-    @include tpBtnBg($grayLight);
+    @include tpBtnBg($gray);
   }
 
   &.btn-glossy {
