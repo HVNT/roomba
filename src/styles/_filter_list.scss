@@ -1,6 +1,6 @@
 .filter-list {
   background-color: $monoDarker;
-  background: url(/img/bg-dark-textured.png) repeat;
+  //background: url(/img/bg-dark-textured.png) repeat scroll;
   border-top: 1px solid $mono;
   display: block;
   overflow: hidden;
@@ -9,15 +9,12 @@
   @include box-sizing(border-box);
 
   .ui-widget-content {
-    background: $monoLighter;
     @extend %dark-bg-divet;
+    background: $mono;
   }
 
   .ui-widget-header {
-    //@include gradient-vertical($monoLight, $mono);
-    @include gradient-vertical($btnDangerBackgroundHighlight, $btnDangerBackground);
-    //@include gradient-vertical($btnDangerBackground, $btnDangerBackgroundHighlight);
-    //@include gradient-vertical($btnPrimaryBackground, $btnPrimaryBackgroundHighlight);
+    @include gradient-vertical($red, darken(adjust_hue($red, 8%), 15%));
   }
 
   .ui-slider {
@@ -29,7 +26,7 @@
     .ui-state-default {
       background: $red;
       background: url(/img/slider-handle.png);
-      @include box-shadow(0 1px 4px rgba(0,0,0,0.75));
+      @include box-shadow(0 1px 4px rgba(0,0,0,0.5));
     }
   }
 
@@ -150,7 +147,7 @@
 
       > a {
         color: $monoLighter;
-        text-shadow: 0 1px $monoDark;
+        text-shadow: 0 -1px 1px darken($monoDarker, 25%);
         text-decoration: none;
       }
     }

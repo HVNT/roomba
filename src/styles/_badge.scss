@@ -12,8 +12,10 @@
 }
 
 .badge--success {
-  @include gradient-vertical($green, lighten(adjust-hue($green, 8%), 15%));
+  text-shadow: 0 -1px 1px darken($green, 25%);
+  @include gradient-vertical($green, darken(adjust_hue($green, 8%), 15%));
 }
 .badge--info {
-  @include gradient-vertical($blue, lighten(adjust-hue($blue, 8%), 15%));
+  text-shadow: 0 -1px 1px darken($blue, 25%);
+  @include gradient-vertical($blue, darken(adjust_hue($blue, 8%), 15%));
 }
