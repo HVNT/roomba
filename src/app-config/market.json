@@ -159,8 +159,8 @@
                         "type": "typeahead",
                         "typeahead": [
                             "1 BR / 1 BA", "1 BR / 1.5 BA", "2 BR / 1 BA", "2 BR / 1.5 BA", "2 BR / 2 BA", "3 BR / 2 BA", "3 BR / 2.5 BA", "3 BR / 3 BA", "4 BR / 2 BA", "4 BR / 2.5 BA", "4 BR / 3 BA",
-                            "1 BR / 1 BA S", "1 BR / 1.5 BA S", "2 BR / 1 BA S", "2 BR / 1.5 BA S", "2 BR / 2 BA S", "3 BR / 2 BA S", "3 BR / 2.5 BA S", "3 BR / 3 BA S", "4 BR / 2 BA S", "4 BR / 2.5 BA S", "4 BR / 3 BA S",
-                            "AVERAGE", "Studio"
+                            "1 BR / 1 BA TH", "1 BR / 1.5 BA TH", "2 BR / 1 BA TH", "2 BR / 1.5 BA TH", "2 BR / 2 BA TH", "3 BR / 2 BA TH", "3 BR / 2.5 BA TH", "3 BR / 3 BA TH", "4 BR / 2 BA TH", "4 BR / 2.5 BA TH", "4 BR / 3 BA TH",
+                            "Average", "Studio", "Efficiency"
                         ]
                     },
                     {

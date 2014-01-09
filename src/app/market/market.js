@@ -17,8 +17,7 @@ angular.module('roomba.app')
 
                             User.get()
                                 .then(function (user) {
-                                    console.log(user);
-                                    if (_.contains(User.profile.roles, 'admin')) {
+                                    if (User.isAdmin) {
                                         // If admin, get Users
                                         defer.resolve(Users.init());
                                     } else {
@@ -55,8 +54,8 @@ angular.module('roomba.app')
                     redirectTo: '/market'
                 });
         }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', '$q', '$dialog', 'Users',
-        function ($scope, Market, $routeParams, $location, $q, $dialog, Users) {
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', '$q', '$dialog', 'Users', 'User',
+        function ($scope, Market, $routeParams, $location, $q, $dialog, Users, User) {
             var Model = Market.Model;
             $scope.items = Market.visibleItems;
             $scope.dimensions = Market.dimensions;
@@ -73,7 +72,9 @@ angular.module('roomba.app')
             };
             $scope.activeSearch = {title: 'Any', key: '$'};
 
-            $scope.users = Users.generateStats($scope.collectionID, Market.getItems());
+            if (User.isAdmin) {
+                $scope.users = Users.generateStats($scope.collectionID, Market.getItems());
+            }
 
             $scope.joinDialog = $dialog.dialog({
                 templateUrl: '/app/market/partials/join-dialog.html?v=' + Date.now(),

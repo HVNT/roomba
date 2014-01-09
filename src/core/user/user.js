@@ -22,6 +22,9 @@ angular.module('rescour.user', ['ngCookies'])
                     function (response) {
                         self.id = response.data[0].id;
                         angular.copy(response.data[0], self.profile);
+                        if (_.contains(self.profile.roles, 'admin')) {
+                            self.isAdmin = true;
+                        }
                         defer.resolve(self);
                     },
                     function (response) {
