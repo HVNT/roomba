@@ -445,7 +445,6 @@ angular.module('roomba.app',
                                     self.$spinner = false;
                                     var _resources = {};
                                     _resources[resourceKey] = response.data;
-                                    console.log(response);
                                     _defer.resolve(_resources);
                                 }, function (response) {
                                     self.$spinner = false;

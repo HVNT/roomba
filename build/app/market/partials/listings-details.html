@@ -7,8 +7,17 @@
            href="https://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q={{ activeItem.edited.address.latitude }},+{{ activeItem.edited.address.longitude }}">
             <i class="icon-globe"></i>
         </a>
-        <a ng-href="{{ activeItem.raw.page.value }}" target="_blank" class="hint--bottom dropdown" data-hint="View Source Page">{{ activeItem.title }}</a>
-        <div class="icon-btn icon-btn-success hint--bottom" data-hint="Copy all Raw"><i class="icon-download-alt" ng-click="copyAllRaw(activeItem, activeItemResources)"></i></div>
+        <a ng-href="{{ activeItem.raw.page.value }}" target="_blank" class="hint--bottom dropdown"
+           data-hint="View Source Page">{{ activeItem.title }}</a>
+
+        <div class="icon-btn icon-btn-success hint--bottom" data-hint="Copy all Raw"
+             ng-click="copyAllRaw(activeItem, activeItemResources)"><i class="icon-download-alt"></i></div>
+        <div class="icon-btn hint--bottom"
+             data-hint="{{ users[activeItem._updatedBy].name }} on {{ activeItem._updatedTs * 1000 | date }}"
+             ui-if="users"
+             ng-click="openUserDialog()">
+            <i class="icon-user"></i>
+        </div>
     </div>
     <form class="form-horizontal fields-editor" ng-submit="noop()">
         <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'" ng-hide="field.hidden">
@@ -66,29 +75,31 @@
 
             <!--Address and other subfield-->
             <div class="col-lg-10" ui-if="field.fields">
-                <div class="form-group" ng-repeat="subfield in field.fields" ng-hide="subfield.hidden">
-                    <div class="col-lg-10">
-                        <input type="text" class="form-control"
-                               ng-hide="activeItem.raw[field.key][subfield.key].showRaw"
-                               ng-model="activeItem.edited[field.key][subfield.key]"
-                               ng-readonly="subfield.readonly"
-                               placeholder="{{ subfield.title }}"/>
-                        <input type="text"
-                               class="form-control status-text-{{ activeItem.raw[field.key][subfield.key].status }}"
-                               ng-show="activeItem.raw[field.key][subfield.key].showRaw"
-                               placeholder="{{ subfield.title }}"
-                               ng-model="activeItem.raw[field.key][subfield.key].value"/>
+                <div class="row">
+                    <div class="form-group col-lg-12" ng-repeat="subfield in field.fields" ng-hide="subfield.hidden">
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control"
+                                   ng-hide="activeItem.raw[field.key][subfield.key].showRaw"
+                                   ng-model="activeItem.edited[field.key][subfield.key]"
+                                   ng-readonly="subfield.readonly"
+                                   placeholder="{{ subfield.title }}"/>
+                            <input type="text"
+                                   class="form-control status-text-{{ activeItem.raw[field.key][subfield.key].status }}"
+                                   ng-show="activeItem.raw[field.key][subfield.key].showRaw"
+                                   placeholder="{{ subfield.title }}"
+                                   ng-model="activeItem.raw[field.key][subfield.key].value"/>
+                        </div>
+                        <button class="btn col-lg-1 hint--left hint--bounce"
+                                ng-class="classRawField(activeItem.raw[field.key][subfield.key])"
+                                ng-click="copySubfieldFromRaw(activeItem, field.key, subfield.key)"
+                                ng-hide="isRawNull(activeItem.raw[field.key][subfield.key])"
+                                ng-mouseover="activeItem.raw[field.key][subfield.key].showRaw = true"
+                                ng-mouseleave="activeItem.raw[field.key][subfield.key].showRaw = false"
+                                data-hint="Copy">
+                            <i ng-hide="activeItem.raw[field.key][subfield.key].copied" class="icon-inbox"></i>
+                            <i ng-show="activeItem.raw[field.key][subfield.key].copied" class="icon-check-sign"></i>
+                        </button>
                     </div>
-                    <button class="btn col-lg-1 hint--left hint--bounce"
-                            ng-class="classRawField(activeItem.raw[field.key][subfield.key])"
-                            ng-click="copySubfieldFromRaw(activeItem, field.key, subfield.key)"
-                            ng-hide="isRawNull(activeItem.raw[field.key][subfield.key])"
-                            ng-mouseover="activeItem.raw[field.key][subfield.key].showRaw = true"
-                            ng-mouseleave="activeItem.raw[field.key][subfield.key].showRaw = false"
-                            data-hint="Copy">
-                        <i ng-hide="activeItem.raw[field.key][subfield.key].copied" class="icon-inbox"></i>
-                        <i ng-show="activeItem.raw[field.key][subfield.key].copied" class="icon-check-sign"></i>
-                    </button>
                 </div>
             </div>
         </div>

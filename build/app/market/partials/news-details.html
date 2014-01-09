@@ -1,6 +1,15 @@
 <!--Begin Fields-->
 <div class="row details-container">
-    <div class="details-header"><h3> {{ activeItem.title }}</h3></div>
+    <div class="details-header">
+        <a ng-href="{{ activeItem.url }}" target="_blank" class="hint--bottom dropdown"
+           data-hint="View Source Page">{{ activeItem.title }}</a>
+        <div class="icon-btn hint--bottom"
+             data-hint="{{ users[activeItem._updatedBy].name }} on {{ activeItem._updatedTs * 1000 | date }}"
+             ui-if="users"
+             ng-click="openUserDialog()">
+            <i class="icon-user"></i>
+        </div>
+    </div>
     <form class="form-horizontal fields-editor" ng-submit="noop()">
         <div class="form-group" ng-repeat="field in collection.fields | orderBy: '-weight'" ng-hide="field.hidden">
 

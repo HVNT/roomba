@@ -1,6 +1,6 @@
 angular.module('roomba.app')
-    .config(['$routeProvider',
-        function ($routeProvider) {
+    .config(['$routeProvider', '$provide',
+        function ($routeProvider, $provide) {
             $routeProvider
                 .when('/market',
                 {
@@ -12,6 +12,23 @@ angular.module('roomba.app')
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
                     resolve: {
+                        User: function ($q, $http, User, Users) {
+                            var defer = $q.defer();
+
+                            User.get()
+                                .then(function (user) {
+                                    console.log(user);
+                                    if (_.contains(User.profile.roles, 'admin')) {
+                                        // If admin, get Users
+                                        defer.resolve(Users.init());
+                                    } else {
+                                        defer.resolve(user);
+                                    }
+                                });
+
+                            return defer.promise;
+                            s
+                        },
                         Market: function ($route, $q, Models) {
                             var defer = $q.defer(),
                                 _Item;
@@ -38,12 +55,11 @@ angular.module('roomba.app')
                     redirectTo: '/market'
                 });
         }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', '$q', '$dialog',
-        function ($scope, Market, $routeParams, $location, $q, $dialog) {
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', '$q', '$dialog', 'Users',
+        function ($scope, Market, $routeParams, $location, $q, $dialog, Users) {
             var Model = Market.Model;
             $scope.items = Market.visibleItems;
             $scope.dimensions = Market.dimensions;
-            console.log($scope.dimensions.getDiscrete());
             $scope.activeItem = Market.getActive();
             $scope.activeItemResources = {};
             $scope.collectionID = $routeParams.collection;
@@ -56,6 +72,8 @@ angular.module('roomba.app')
                 collapseFilters: true
             };
             $scope.activeSearch = {title: 'Any', key: '$'};
+
+            $scope.users = Users.generateStats($scope.collectionID, Market.getItems());
 
             $scope.joinDialog = $dialog.dialog({
                 templateUrl: '/app/market/partials/join-dialog.html?v=' + Date.now(),
@@ -71,6 +89,20 @@ angular.module('roomba.app')
                     }
                 }
             });
+
+            $scope.userDialog = $dialog.dialog({
+                templateUrl: '/app/market/partials/user-dialog.html?v=' + Date.now(),
+                controller: 'UserDialogCtrl',
+                resolve: {
+                    user: function () {
+                        return $scope.users[$scope.activeItem._updatedBy];
+                    }
+                }
+            });
+
+            $scope.openUserDialog = function () {
+                $scope.userDialog.open();
+            };
 
             $scope.applyFilters = function () {
                 $scope.items = Market.apply();
@@ -96,7 +128,6 @@ angular.module('roomba.app')
 
                     if ($scope.activeItem) {
                         $scope.activeItem.$getResources().then(function (results) {
-                            console.log(results);
                             for (var i = results.length - 1; i >= 0; i--) {
                                 for (var _resource in results[i]) {
                                     if (results[i].hasOwnProperty(_resource)) {
@@ -160,7 +191,6 @@ angular.module('roomba.app')
             $scope.hasTag = function (item, tag) {
                 return _.contains(item.tags, tag);
             };
-
 
             $scope.setSearchCriteria = function (field) {
                 $scope.activeSearch = {};
@@ -554,7 +584,6 @@ angular.module('roomba.app')
             $scope.searchBy = {};
 
             $scope.join = function (selectedItem) {
-                console.log("sup");
                 $scope.activeItem.$join(selectedItem)
                     .then(function (deletedItem) {
                         dialog.close({status: 'success', message: $scope.activeItem.title + ' and ' + selectedItem.title + ' successfully joined!'})
@@ -573,6 +602,14 @@ angular.module('roomba.app')
 
             $scope.hasTag = function (item, tag) {
                 return _.contains(item.tags, tag);
+            };
+        }])
+    .controller('UserDialogCtrl', ['$scope', 'user', 'dialog',
+        function ($scope, user, dialog) {
+            console.log(user);
+            $scope.user = user;
+            $scope.close = function () {
+                dialog.close();
             };
         }])
     .factory('Models', ['Item', '$http', '$_api', '$q',

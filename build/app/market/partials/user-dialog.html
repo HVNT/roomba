@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="close()">&times;</button>
+    <h4 id="myModalLabel">User Stats for {{ user.name }}</h4>
+</div>
+<div class="modal-body">
+    <div class="page-header"><h3>Listings</h3></div>
+    <dl class="dl-horizontal">
+        <dt>Count:</dt>
+        <dd>{{ user.listings.count }}</dd>
+        <dt>Last Activity:</dt>
+        <dd>{{ user.listings.lastActivity * 1000 | date }}</dd>
+    </dl>
+
+    <div class="page-header"><h3>News</h3></div>
+    <dl class="dl-horizontal">
+        <dt>Count:</dt>
+        <dd>{{ user.news.count }}</dd>
+        <dt>Last Activity:</dt>
+        <dd>{{ user.news.lastActivity * 1000 | date }}</dd>
+    </dl>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-glossy" ng-click="close()">Close</button>
+</div>
