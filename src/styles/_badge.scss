@@ -1,7 +1,5 @@
 .badge {
-  position: absolute;
-  top: 6px;
-  right: 20px;
+  @extend %dark-bg-divet;
   display: inline-block;
   font-size: 11px;
   font-weight: normal;
@@ -11,12 +9,11 @@
   background: $mono;
   @include border-radius($borderRadius);
   @include box-sizing(border-box);
+}
 
-  &.badge-success {
-    background: $green;
-  }
-
-  &.badge-info {
-    background: $blue;
-  }
+.badge--success {
+  @include gradient-vertical($green, lighten(adjust-hue($green, 8%), 15%));
+}
+.badge--info {
+  @include gradient-vertical($blue, lighten(adjust-hue($blue, 8%), 15%));
 }

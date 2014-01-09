@@ -9,9 +9,8 @@
   @include box-sizing(border-box);
 
   .ui-widget-content {
-    border: 1px solid rgba(0, 0, 0, 0.85);
     background: $monoLighter;
-    @include box-shadow(#{inset 0 0 1px 1px rgba(0, 0, 0, 0.2), 0 1px rgba(255,255,255,0.19)});
+    @extend %dark-bg-divet;
   }
 
   .ui-widget-header {
@@ -155,5 +154,11 @@
         text-decoration: none;
       }
     }
+  }
+
+  .badge {
+    position: absolute;
+    top: 6px;
+    right: 20px;
   }
 }

@@ -560,7 +560,7 @@ var thotpod = (function () {
                                 predictLength += popcount(predictBitSet[i] & _value.ids[i] & this.subsetIds[i] & dimensions.excludedRangeMask[i]);
                             }
                             if (predictLength) {
-                                _value.badge = 'badge-success';
+                                _value.badge = 'success';
                                 _value.predict = "+" + predictLength;
                             } else {
                                 _value.badge = null;
@@ -573,7 +573,7 @@ var thotpod = (function () {
                                 _value.predict += popcount(dimensions.visibleIds[i] & _value.ids[i]);
                             }
 
-                            _value.badge = _value.predict ? 'badge-info' : '';
+                            _value.badge = _value.predict ? 'info' : '';
                         }
                     }
                 }
