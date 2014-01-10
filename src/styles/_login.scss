@@ -51,13 +51,19 @@
 
   .form-signin-heading {
     margin: 10px 10px 20px;
-    font-size: 24px;
+    font-size: 20px;
+    color: $grayDark;
   }
 
   .form-signin input[type="text"],
   .form-signin input[type="password"] {
     height: auto;
     padding: 10px 9px;
+    outline: 0;
+    &:focus {
+      border: 1px solid $blue !important;
+      @include box-shadow(none !important);
+    }
   }
 
   .sign-up-text {

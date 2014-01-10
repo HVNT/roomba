@@ -49,7 +49,7 @@ $btnBorderRadius: 5px;
   *border: 0;
   line-height: $baseLineHeight;
   text-align: center;
-  //padding: $baseFontSize/2 $baseFontSize*1.5;
+  padding: $baseFontSize/2 $baseFontSize;
   cursor: pointer;
   @include border-radius($btnBorderRadius);
   @include box-sizing(border-box);
@@ -67,7 +67,7 @@ $btnBorderRadius: 5px;
   }
 
   &.btn-large {
-    font-size:  $baseFontSize + 2px;
+    padding: $baseFontSize/2 $baseFontSize*1.5;
     line-height: normal;
   }
 

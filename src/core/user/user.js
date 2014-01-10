@@ -216,6 +216,6 @@ angular.module('rescour.user', ['ngCookies'])
                 })(batchLimit);
 
                 return defer.promise;
-            }
+            };
 
         }]);
