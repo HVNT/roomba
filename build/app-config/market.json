@@ -111,7 +111,7 @@
                 "weight": 9,
                 "key": "status",
                 "type": "typeahead",
-                "typeahead": ["Marketing", "Under Contract", "Under LOI", "Sold"]
+                "typeahead": ["Marketing", "Under Contract", "Under LOI", "Sold", "Expired"]
             },
             {
                 "title": "Address",
