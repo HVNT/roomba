@@ -25,6 +25,7 @@ angular.module('rescour.user', ['ngCookies'])
                         if (_.contains(self.profile.roles, 'admin')) {
                             self.isAdmin = true;
                         }
+                        console.log(self);
                         defer.resolve(self);
                     },
                     function (response) {

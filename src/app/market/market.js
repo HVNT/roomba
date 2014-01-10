@@ -12,13 +12,14 @@ angular.module('roomba.app')
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
                     resolve: {
-                        User: function ($q, $http, User, Users) {
+                        init: function ($q, $http, User, Users) {
                             var defer = $q.defer();
 
                             User.get()
                                 .then(function (user) {
                                     if (User.isAdmin) {
                                         // If admin, get Users
+                                        console.log(User);
                                         defer.resolve(Users.init());
                                     } else {
                                         defer.resolve(user);
@@ -26,7 +27,6 @@ angular.module('roomba.app')
                                 });
 
                             return defer.promise;
-                            s
                         },
                         Market: function ($route, $q, Models) {
                             var defer = $q.defer(),
@@ -74,6 +74,7 @@ angular.module('roomba.app')
 
             if (User.isAdmin) {
                 $scope.users = Users.generateStats($scope.collectionID, Market.getItems());
+                console.log($scope.users);
             }
 
             $scope.joinDialog = $dialog.dialog({
