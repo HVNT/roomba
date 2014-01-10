@@ -153,11 +153,13 @@ angular.module('rescour.user', ['ngCookies'])
                             name: user.firstName + ' ' + user.lastName,
                             listings: {
                                 count: 0,
-                                lastActivity: null
+                                lastActivity: null,
+                                items: []
                             },
                             news: {
                                 count: 0,
-                                lastActivity: null
+                                lastActivity: null,
+                                items: []
                             }
                         }
                     }
@@ -176,6 +178,7 @@ angular.module('rescour.user', ['ngCookies'])
 
                     if (user) {
                         user[key].count += 1;
+                        user[key].items.push(model);
                         if (lastUpdated > user[key].lastActivity) {
                             user[key].lastActivity = lastUpdated;
                         }

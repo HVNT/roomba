@@ -12,14 +12,13 @@ angular.module('roomba.app')
                     controller: 'CollectionCtrl',
                     reloadOnSearch: false,
                     resolve: {
-                        init: function ($q, $http, User, Users) {
+                        init: function ($q, $http, User, Users, $route) {
                             var defer = $q.defer();
 
                             User.get()
                                 .then(function (user) {
                                     if (User.isAdmin) {
                                         // If admin, get Users
-                                        console.log(User);
                                         defer.resolve(Users.init());
                                     } else {
                                         defer.resolve(user);
@@ -74,7 +73,6 @@ angular.module('roomba.app')
 
             if (User.isAdmin) {
                 $scope.users = Users.generateStats($scope.collectionID, Market.getItems());
-                console.log($scope.users);
             }
 
             $scope.joinDialog = $dialog.dialog({
@@ -98,12 +96,19 @@ angular.module('roomba.app')
                 resolve: {
                     user: function () {
                         return $scope.users[$scope.activeItem._updatedBy];
+                    },
+                    collection: function () {
+                        return $scope.collectionID;
                     }
                 }
             });
 
             $scope.openUserDialog = function () {
-                $scope.userDialog.open();
+                $scope.userDialog.open().then(function (item) {
+                    if (item) {
+                        $location.search('id', item.id);
+                    }
+                });
             };
 
             $scope.applyFilters = function () {
@@ -606,12 +611,16 @@ angular.module('roomba.app')
                 return _.contains(item.tags, tag);
             };
         }])
-    .controller('UserDialogCtrl', ['$scope', 'user', 'dialog',
-        function ($scope, user, dialog) {
-            console.log(user);
+    .controller('UserDialogCtrl', ['$scope', 'user', 'dialog', 'collection',
+        function ($scope, user, dialog, collection) {
             $scope.user = user;
+            $scope.collection = collection;
             $scope.close = function () {
                 dialog.close();
+            };
+
+            $scope.openItem = function (item) {
+                dialog.close(item);
             };
         }])
     .factory('Models', ['Item', '$http', '$_api', '$q',

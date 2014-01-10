@@ -1,23 +1,28 @@
 <div class="modal-header">
     <button type="button" class="close" ng-click="close()">&times;</button>
-    <h4 id="myModalLabel">User Stats for {{ user.name }}</h4>
+    <h4 id="myModalLabel">{{ collection | uppercase }} Stats for {{ user.name }}</h4>
 </div>
-<div class="modal-body">
-    <div class="page-header"><h3>Listings</h3></div>
+<div class="modal-body" chunk="user[collection].items | orderBy:'_updatedTs':true" chunk-size="15">
     <dl class="dl-horizontal">
         <dt>Count:</dt>
-        <dd>{{ user.listings.count }}</dd>
+        <dd>{{ user[collection].count }}</dd>
         <dt>Last Activity:</dt>
-        <dd>{{ user.listings.lastActivity * 1000 | date }}</dd>
+        <dd>{{ user[collection].lastActivity * 1000 | date }}</dd>
     </dl>
-
-    <div class="page-header"><h3>News</h3></div>
-    <dl class="dl-horizontal">
-        <dt>Count:</dt>
-        <dd>{{ user.news.count }}</dd>
-        <dt>Last Activity:</dt>
-        <dd>{{ user.news.lastActivity * 1000 | date }}</dd>
-    </dl>
+    <table class="table table-bordered scroll-wrap">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in chunk">
+            <td><a href="javascript:" ng-click="openItem(item)">{{ item.title }}</a></td>
+            <td>{{ item._updatedTs * 1000| date }}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <div class="modal-footer">
     <button class="btn btn-glossy" ng-click="close()">Close</button>

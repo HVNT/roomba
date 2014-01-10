@@ -1,17 +1,20 @@
 <!--Begin Fields-->
 <div class="row details-container">
     <div class="details-header">
+
+        <div class="icon-btn icon-btn-success hint--bottom" data-hint="Copy all Raw"
+             ng-click="copyAllRaw(activeItem, activeItemResources)"><i class="icon-download-alt"></i></div>
+        
+        <a ng-href="{{ activeItem.raw.page.value }}" target="_blank" class="hint--bottom dropdown"
+           data-hint="View Source Page">{{ activeItem.title }}</a>
+
         <a class="icon-btn hint--bottom"
            data-hint="View on Map"
            target="_blank"
            href="https://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q={{ activeItem.edited.address.latitude }},+{{ activeItem.edited.address.longitude }}">
             <i class="icon-globe"></i>
         </a>
-        <a ng-href="{{ activeItem.raw.page.value }}" target="_blank" class="hint--bottom dropdown"
-           data-hint="View Source Page">{{ activeItem.title }}</a>
 
-        <div class="icon-btn icon-btn-success hint--bottom" data-hint="Copy all Raw"
-             ng-click="copyAllRaw(activeItem, activeItemResources)"><i class="icon-download-alt"></i></div>
         <div class="icon-btn hint--bottom"
              data-hint="{{ users[activeItem._updatedBy].name }} on {{ activeItem._updatedTs * 1000 | date }}"
              ui-if="users"
