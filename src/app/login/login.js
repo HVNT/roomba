@@ -45,7 +45,7 @@ angular.module('roomba.app')
         function ($scope, $location, $http, $_api) {
             $scope.creds = {};
             $scope.loginAlerts = [];
-            var loginFailAlert = { type: 'error', msg: 'Incorrect email password combination.  Please try again.' },
+            var loginFailAlert = { type: 'danger', msg: 'Incorrect email password combination.  Please try again.' },
                 loginAuthenticatingAlert = { type: 'info', msg: 'Authenticating' };
 
             $scope.login = function () {
@@ -153,7 +153,7 @@ angular.module('roomba.app')
                     }, function (response) {
                         $scope.resetPasswordAlerts = [
                             {
-                                type: 'error',
+                                type: 'danger',
                                 msg: response.data.status_message
                             }
                         ];
