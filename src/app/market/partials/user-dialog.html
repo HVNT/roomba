@@ -1,6 +1,6 @@
 <div class="modal-header">
     <button type="button" class="close" ng-click="close()">&times;</button>
-    <h4 id="myModalLabel">{{ collection | uppercase }} Stats for {{ user.name }}</h4>
+    <h4 id="myModalLabel">{{ collection | uppercase }} for {{ user.name }}</h4>
 </div>
 <div class="modal-body" chunk="user[collection].items | orderBy:'_updatedTs':true" chunk-size="15">
     <dl class="dl-horizontal">
@@ -19,7 +19,7 @@
         <tbody>
         <tr ng-repeat="item in chunk">
             <td><a href="javascript:" ng-click="openItem(item)">{{ item.title }}</a></td>
-            <td>{{ item._updatedTs * 1000| date }}</td>
+            <td>{{ item._updatedTs * 1000| date:'medium' }}</td>
         </tr>
         </tbody>
     </table>
