@@ -106,7 +106,7 @@ angular.module('roomba.app')
                 }, function (response) {
                     $scope.forgotPasswordAlerts = [
                         {
-                            type: 'error',
+                            type: 'danger',
                             msg: 'Invalid email, please try again'
                         }
                     ];
