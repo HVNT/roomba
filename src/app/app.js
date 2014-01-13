@@ -305,8 +305,10 @@ angular.module('roomba.app',
                     } else if (collection.key === 'news') {
                         if (Date.parse(self.date)) {
                             self.age = Math.ceil(Math.abs(Date.now() - (new Date(self.date))) / (1000 * 3600 * 24));
-                        } else {
+                        } else if (self.id) {
                             self.age = self.date ? new Date(parseInt(this.date, 10)) : new Date(parseInt(this.id.toString().slice(0, 8), 16) * 1000);
+                        } else {
+                            self.age = 0;
                         }
                         self.datePosted = self.date;
 
