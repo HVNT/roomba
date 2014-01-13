@@ -308,6 +308,7 @@ angular.module('roomba.app',
                         } else {
                             self.age = self.date ? new Date(parseInt(this.date, 10)) : new Date(parseInt(this.id.toString().slice(0, 8), 16) * 1000);
                         }
+                        self.datePosted = self.date;
 
                         self.checkStateAbbreviation();
                         self.checkSource();

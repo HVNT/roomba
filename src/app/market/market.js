@@ -361,7 +361,8 @@ angular.module('roomba.app')
             $scope.sortFields = {
                 title: false,
                 completion: false,
-                state: false
+                state: false,
+                datePosted: false
             };
 
             $scope.setSortField = function (sortField) {
