@@ -388,7 +388,7 @@ angular.module('roomba.app',
                         }, function (results, status) {
                             if (!$rootScope.$$phase) {
                                 $rootScope.$apply(function () {
-                                    if (results) {
+                                    if (results && results[0]) {
                                         var _location = results[0].geometry.location;
                                         if (_location) {
                                             address.latitude = _location.lat();
