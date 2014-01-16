@@ -295,6 +295,7 @@ angular.module('roomba.app',
                         } else {
                             this.title = this.edited.title;
                         }
+                        self.pageUrl = self.edited.page || self.raw.page.value;
                         self.prodId = self.prodId || null;
                     } else if (collection.key === 'contacts') {
                         if (!this.edited.name) {
@@ -663,6 +664,7 @@ angular.module('roomba.app',
                     }
 
                     if (_oldItem && _newItem) {
+                        _newItem.tags = _oldItem.tags;
                         _newItem.edited = _oldItem.edited;
                         _newItem.resources = _oldItem.resources;
                         _newItem.prodId = _oldItem.prodId;

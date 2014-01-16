@@ -8,7 +8,8 @@
             <i class="icon-user"></i> {{ users[activeItem._updatedBy].name }}
         </div>
 
-        <a ng-href="{{ activeItem.raw.page.value }}" target="_blank" class="hint--bottom dropdown"
+        <small>( {{ activeItem._createdTs * 1000 | date }} ) </small>
+        <a ng-href="{{ activeItem.pageUrl }}" target="_blank" class="hint--bottom dropdown"
            data-hint="View Source Page">{{ activeItem.title }}</a>
 
         <div class="icon-btn icon-btn-success hint--bottom" data-hint="Copy all Raw"
