@@ -90,6 +90,7 @@ angular.module('roomba.app',
                 var Item = function (data, defaults) {
                     var _defaults = defaults || {
                             title: 'New ' + collection.title,
+                            _updatedBy: 'newUser',
                             tags: [],
                             isVisible: true
                         },
