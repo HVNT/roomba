@@ -286,23 +286,37 @@
         "path": "/news/",
         "dimensions": {
             "discrete": {
+                "category": {
+                    "title": "Category",
+                    "weight": 11,
+                    "restrict": ["Under Construction", "Future Development", "Transactions", "Financing", "Renovations", "Newly Completed"]
+                },
                 "tags": {
                     "title": "Tags",
                     "weight": 10,
                     "restrict": ["edited", "published", "raw", "unpublished", "flagged", "conflict"],
                     "multi": true
                 },
-                "category": {
-                    "title": "Category",
-                    "weight": 10,
-                    "restrict": ["Under Construction", "Future Development", "Transactions", "Financing", "Renovations", "Newly Completed"]
+                "_updatedBy": {
+                    "title": "User",
+                    "weight": 9
+                },
+                "state": {
+                    "title": "State",
+                    "nested": "address",
+                    "weight": 8
+                },
+                "city": {
+                    "title": "City",
+                    "nested": "address",
+                    "weight": 8
                 }
             },
             "range": {
                 "age": {
                     "title": "Days Old",
                     "weight": "10",
-                    "highBound": "1000"
+                    "highBound": "300"
                 }
             }
         },
