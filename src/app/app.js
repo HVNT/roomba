@@ -815,13 +815,18 @@ angular.module('roomba.app',
                 Item.prototype.checkSource = function () {
                     var sources = {
                         'www.bizjournals.com': 'The Business Journals',
+                        'bizjournals.com': 'The Business Journals',
                         'www.rebusinessonline.com': 'REBusiness Online',
+                        'rebusinessonline.com': 'REBusiness Online',
                         'www.globest.com': 'GlobeSt.com',
+                        'globest.com': 'GlobeSt.com',
                         'www.multifamilybiz.com': 'MultifamilyBiz.com',
-                        'www.multihousingnews.com': 'Multi-Housing News'
+                        'multifamilybiz.com': 'MultifamilyBiz.com',
+                        'www.multihousingnews.com': 'Multi-Housing News',
+                        'multihousingnews.com': 'Multi-Housing News'
                     };
 
-                    if (this.url) {
+                    if (this.url && !this.source) {
                         var sourceUrl = this.url.split(/^http:\/\//)[1];
                         if (sourceUrl) {
                             this.source = sources[sourceUrl.split(/\//)[0]] || '';
