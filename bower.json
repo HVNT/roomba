@@ -18,7 +18,8 @@
     "angular-ui-bootstrap-bower": "~0.2.0",
     "bootstrap": "latest",
     "hint.css": "~1.3.0",
-    "angular-ui": "~0.4.0"
+    "angular-ui": "~0.4.0",
+    "angular-segmentio": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.0.7",

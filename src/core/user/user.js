@@ -6,8 +6,8 @@
  * File: user.js
  */
 angular.module('rescour.user', ['ngCookies'])
-    .service('User', ['$http', '$q', '$_api',
-        function ($http, $q, $_api) {
+    .service('User', ['$http', '$q', '$_api', 'segmentio',
+        function ($http, $q, $_api, segmentio) {
             this.profile = {};
             this.billing = {};
 
@@ -20,6 +20,11 @@ angular.module('rescour.user', ['ngCookies'])
 
                 $http.get(path, config).then(
                     function (response) {
+                        segmentio.identify(response.id, {
+                            email: response.data[0].email,
+                            firstName: response.data[0].firstName,
+                            lastName: response.data[0].lastName
+                        });
                         self.id = response.data[0].id;
                         angular.copy(response.data[0], self.profile);
                         if (_.contains(self.profile.roles, 'admin')) {

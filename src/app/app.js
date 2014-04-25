@@ -18,6 +18,7 @@ angular.module('roomba.app',
             'rescour.utility',
 //            'rescour.marketplace',
             'thotpod.spinner',
+            'segmentio',
             'ui'
         ])
     .value('States', {
@@ -868,6 +869,9 @@ angular.module('roomba.app',
                     redirectTo: '/'
                 });
         }])
+    .run(['segmentio', function (segmentio) {
+        segmentio.load('qeyja0akdl');
+    }])
     .controller("AppController", ['$scope', '$rootScope', '$location', '$_api', '$http',
         function ($scope, $rootScope, $location, $_api, $http) {
 

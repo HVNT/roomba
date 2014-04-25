@@ -91,6 +91,7 @@
 <script src="/components/underscore/underscore-min.js"></script>
 <script src="/components/spin.js/dist/spin.min.js"></script>
 <script src="/components/tp-marketplace/src/marketplace-src.js"></script>
+<script src="/components/angular-segmentio/angular-segmentio.js"></script>
 
 <script src="/core/user/user.js"></script>
 <script src="/core/utility/utility.js"></script>
