@@ -82,9 +82,9 @@ angular.module('roomba.app',
         "WI": "Wisconsin",
         "WY": "Wyoming"
     })
-    .factory('Item', ['$_api', '$q', '$http', 'States', '$rootScope',
+    .factory('Item', ['$_api', '$q', '$http', 'States', '$rootScope', 'segmentio',
 
-        function ($_api, $q, $http, States, $rootScope) {
+        function ($_api, $q, $http, States, $rootScope, segmentio) {
 
             function ItemFactory(collection) {
 
@@ -605,21 +605,27 @@ angular.module('roomba.app',
                     this.tags = _.without(this.tags, 'edited', 'raw');
                     this.tags.push('edited');
 
-                    return this.$update();
+                    return this.$update().then(function () {
+                        segmentio.track('Saved ' + collection.key);
+                    });
                 };
 
                 Item.prototype.$publish = function () {
                     this.tags = _.without(this.tags, 'published', 'unpublished');
                     this.tags.push('published');
 
-                    return this.$updateTags();
+                    return this.$updateTags().then(function () {
+                        segmentio.track('Published ' + collection.key);
+                    });
                 };
 
                 Item.prototype.$unpublish = function () {
                     this.tags = _.without(this.tags, 'published', 'unpublished');
                     this.tags.push('unpublished');
 
-                    return this.$updateTags();
+                    return this.$updateTags().then(function () {
+                        segmentio.track('Unpublished ' + collection.key);
+                    });
                 };
 
                 Item.prototype.$flag = function () {
@@ -629,7 +635,9 @@ angular.module('roomba.app',
                         this.tags.push('flagged');
                     }
 
-                    return this.$updateTags();
+                    return this.$updateTags().then(function () {
+                        segmentio.track('Flagged ' + collection.key);
+                    });
                 };
 
                 Item.prototype.$join = function (selectedItem) {
@@ -677,6 +685,7 @@ angular.module('roomba.app',
                             },function (response) {
                                 defer.reject(response);
                             }).then(function (response) {
+                                segmentio.track('Joined ' + collection.key);
                                 defer.resolve(_oldItem);
                             }, function (response) {
                                 defer.reject(response);
@@ -834,7 +843,8 @@ angular.module('roomba.app',
                         } else {
                             this.source = sources[this.url.split(/\//)[0]] || '';
                         }
-                    };
+                    }
+                    ;
                 };
 
                 Item.prototype.hasPageConflict = function () {

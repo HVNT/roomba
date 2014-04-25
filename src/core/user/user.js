@@ -20,7 +20,7 @@ angular.module('rescour.user', ['ngCookies'])
 
                 $http.get(path, config).then(
                     function (response) {
-                        segmentio.identify(response.id, {
+                        segmentio.identify(response.data[0].id, {
                             email: response.data[0].email,
                             firstName: response.data[0].firstName,
                             lastName: response.data[0].lastName
@@ -30,7 +30,6 @@ angular.module('rescour.user', ['ngCookies'])
                         if (_.contains(self.profile.roles, 'admin')) {
                             self.isAdmin = true;
                         }
-                        console.log(self);
                         defer.resolve(self);
                     },
                     function (response) {
