@@ -483,7 +483,7 @@ module.exports = function (grunt) {
         'compass:prod',
         'template:prod',
         'clean:template',
-        'karma:unit',
+//        'karma:unit',
         'useminPrepare',
         'concat:.tmp/scripts/scripts.js',
         'concat:.tmp/styles/main.css',
