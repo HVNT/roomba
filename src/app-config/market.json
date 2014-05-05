@@ -253,6 +253,29 @@
                 ]
             },
             {
+                "title": "Tax History",
+                "weight": 9,
+                "key": "taxHistory",
+                "fields": [
+                    {
+                        "key": "year",
+                        "title": "Year"
+                    },
+                    {
+                        "key": "taxAssessment",
+                        "title": "Tax Assessment"
+                    },
+                    {
+                        "key": "propertyTaxes",
+                        "title": "Property Taxes"
+                    },
+                    {
+                        "key": "millRate",
+                        "title": "Mill Rate"
+                    }
+                ]
+            },
+            {
                 "title": "News",
                 "weight": 9,
                 "key": "comps",
