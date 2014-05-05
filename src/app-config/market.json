@@ -218,7 +218,7 @@
                 ]
             },
             {
-                "title": "Comps",
+                "title": "News",
                 "weight": 9,
                 "key": "comps",
                 "fields": [
@@ -229,18 +229,6 @@
                     {
                         "key": "title",
                         "title": "Title"
-                    },
-                    {
-                        "key": "buyer",
-                        "title": "Buyer"
-                    },
-                    {
-                        "key": "seller",
-                        "title": "Seller"
-                    },
-                    {
-                        "key": "price",
-                        "title": "Price"
                     },
                     {
                         "key": "body",
