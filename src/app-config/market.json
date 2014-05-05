@@ -149,6 +149,17 @@
         ],
         "models": [
             {
+                "title": "Comments",
+                "key": "comments",
+                "weight": 200,
+                "fields": [
+                    {
+                        "key": "text",
+                        "title": "Text"
+                    }
+                ]
+            },
+            {
                 "title": "Unit Mix",
                 "key": "unitMix",
                 "weight": 100,
@@ -196,17 +207,6 @@
                 ]
             },
             {
-                "title": "Comments",
-                "key": "comments",
-                "weight": 10,
-                "fields": [
-                    {
-                        "key": "text",
-                        "title": "Text"
-                    }
-                ]
-            },
-            {
                 "title": "Portfolio",
                 "key": "portfolio",
                 "weight": 10,
@@ -214,6 +214,41 @@
                     {
                         "key": "title",
                         "title": "Title"
+                    }
+                ]
+            },
+            {
+                "title": "Sales History",
+                "weight": 9,
+                "key": "salesHistory",
+                "fields": [
+                    {
+                        "key": "date",
+                        "title": "Date"
+                    },
+                    {
+                        "key": "buyer",
+                        "title": "Buyer"
+                    },
+                    {
+                        "key": "seller",
+                        "title": "Seller"
+                    },
+                    {
+                        "key": "price",
+                        "title": "Price"
+                    },
+                    {
+                        "key": "pricePerUnit",
+                        "title": "Price / Unit"
+                    },
+                    {
+                        "key": "source",
+                        "title": "Source"
+                    },
+                    {
+                        "key": "sourceUrl",
+                        "title": "Source Url"
                     }
                 ]
             },
