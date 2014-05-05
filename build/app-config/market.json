@@ -149,6 +149,17 @@
         ],
         "models": [
             {
+                "title": "Comments",
+                "key": "comments",
+                "weight": 200,
+                "fields": [
+                    {
+                        "key": "text",
+                        "title": "Text"
+                    }
+                ]
+            },
+            {
                 "title": "Unit Mix",
                 "key": "unitMix",
                 "weight": 100,
@@ -196,17 +207,6 @@
                 ]
             },
             {
-                "title": "Comments",
-                "key": "comments",
-                "weight": 10,
-                "fields": [
-                    {
-                        "key": "text",
-                        "title": "Text"
-                    }
-                ]
-            },
-            {
                 "title": "Portfolio",
                 "key": "portfolio",
                 "weight": 10,
@@ -218,17 +218,13 @@
                 ]
             },
             {
-                "title": "Comps",
+                "title": "Sales History",
                 "weight": 9,
-                "key": "comps",
+                "key": "salesHistory",
                 "fields": [
                     {
-                        "key": "link",
-                        "title": "Link"
-                    },
-                    {
-                        "key": "title",
-                        "title": "Title"
+                        "key": "date",
+                        "title": "Date"
                     },
                     {
                         "key": "buyer",
@@ -241,6 +237,56 @@
                     {
                         "key": "price",
                         "title": "Price"
+                    },
+                    {
+                        "key": "pricePerUnit",
+                        "title": "Price / Unit"
+                    },
+                    {
+                        "key": "source",
+                        "title": "Source"
+                    },
+                    {
+                        "key": "sourceUrl",
+                        "title": "Source Url"
+                    }
+                ]
+            },
+            {
+                "title": "Tax History",
+                "weight": 9,
+                "key": "taxHistory",
+                "fields": [
+                    {
+                        "key": "year",
+                        "title": "Year"
+                    },
+                    {
+                        "key": "taxAssessment",
+                        "title": "Tax Assessment"
+                    },
+                    {
+                        "key": "propertyTaxes",
+                        "title": "Property Taxes"
+                    },
+                    {
+                        "key": "millRate",
+                        "title": "Mill Rate"
+                    }
+                ]
+            },
+            {
+                "title": "News",
+                "weight": 9,
+                "key": "comps",
+                "fields": [
+                    {
+                        "key": "link",
+                        "title": "Link"
+                    },
+                    {
+                        "key": "title",
+                        "title": "Title"
                     },
                     {
                         "key": "body",
