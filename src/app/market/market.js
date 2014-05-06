@@ -181,6 +181,29 @@ angular.module('roomba.app')
                 $scope.selectItem(_newItem);
             };
 
+            $scope.duplicateNewsItem = function (newsItem) {
+                var _dupe = new Model();
+
+                if(_dupe.title == "New News") {
+                    _dupe.address = newsItem.address;
+                    _dupe.body = newsItem.body;
+                    _dupe.category = newsItem.category;
+                    _dupe.city = newsItem.city;
+                    _dupe.datePosted = newsItem.datePosted;
+                    _dupe.site = newsItem.site;
+                    _dupe.source = newsItem.source;
+                    _dupe.state = newsItem.state;
+                    _dupe.tags = newsItem.tags;
+                    _dupe.title = newsItem.title;
+                    _dupe.url = newsItem.url;
+                    $scope.items.unshift(_dupe);
+                    $scope.selectItem(_dupe);
+                } else {
+                    console.log("Cannot currently duplicated other item types");
+                }
+
+            };
+
             $scope.classRawField = function (field) {
                 if (field) {
                     if (field.copied) {

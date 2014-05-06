@@ -173,6 +173,13 @@
                     <i class="icon-exchange"></i>
                 </a>
             </div>
+            <div class="btn-group pull-left" ui-if="collection.key  == 'news'">
+                <a class="btn btn-info hint--bottom hint--info" data-hint="Duplicate News Item"
+                   ng-click="duplicateNewsItem(activeItem)"
+                   ng-class="{'disabled': !activeItem}">
+                    <i class="icon-copy"></i>
+                </a>
+            </div>
             <div class="btn-group pull-right">
                 <button class="btn btn-success btn-large btn-glossy" ng-click="saveItem(activeItem)"
                         ng-class="{'disabled': !activeItem}">
