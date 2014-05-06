@@ -53,8 +53,8 @@ angular.module('roomba.app')
                     redirectTo: '/market'
                 });
         }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', '$q', '$dialog', 'Users', 'User',
-        function ($scope, Market, $routeParams, $location, $q, $dialog, Users, User) {
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', '$q', '$dialog', 'Users', 'User', '$window',
+        function ($scope, Market, $routeParams, $location, $q, $dialog, Users, User, $window) {
             var Model = Market.Model;
             $scope.items = Market.visibleItems;
             $scope.dimensions = Market.dimensions;
@@ -122,6 +122,7 @@ angular.module('roomba.app')
                     $scope.activeItem = Market.getActive();
                     $scope.activeItem.isActive = true;
                     $scope.activeItemResources = {};
+                    console.log($scope.activeItem);
 
                     if ($scope.previousActive) {
                         $scope.previousActive.isActive = false;
@@ -202,8 +203,19 @@ angular.module('roomba.app')
                 } else {
                     console.log("Cannot currently duplicated other item types");
                 }
-
             };
+
+            $scope.findMyAssessor = function (activeItem) {
+                var _county = activeItem.edited.county.toLowerCase(),
+                    url = 'http://publicrecords.netronline.com/state/GA/county/' + _county + '/';
+
+                $window.open(url);
+            };
+
+            $scope.visitMyAssessor = function (activeItem) {
+                $window.open(activeItem.edited.assessorUrl);
+            };
+
 
             $scope.classRawField = function (field) {
                 if (field) {
@@ -556,6 +568,7 @@ angular.module('roomba.app')
                         });
                 }
             };
+
         }])
     .controller('ResourceCtrl', ['$scope',
         function ($scope) {

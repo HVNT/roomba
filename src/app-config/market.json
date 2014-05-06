@@ -46,11 +46,6 @@
                 "type": "textarea"
             },
             {
-                "title": "County",
-                "hidden": true,
-                "key": "county"
-            },
-            {
                 "title": "Year Built",
                 "weight": 3000,
                 "key": "yearBuilt",
@@ -58,7 +53,7 @@
             },
             {
                 "title": "Page",
-                "weight": 1,
+                "weight": 2,
                 "key": "page",
                 "type": "text"
             },
@@ -126,7 +121,7 @@
             },
             {
                 "title": "Address",
-                "weight": 0,
+                "weight": 2,
                 "key": "address",
                 "fields": [
                     {
@@ -156,6 +151,16 @@
                         "readonly": true
                     }
                 ]
+            },
+            {
+                "title": "County",
+                "weight": 1,
+                "key": "county"
+            },
+            {
+                "title": "Assessor Url",
+                "weight": 0,
+                "key": "assessorUrl"
             }
         ],
         "models": [
