@@ -189,6 +189,7 @@ angular.module('roomba.app')
                     _dupe.body = newsItem.body;
                     _dupe.category = newsItem.category;
                     _dupe.city = newsItem.city;
+                    _dupe.date = newsItem.date;
                     _dupe.datePosted = newsItem.datePosted;
                     _dupe.site = newsItem.site;
                     _dupe.source = newsItem.source;
@@ -197,7 +198,7 @@ angular.module('roomba.app')
                     _dupe.title = newsItem.title;
                     _dupe.url = newsItem.url;
                     $scope.items.unshift(_dupe);
-                    $scope.selectItem(_dupe);
+                    $scope.$apply();
                 } else {
                     console.log("Cannot currently duplicated other item types");
                 }

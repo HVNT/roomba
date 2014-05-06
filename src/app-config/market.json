@@ -40,6 +40,17 @@
                 "type": "text"
             },
             {
+                "title": "Comment",
+                "weight": 6000,
+                "key": "comment",
+                "type": "textarea"
+            },
+            {
+                "title": "County",
+                "hidden": true,
+                "key": "county"
+            },
+            {
                 "title": "Year Built",
                 "weight": 3000,
                 "key": "yearBuilt",
