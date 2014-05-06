@@ -173,6 +173,23 @@
                     <i class="icon-exchange"></i>
                 </a>
             </div>
+            <div class="btn-group pull-left" ui-if="collection.key  == 'listings'"
+                    style="margin-left:20px;">
+                <a class="btn btn-danger hint--top hint--error hint--bounce"
+                   data-hint="Tax Assessor"
+                   ui-if="!activeItem.edited.assessorUrl"
+                   ng-click="findMyAssessor(activeItem)"
+                   ng-class="{'disabled': !activeItem.edited.county}">
+                    Find my Assessor!
+                </a>
+                <a class="btn btn-default hint--top hint--info hint--bounce"
+                   data-hint="Tax Assessor"
+                   ui-if="activeItem.edited.assessorUrl"
+                   ng-click="visitMyAssessor(activeItem)"
+                   ng-class="{'disabled': !activeItem}">
+                    Visit my Assessor
+                </a>
+            </div>
             <div class="btn-group pull-left" ui-if="collection.key  == 'news'">
                 <a class="btn btn-info hint--bottom hint--info" data-hint="Duplicate News Item"
                    ng-click="duplicateNewsItem(activeItem)"
