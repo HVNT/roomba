@@ -394,14 +394,60 @@ angular.module('roomba.app',
                             if (!$rootScope.$$phase) {
                                 $rootScope.$apply(function () {
                                     if (results && results[0]) {
-                                        var _location = results[0].geometry.location,
-                                            _county = null;
+                                        var _location = results[0].geometry.location;
+
+                                        if (collection.key == 'listing') {
+                                            var _county = null;
+
+                                            if(results[0].address_components) {
+                                                for (var i = 0; i < results[0].address_components.length; i++) {
+                                                    var component = results[0].address_components[i];
+                                                    if (component.types[0] == "administrative_area_level_2") {
+                                                        _county = component.long_name;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+                                            if (_location && _county) {
+                                                self.edited.county = _county.substr(0, _county.indexOf(' '));
+                                                address.latitude = _location.lat();
+                                                address.longitude = _location.lng();
+                                                defer.resolve({status: "success"});
+                                            } else if (_location && !_county) {
+                                                defer.reject({message: "Could not find county."});
+                                            } else if (!_location && _county) {
+                                                defer.reject({message: "Could not find location."});
+                                            } else {
+                                                defer.reject({message: "Could not find location and county."});
+                                            }
+                                        } else {
+                                            if (_location) {
+                                                address.latitude = _location.lat();
+                                                address.longitude = _location.lng();
+                                                defer.resolve({status: "success"});
+                                            } else {
+                                                defer.reject({message: "Could not find location."});
+                                            }
+                                        }
+
+                                    } else {
+                                        defer.resolve({message: status, status: 0});
+                                    }
+                                });
+                            } else {
+                                if (results) {
+                                    var _location = results[0].geometry.location;
+
+                                    if (collection.key == 'listing') { //type == listing
+                                        var _county = null;
 
                                         if(results[0].address_components) {
                                             for (var i = 0; i < results[0].address_components.length; i++) {
                                                 var component = results[0].address_components[i];
                                                 if (component.types[0] == "administrative_area_level_2") {
                                                     _county = component.long_name;
+                                                    break;
                                                 }
                                             }
                                         }
@@ -419,34 +465,13 @@ angular.module('roomba.app',
                                             defer.reject({message: "Could not find location and county."});
                                         }
                                     } else {
-                                        defer.resolve({message: status, status: 0});
-                                    }
-                                });
-                            } else {
-                                if (results) {
-                                    var _location = results[0].geometry.location,
-                                        _county = null;
-
-                                    if(results[0].address_components) {
-                                        for (var i = 0; i < results[0].address_components.length; i++) {
-                                            var component = results[0].address_components[i];
-                                            if (component.types[0] == "administrative_area_level_2") {
-                                                _county = component.long_name;
-                                            }
+                                        if (_location) {
+                                            address.latitude = _location.lat();
+                                            address.longitude = _location.lng();
+                                            defer.resolve({status: "success"});
+                                        } else {
+                                            defer.reject({message: "Could not find location."});
                                         }
-                                    }
-
-                                    if (_location && _county) {
-                                        self.edited.county = _county.substr(0, _county.indexOf(' '));
-                                        address.latitude = _location.lat();
-                                        address.longitude = _location.lng();
-                                        defer.resolve({status: "success"});
-                                    } else if (_location && !_county) {
-                                        defer.reject({message: "Could not find county."});
-                                    } else if (!_location && _county) {
-                                        defer.reject({message: "Could not find location."});
-                                    } else {
-                                        defer.reject({message: "Could not find location and county."});
                                     }
                                 } else {
                                     defer.resolve({message: status, status: 0});
