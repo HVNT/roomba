@@ -396,7 +396,7 @@ angular.module('roomba.app',
                                     if (results && results[0]) {
                                         var _location = results[0].geometry.location;
 
-                                        if (collection.key == 'listing') {
+                                        if (collection.key == 'listings') {
                                             var _county = null;
 
                                             if(results[0].address_components) {
@@ -404,6 +404,7 @@ angular.module('roomba.app',
                                                     var component = results[0].address_components[i];
                                                     if (component.types[0] == "administrative_area_level_2") {
                                                         _county = component.long_name;
+                                                        console.log(_county);
                                                         break;
                                                     }
                                                 }
@@ -439,7 +440,7 @@ angular.module('roomba.app',
                                 if (results) {
                                     var _location = results[0].geometry.location;
 
-                                    if (collection.key == 'listing') { //type == listing
+                                    if (collection.key == 'listings') { //type == listing
                                         var _county = null;
 
                                         if(results[0].address_components) {
