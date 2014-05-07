@@ -122,7 +122,6 @@ angular.module('roomba.app')
                     $scope.activeItem = Market.getActive();
                     $scope.activeItem.isActive = true;
                     $scope.activeItemResources = {};
-                    console.log($scope.activeItem);
 
                     if ($scope.previousActive) {
                         $scope.previousActive.isActive = false;
