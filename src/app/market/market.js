@@ -183,7 +183,6 @@ angular.module('roomba.app')
 
             $scope.duplicateNewsItem = function (newsItem) {
                 var _dupe = new Model();
-                console.log(_dupe);
 
                 if(_dupe.title == "New News") {
                     _dupe.address = newsItem.address;
@@ -200,8 +199,6 @@ angular.module('roomba.app')
                     _dupe.url = newsItem.url;
                     $scope.items.unshift(_dupe);
                     $scope.selectItem(_dupe);
-                    console.log(newsItem);
-                    console.log(_dupe);
                 } else {
                     console.log("Cannot currently duplicated other item types");
                 }
