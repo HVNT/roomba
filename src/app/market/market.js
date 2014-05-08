@@ -53,8 +53,8 @@ angular.module('roomba.app')
                     redirectTo: '/market'
                 });
         }])
-    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', '$q', '$dialog', 'Users', 'User', '$window',
-        function ($scope, Market, $routeParams, $location, $q, $dialog, Users, User, $window) {
+    .controller('CollectionCtrl', ['$scope', 'Market', '$routeParams', '$location', '$q', '$dialog', 'States_Inverse', 'Users', 'User', '$window',
+        function ($scope, Market, $routeParams, $location, $q, $dialog, States_Inverse, Users, User, $window) {
             var Model = Market.Model;
             $scope.items = Market.visibleItems;
             $scope.dimensions = Market.dimensions;
@@ -206,7 +206,9 @@ angular.module('roomba.app')
 
             $scope.findMyAssessor = function (activeItem) {
                 var _county = activeItem.edited.county.toLowerCase(),
-                    url = 'http://publicrecords.netronline.com/state/GA/county/' + _county + '/';
+                    _state = activeItem.state ? activeItem.state : activeItem.edited.address.state,
+                    url = 'http://publicrecords.netronline.com/state/' + States_Inverse[_state]
+                        + '/county/' + _county + '/';
 
                 $window.open(url);
             };
