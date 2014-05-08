@@ -206,10 +206,11 @@ angular.module('roomba.app')
 
             $scope.findMyAssessor = function (activeItem) {
                 var _county = activeItem.edited.county.toLowerCase(),
-                    _state = activeItem.state ? activeItem.state : activeItem.edited.address.state,
+                    _state = activeItem.edited.address.state ? activeItem.edited.address.state : activeItem.state,
                     url = 'http://publicrecords.netronline.com/state/' + States_Inverse[_state]
                         + '/county/' + _county + '/';
 
+                console.log(url);
                 $window.open(url);
             };
 
