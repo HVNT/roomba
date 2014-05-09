@@ -179,7 +179,7 @@
                    data-hint="Tax Assessor"
                    ui-if="!activeItem.edited.assessorUrl"
                    ng-click="findMyAssessor(activeItem)"
-                   ng-class="{'disabled': !activeItem.edited.county}">
+                   ng-class="{'disabled': !activeItem.edited.county || activeItem.state == 'None'}">
                     Find my Assessor!
                 </a>
                 <a class="btn btn-default hint--top hint--info hint--bounce"

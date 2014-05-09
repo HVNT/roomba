@@ -205,10 +205,14 @@ angular.module('roomba.app')
             };
 
             $scope.findMyAssessor = function (activeItem) {
-                var _county = activeItem.edited.county.toLowerCase(),
-                    _state = activeItem.edited.address.state ? activeItem.edited.address.state : activeItem.state,
-                    url = 'http://publicrecords.netronline.com/state/' + States_Inverse[_state]
-                        + '/county/' + _county + '/';
+//                var _county = activeItem.edited.county.toLowerCase(),
+                var _state = activeItem.edited.address.state ?
+                    activeItem.edited.address.state.trim() : activeItem.state.trim();
+
+                // county is buggy because shit is fucked.. so until i can figure out hack to see
+                // if a url will return a 404 this is the best we can do
+                var url = 'http://publicrecords.netronline.com/state/' + States_Inverse[_state] + '/';
+//                        + '/county/' + _county + '/';
 
                 console.log(url);
                 $window.open(url);

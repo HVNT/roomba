@@ -471,7 +471,7 @@ angular.module('roomba.app',
                                             }
 
                                             if (_location && _county) {
-                                                self.edited.county = _county.substr(0, _county.indexOf(' '));
+                                                self.edited.county = _county; //.substring(0, _county.lastIndexOf(' '));
                                                 address.latitude = _location.lat();
                                                 address.longitude = _location.lng();
                                                 defer.resolve({status: "success"});
@@ -514,7 +514,7 @@ angular.module('roomba.app',
                                         }
 
                                         if (_location && _county) {
-                                            self.edited.county = _county.substr(0, _county.indexOf(' '));
+                                            self.edited.county = _county; //.substring(0, _county.lastIndexOf(' '));
                                             address.latitude = _location.lat();
                                             address.longitude = _location.lng();
                                             defer.resolve({status: "success"});
@@ -543,6 +543,7 @@ angular.module('roomba.app',
                     } else {
                         defer.resolve({status: 0, message: "No address provided."})
                     }
+                    console.log(self);
 
                     return defer.promise;
                 };
