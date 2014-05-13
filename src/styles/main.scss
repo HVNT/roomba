@@ -1,104 +1,85 @@
+/** Armoire Specific Variables **/
+
+$dashboard-filter-width: 245px;
+$dashboard-list-width: 402px;
+$header-height: 60px;
+
+/** Vendor **/
+
 @import "compass";
-//@import "compass/reset";
-@import "compass_twitter_bootstrap/mixins";
-@import "compass_twitter_bootstrap/variables";
-@import "compass_twitter_bootstrap/modals";
-@import "compass_twitter_bootstrap/component-animations";
-@import "mixins";
+@import "compass/reset";
+@import "animation";
+@import "animation/animate";
+@import "animation/animate/classes";
+@import "components/font-awesome/scss/font-awesome";
+@import "components/hint.css/src/hint";
 
-$monoLighter: $grayLighter;
-$monoLight: $grayLight;
-$mono: $gray;
-$monoDark: $grayDark;
-$monoDarker: $grayDarker;
-$borderRadius: 5px;
-$gutterWidth: 20px;
+/** Rescour Global **/
 
-@import "ngform";
-@import "filter_list";
-@import "thotpod_btn";
-@import "input_dropdown";
-@import "badge";
-@import "login";
-@import "input";
+@import "common";
 
-$bgColor: $grayLighter;
+/** Swinder Specific **/
 
-ul {
+
+
+body {
   margin: 0;
-  padding: 0;
-  list-style: none;
+  font-family: $font-family-sans-serif;
+  font-size: $font-size-base;
+  line-height: $line-height;
+  color: $text-color;
+  background:  $body-bg;
+  //overflow-x: hidden;
+  overflow:hidden;
+  //overflow-y: auto;
 }
 
-@mixin icon-invert($iconColor) {
-  &:hover {
-    i {
-      color: white;
-    }
-    background: $iconColor;
+/** Loading Screen **/
+
+.loading-background {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  z-index: 5;
+  background: $body-bg;
+  @include animation(fadeIn 1s ease);
+
+  &::after {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    content: '';
+    z-index: 6;
+    @include background-image(radial-gradient(center, ellipse cover,  rgba(0,0,0,0) 0%,rgba(99,103,105,0.45) 100%));
   }
-  &:active {
-    background: darken($iconColor, 10%);
-  }
-  i {
-    color: $iconColor;
+
+  &.ng-hide {
+    @include animation(fadeOut 1s ease);
   }
 }
 
-@mixin header-button($headerColor) {
-  display: inline-block;
-  cursor: pointer;
-  padding: 10px;
-  border: 2px solid $headerColor;
-  color: $headerColor;
-  margin-top: 0;
-  @include border-radius(4px);
-
-  &:hover {
-    cursor: pointer;
-    background: $headerColor;
-    color: $white;
-  }
-}
-
-.global-alerts-container {
-  position: fixed;
-  top: 15px;
+.loading-container {
+  position: absolute;
+  top: 50%;
   left: 50%;
-  width: 50%;
-  margin-left: -25%;
-  z-index: 5000;
-
-  .alert {
-    box-shadow: 0 0px 4px rgba(0,0,0,0.2);
-  }
+  width: 400px;
+  height: 200px;
+  margin-left: -200px;
+  margin-top: -100px;
+  text-align: center;
 }
 
-.origami-left {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: url(/img/origami_left.png) top left no-repeat;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-.origami-right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: url(/img/origami_right.png) top right no-repeat;
-  width: 817px;
-  height: 547px;
-  z-index: -1;
-}
-
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none;
+.account {
+  @extend .dashboard;
+  overflow: scroll;
 }
 
 /* Scroll Bar */
+
 ::-webkit-scrollbar, ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
@@ -106,7 +87,8 @@ ul {
 }
 
 ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
-  background-color: darken($grayLight, 20%);
+  background-color: $gray-dark;
+
   @include border-radius(5px);
   @include box-shadow(rgba(0, 0, 0, 0.05) -1px 0 7px inset);
 }
@@ -119,347 +101,37 @@ ul {
   display: none;
 }
 
-body {
-  min-height: 100%;
-  margin: 0;
-  background-color: $bgColor;
-  font-family: 'Open Sans' !important;
-  overflow: hidden;
+/** Hint Branding **/
+
+.hint--primary {
+  @include hint-type($gray-darker);
 }
 
-.main-header {
-  padding: 0 20px;
-  .navbar {
-    margin-bottom: 0;
-    padding-right: 0;
-    .navbar-brand {
-      padding: 10px;
-    }
+.hint--success {
+  @include hint-type($brand-success);
+}
+
+.hint--error {
+  @include hint-type($brand-danger);
+}
+
+.hint--info {
+  @include hint-type($brand-primary);
+}
+
+.hint--top {
+  &::before {
+    margin-left: -6px;
   }
 }
 
-.roomba-wrap {
+/** Loading Bar Branding **/
 
-  & > .row {
-    margin: 0;
-  }
-  .header-actions {
-    position: relative;
-    padding: 15px 25px;
-    background: $grayDarker;
-  }
+#loading-bar .bar {
+  background: $brand-danger;
 }
 
-.market-filter {
-  .slider-container {
-    margin: 20px 20px 10px;
-    position:relative
-  }
-}
-
-
-$marketListBg: #333;
-.market-list {
-  background: lighten($marketListBg, 25%);
-  color: white;
-
-  .label-list-item {
-    text-align: center;
-    background-color: lighten($marketListBg, 10%) !important;
-  }
-
-  .label-list-item,
-  .listing-list-item {
-    padding: 10px 0;
-    cursor: pointer;
-    &:hover,
-    &.active {
-      background-color: $marketListBg !important;
-    }
-
-    &:active {
-      background-color: darken($marketListBg, 5%) !important;
-    }
-
-    i {
-      color: $grayLight;
-      cursor: pointer;
-
-      &:hover {
-        color: darken($grayLight, 5%);
-      }
-    }
-
-    .list-item-title {
-      &:hover {
-        text-decoration: underline;
-
-        i {
-          text-decoration: none;
-        }
-      }
-      i {
-        margin-left: 5px;
-      }
-    }
-
-    .progress {
-      margin-bottom: 0;
-    }
-  }
-}
-
-.market-details {
-  .details-header {
-    margin-bottom: $gutterWidth/2;
-    text-align: center;
-
-    & > div {
-      position: relative;
-      display: inline-block;
-    }
-    a {
-      font-size: 24px;
-    }
-    h3 {
-      @include header-button($blue);
-    }
-
-    span {
-      font-size: 24px;
-    }
-  }
-
-  .fields-editor {
-    input {
-      @include placeholder-style($white, 200, italic);
-    }
-    textarea {
-      @include flat-input(12px, 14px, 15px);
-    }
-
-    .typeahead.dropdown-menu {
-      left: 15px !important;
-    }
-  }
-
-  input {
-    @extend %input-edit;
-
-    &[readonly] {
-      background-color: #999;
-    }
-  }
-}
-
-.details-container {
-  padding: 0 10px;
-}
-
-.scroll-container {
-  position: relative;
-
-  .row {
-    margin: 0;
-  }
-
-  .scroll-wrap {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    padding: 20px 10px;
-  }
-}
-
-
-.group-editor {
-
-
-  &.model-editor {
-    h4.action {
-      @include header-button($blue);
-    }
-    .dropdown {
-      position: absolute;
-    }
-  }
-
-  .cell-view {
-    img {
-      margin: 15px;
-      display: block;
-      height: 100px;
-    }
-  }
-
-  .input-preview {
-    position: absolute;
-    left: 0;
-  }
-
-  .table-icon-action {
-    cursor: pointer;
-    font-size: 16px;
-    background: transparent;
-    text-align: center;
-    vertical-align: middle;
-    width: 35px;
-
-    &.table-icon-success {
-      @include icon-invert($green);
-    }
-
-    &.table-icon-error {
-      @include icon-invert($red);
-    }
-
-    &.table-icon-info {
-      @include icon-invert($blue);
-    }
-  }
-
-  .input-overlay {
-    color: $blue;
-  }
-
-  .table-input-action {
-    font-size: 10px;
-    position: absolute;
-    right: 0;
-    padding: 5px;
-    top: 5px;
-    color: white;
-    cursor: pointer;
-    @include border-radius(4px);
-  }
-
-  table {
-    padding: 15px;
-
-    td {
-      position: relative;
-    }
-
-    .hover-display {
-      display: none;
-      position: absolute;
-      left: 0;
-      top: 0;
-
-      i {
-        color: red;
-      }
-    }
-
-    tr:hover {
-
-      & > hover-display {
-        display: block;
-      }
-    }
-  }
-
-  input {
-    background: transparent;
-    color: $black;
-    width: 90%;
-
-    &:hover {
-      background: rgba(0, 0, 0, 0.1);
-    }
-  }
-}
-
-.status-btn-info {
-  @include tpBtnBg($blue);
-}
-
-.status-btn-success {
-  @include tpBtnBg($green);
-}
-
-.status-btn-error {
-   @include tpBtnBg($red);
- }
-
-.status-btn-warning {
-  @include tpBtnBg($orange);
-}
-
-.status-solid-info {
-  background: $blue;
-}
-
-.status-solid-success {
-  background: $green;
-}
-
-.status-solid-error {
-  background: $red;
-}
-
-.status-solid-warning {
-  background: $orange;
-}
-
-.status-text-info {
-  color: $blue !important;
-}
-
-.status-text-success {
-  color: $green !important;
-}
-
-.status-text-warning, .status-text-2 {
-  color: $orange !important;
-}
-
-.status-text-error {
-  color: $red !important;
-}
-
-.edited {
-  font-weight: bold;
-  
-  &:before {
-    content: "* "
-  }
-}
-
-.modal {
-  display: block;
-  height: 526px;
-}
-
-.modal-footer {
-  margin-top: 0;
-}
-
-.icon-btn {
-  display:inline-block;
-  position: relative;
-  vertical-align: middle;
-  margin: 5px;
-  padding: 10px;
-  color: $blue;
-  background: transparent;
-  cursor: pointer;
-  font-size: 13px !important;
-
-  &:hover {
-    text-decoration: none;
-    background: $blue;
-    color: white;
-  }
-}
-
-.icon-btn-success {
-  color: $green;
-
-  &:hover {
-    background: $green;
-  }
+#loading-bar .peg {
+  @include box-shadow(none !important);
+  @include box-shadow(#{0 0 10px $brand-primary, 0 0 5px $brand-primary});
 }

@@ -1,0 +1,138 @@
+.accordion {
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* For accordion animations look @ core/animations module */
+.accordion--expanded {
+  margin: $grid-gutter-width 0;
+
+  > .accordion__body {
+//    padding: $grid-gutter-width;
+  }
+
+  > .accordion__footer {
+    display: block;
+  }
+}
+
+.accordion--expanded-motionless {
+  > .accordion__body {
+    padding: $grid-gutter-width;
+  }
+
+  > .accordion__footer {
+    display: block;
+  }
+}
+
+.accordion__header {
+  padding: 15px $grid-gutter-width;
+  line-height: 1;
+}
+
+.accordion__header--fixed-height {
+  padding: 15px $grid-gutter-width;
+  line-height: 25px;
+}
+
+.accordion__body {
+  background: white;
+  color: $gray-darker;
+}
+
+.accordion__footer {
+  display: none;
+}
+
+
+/* MODIFIERS */
+.accordion--primary {
+  background: $brand-primary;
+  color: $white;
+  border-bottom: 1px solid adjust_hue(darken($brand-primary, 15%), 7%);
+  border-top: 1px solid rgba(252, 252, 252, 0.5);
+  > .accordion__header:hover {
+    background: darken($brand-primary, 10%);
+  }
+}
+.accordion--white {
+  border-top: 1px solid rgba(252, 252, 252, 0.5);
+
+  > .accordion__header {
+    border-bottom: 1px solid adjust_hue(darken($gray-light, 15%), 7%);
+    color: $gray-dark;
+    background: $gray-lighter;
+  }
+  > .accordion__header:hover {
+    background: darken($gray-lighter, 10%);
+  }
+  > .ani-accordion {
+    background: $almost-white;
+//    border-left: 1px solid adjust_hue(darken($gray, 15%), 7%);
+//    border-right: 1px solid adjust_hue(darken($gray, 15%), 7%);
+    > .accordion__body {
+
+    }
+  }
+}
+.accordion--inverse {
+  border-top: 1px solid rgba(252, 252, 252, 0.5);
+
+  > .accordion__header {
+    border-bottom: 1px solid adjust_hue(darken($gray-dark, 15%), 7%);
+    color: $gray-lighter;
+    background: $gray;
+  }
+  > .accordion__header:hover {
+    background: darken($gray, 10%);
+  }
+  > .ani-accordion {
+    background: $gray-light;
+//    border-left: 1px solid adjust_hue(darken($gray, 15%), 7%);
+//    border-right: 1px solid adjust_hue(darken($gray, 15%), 7%);
+    > .accordion__body {
+
+    }
+  }
+}
+.accordion--success{
+  border-top: 1px solid rgba(252, 252, 252, 0.5);
+
+  > .accordion__header {
+    border-bottom: 1px solid adjust_hue(darken($state-success-bg, 15%), 7%);
+    color: $gray;
+    background: $state-success-bg;
+  }
+  > .accordion__header:hover {
+    background: darken($state-success-bg, 10%);
+  }
+  > .ani-accordion {
+    background: $almost-white;
+    //    border-left: 1px solid adjust_hue(darken($gray, 15%), 7%);
+    //    border-right: 1px solid adjust_hue(darken($gray, 15%), 7%);
+    > .accordion__body {
+
+    }
+  }
+}
+.accordion--danger {
+  border-top: 1px solid rgba(252, 252, 252, 0.5);
+
+  > .accordion__header {
+    border-bottom: 1px solid adjust_hue(darken($state-danger-bg, 15%), 7%);
+    color: $gray;
+    background: $state-danger-bg;
+  }
+  > .accordion__header:hover {
+    background: darken($state-danger-bg, 10%);
+  }
+  > .ani-accordion {
+    background: $almost-white;
+    //    border-left: 1px solid adjust_hue(darken($gray, 15%), 7%);
+    //    border-right: 1px solid adjust_hue(darken($gray, 15%), 7%);
+    > .accordion__body {
+
+    }
+  }
+}

@@ -1,20 +1,20 @@
 /**
  * Created with JetBrains WebStorm.
- * User: spencer
- * Date: 8/28/13
- * Time: 9:08 AM
- * To change this template use File | Settings | File Templates.
+ * User: hvnt
+ * Date: 5/13/14
+ * Time: 9:43 AM
+ * File:
  */
 
 'use strict';
 
-describe('roomba.app', function() {
+describe('rescour.roomba', function() {
 
     beforeEach(function() {
-        module('roomba.app');
+        module('rescour.roomba');
     });
 
-    it('should be 1', function() {
+    it('should run a test', function() {
         expect(1).toBe(1);
     });
 });

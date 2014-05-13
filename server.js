@@ -34,7 +34,7 @@ ignorePaths = [
     '/listings', '/listings*',
     '/market', '/market*',
     '/account', '/account*',
-    '/login', '/login*'
+    '/login', '/login*',
 ];
 
 app.get(ignorePaths, function (req, res) {

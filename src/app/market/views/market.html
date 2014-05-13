@@ -1,216 +1,30 @@
-<header class="main-header">
-    <div class="navbar">
-        <ul class="nav navbar-nav">
-            <li class="navbar-brand"><img src="/img/icon-fitted-small.png" height="30" alt=""/></li>
-            <li ng-class="{'active': collection.key  == 'listings'}"><a href="/market/listings">Listings</a></li>
-            <li ng-class="{'active': collection.key == 'news'}"><a href="/market/news">News</a></li>
-            <li ng-class="{'active': collection.key == 'contacts'}"><a href="/market/contacts">Contacts</a></li>
-            <li></li>
-        </ul>
+<header class="main-header" ng-controller="AppCtrl">
+    <a ng-click="globalReset()" class="main-logo">
+        <img class="main-logo__img" src="/assets/img/logo-fitted.png" alt="REscour"/>
+    </a>
+    <ul class="header-nav">
+        <li class="header-nav__item">
+            <div class="search">
+                <span class="input-prepend-btn"><i class="fa fa-search"></i></span>
+                <input class="search__input" ng-model="searchText.title" placeholder="Search by Title" type="text"/>
+            </div>
+        </li>
+        <li class="header-nav__item header-nav__item--large">
+            <div class="switch-toggle switch-candy">
+                <input id="mapSwitch" name="view" type="radio" ng-checked="$state.current.data.view == 'map'">
+                <label for="mapSwitch" ng-click="$state.go('market.mdu.list.map')">Map</label>
 
-        <div class="btn-group pull-right">
-            <button type="button" ng-click="newItem()" class="btn btn-info hint--left hint--bounce"
-                    data-hint="New {{ collection.title }}">
-                <i class="icon-plus-sign"></i>
-            </button>
-        </div>
-    </div>
+                <input id="reportSwitch" name="view" type="radio" ng-checked="$state.current.data.view == 'report'">
+                <label for="reportSwitch" ng-click="$state.go('market.mdu.report.grid')">Report</label>
+                <a></a>
+            </div>
+        </li>
+    </ul>
+    <ul class="header-nav pull-right">
+        <li class="header-nav__item header-nav__item--active"><a href="/market">Market</a></li>
+        <li class="header-nav__item header-nav__item--danger"><a href="javascript:" ng-click="openFeedbackModal()">Feedback</a></li>
+        <li class="header-nav__item hint--left" data-hint="Account"><a href="/account"><i class="fa fa-user header-nav__icon-btn"></i></a></li>
+        <li class="header-nav__item hint--left" data-hint="Logout"><a href="/logout"><i class="fa fa-power-off header-nav__icon-btn"></i></a></li>
+    </ul>
 </header>
-
-<div class="roomba-wrap">
-<div class="row">
-<div ui-if="!marketView.collapseFilters" class="col-lg-2 market-filter">
-    <div class="row">
-        <div class="col-lg-12 header-actions">
-            <div class="btn-group">
-                <button type="button" class="btn btn-danger dropdown-toggle hint--right hint--info hint--bounce"
-                        ng-click="marketView.collapseFilters = true" data-hint="Collapse">
-                    <i class="icon-remove"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="row scroll-container">
-        <ul class="filter-list">
-            <li class="filter-list__item header-search">
-                <div class="input-dd">
-                    <input class="input-dd__input" type="text" placeholder="Search by {{ activeSearch.title }}"
-                           ng-model="searchBy[activeSearch.key]"/>
-
-                    <div class="input-dd__btn input-dd__btn--right" dropdown-toggle><i class="icon-caret-down"></i>
-                    </div>
-                    <ul class="dd-menu">
-                        <li class="dd-menu__item" ng-click="setSearchCriteria()"><a href="javascript:">Any</a></li>
-                        <li class="dd-menu__item"
-                            ng-class="{'active': field.key == activeSearch.key}"
-                            ng-repeat="field in collection.fields | orderBy: '-weight'"
-                            ng-click="setSearchCriteria(field)">
-                            <a href="javascript:">{{field.title}}</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <!--Range sliders-->
-            <li class="filter-list__item" ng-repeat="range in dimensions.getRange() | orderBy:orderByWeight()"
-                ng-if="!range.hidden">
-                <header>
-                    <h3>
-                        {{range.title}} &nbsp; <i class="fa fa-minus-circle" ng-show="range.excludeNA"></i>
-                            <span>{{range.lowSelected}} - {{range.highSelected | checkHighBound:range.highBound}}
-                        </span>
-                    </h3>
-                </header>
-
-                <div slider></div>
-            </li>
-            <!--Discrete Filters-->
-            <li class="filter-list__item"
-                ng-repeat="discrete in dimensions.getDiscrete() | orderBy:orderByWeight()">
-                <header ng-click="discrete.collapse = !discrete.collapse">
-                    <h3 ng-class="{'collapsed': discrete.collapse}">{{discrete.title}}
-                        <span>
-                            <i ng-class="{'icon-chevron-up': !discrete.collapse, 'icon-chevron-down': discrete.collapse}"></i>
-                        </span>
-                    </h3>
-                </header>
-
-                <ul collapse="discrete.collapse">
-                    <li ng-class="{'active': value.isSelected }" ng-repeat="value in discrete.values"
-                        ng-click="toggleDiscrete(discrete, value)">
-                        <a href="javascript:">
-                            {{value.title | ellipsis:26}}
-                        </a>
-
-                        <div class="badge badge--{{ value.badge }}" ui-if="!discrete.multi">{{value.predict}}</div>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
-<div class="market-list col-lg-4"
-     ng-controller="MarketListCtrl">
-    <div class="row">
-        <div class="col-lg-12 header-actions">
-            <div class="btn-group">
-                <button type="button" ui-if="marketView.collapseFilters"
-                        class="btn btn-info hint--bottom hint--info hint--bounce"
-                        ng-click="marketView.collapseFilters = false" data-hint="Expand Search">
-                    <i class="icon-search"></i>
-                </button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-inverse dropdown-toggle hint--top hint--info hint--bounce"
-                        data-hint="Sort">
-                    <i class="icon-sort"></i>
-                </button>
-                <ul class="dropdown-menu">
-                    <li ng-class="{'active': isActive}" ng-repeat="(sortField, isActive) in sortFields">
-                        <a href="javascript:" ng-click="setSortField(sortField)">{{ sortField }}</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="btn-group pull-right">
-                <button class="btn hint--top hint--info hint--bounce" data-hint="Publish Selected"
-                        ng-click="publishSelected()">
-                    <i class="icon-cloud-upload"></i>
-                </button>
-                <button class="btn btn-danger hint--bottom hint--error hint--bounce"
-                        ng-click="unpublishSelected()"
-                        data-hint="Un Publish Selected">
-                    <i class="icon-cloud"></i>
-                </button>
-                <button class="btn btn-success hint--top hint--success hint--bounce"
-                        data-hint="Save Selected"
-                        ng-click="saveSelected()">
-                    <i class="icon-save"></i>
-                </button>
-                <button class="btn btn-danger hint--bottom hint--error hint--bounce"
-                        ng-click="flagSelected()"
-                        data-hint="Flag Selected">
-                    <i class="icon-flag"></i>
-                </button>
-            </div>
-
-        </div>
-    </div>
-    <div class="scroll-container">
-        <div class="scroll-wrap"
-             chunk="filteredItems = (items | filter:searchBy[activeSearch.key] | orderBy:sortBy)"
-             chunk-size="100" spinner="loadingItemsSpinner">
-
-            <div class="row label-list-item" ng-click="toggleSelectAll()">
-                Select {{ filteredItems.length }} items
-            </div>
-            <div class="row listing-list-item" ng-class="{'active': item.isActive}" ng-repeat="item in chunk">
-                <div class="col-lg-1 col-sm-1 col-1"><input type="checkbox" ng-model="item.isSelected"/></div>
-
-                <div class="col-lg-9 col-sm-6 col-6 list-item-title" ng-class="{'edited': hasTag(item, 'edited')}"
-                     ng-click="openDetails(item)">
-                    {{item.title}}
-                    <i class="icon-flag status-text-error" ng-show="hasTag(item, 'flagged')"></i>
-                    <i class="icon-cloud status-text-info" ng-show="hasTag(item, 'published')"></i>
-                    <i class="icon-warning-sign status-text-warning" ng-show="item.hasPageConflict()"></i>
-                </div>
-                <div class="col-lg-2 col-sm-3 col-3">
-                    <div class="progress progress-striped">
-                        <div class="progress-bar {{ item.progressClass }}"
-                             ng-style="{width: item.calcFillPercent()}"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div ng-class="(marketView.collapseFilters && 'col-lg-8' || 'col-lg-6')" class="market-details"
-     ng-controller="DetailsCtrl">
-    <div class="row">
-        <div class="col-lg-12 header-actions">
-            <div class="btn-group pull-left" ui-if="collection.key  == 'listings'">
-                <a class="btn btn-info hint--bottom hint--info" data-hint="Join Property With"
-                   ng-click="openJoinDialog()"
-                   ng-class="{'disabled': !activeItem}">
-                    <i class="icon-exchange"></i>
-                </a>
-            </div>
-            <div class="btn-group pull-left" ui-if="collection.key  == 'listings'"
-                    style="margin-left:20px;">
-                <a class="btn btn-danger hint--top hint--error hint--bounce"
-                   data-hint="Tax Assessor"
-                   ui-if="!activeItem.edited.assessorUrl"
-                   ng-click="findMyAssessor(activeItem)"
-                   ng-class="{'disabled': !activeItem.edited.county || activeItem.state == 'None'}">
-                    Find my Assessor!
-                </a>
-                <a class="btn btn-default hint--top hint--info hint--bounce"
-                   data-hint="Tax Assessor"
-                   ui-if="activeItem.edited.assessorUrl"
-                   ng-click="visitMyAssessor(activeItem)"
-                   ng-class="{'disabled': !activeItem}">
-                    Visit my Assessor
-                </a>
-            </div>
-            <div class="btn-group pull-left" ui-if="collection.key  == 'news'">
-                <a class="btn btn-info hint--bottom hint--info" data-hint="Duplicate News Item"
-                   ng-click="duplicateNewsItem(activeItem)"
-                   ng-class="{'disabled': !activeItem}">
-                    <i class="icon-copy"></i>
-                </a>
-            </div>
-            <div class="btn-group pull-right">
-                <button class="btn btn-success btn-large btn-glossy" ng-click="saveItem(activeItem)"
-                        ng-class="{'disabled': !activeItem}">
-                    Save
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="scroll-container row" ng-show="activeItem" spinner="activeItem.$spinner" spinner-size="large">
-        <div class="scroll-wrap">
-            <div ng-include="srcListingDetails"></div>
-        </div>
-    </div>
-</div>
-</div>
-</div>
+<div ui-view autoscroll="false"></div>

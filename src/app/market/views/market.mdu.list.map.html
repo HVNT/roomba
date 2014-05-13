@@ -1,0 +1,64 @@
+<div class="powers">
+    <div class="power dropdown pull-right">
+        <div class="power__title" dropdown-toggle>
+            <i class="fa fa-globe"></i><span>{{tilesPower.title}}</span>
+        </div>
+
+        <ul class="dropdown__list">
+            <li ng-repeat="option in tilesPower.options"
+                ng-class="{'active': option.isSelected}"
+                ng-click="option.action()">
+                <a href="javascript:">{{ option.title }}</a>
+            </li>
+        </ul>
+    </div>
+    <div class="power hint--bottom"
+         data-hint="Toggle News"
+         ng-class="{'disabled': MarketState.map.isNewsDisabled(), 'power--primary': MarketState.map.isNewsToggled}"
+         ng-click="toggleNews()">
+        <div class="power__title">
+            <i class="fa fa-rss"></i><span>News</span>
+        </div>
+    </div>
+
+
+    <div class="power dropdown" ng-if="MarketState.map.isNewsToggled">
+        <div class="power__title" dropdown-toggle>
+            Category
+        </div>
+
+        <ul class="dropdown__list dropdown__list--large">
+            <li ng-repeat="value in newsDimensions.discrete.category.values"
+                ng-class="{'active': value.isSelected}"
+                ng-click="toggleNewsCategory($event, value)">
+                <a href="javascript:">{{ value.title }} <strong class="pull-right">({{ value.predict }})</strong></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="power dropdown" ng-if="MarketState.map.isNewsToggled">
+        <div class="power__title" dropdown-toggle>
+            {{ newsAgePower.title }}
+        </div>
+
+        <ul class="dropdown__list">
+            <li ng-repeat="option in newsAgePower.options"
+                ng-class="{'active': option.isSelected}"
+                ng-click="option.action()">
+                <a href="javascript:">{{ option.title }}</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="power hint--bottom"
+         data-hint="Download Visible News"
+         ng-if="MarketState.map.isNewsToggled" ng-click="convertNewsToCSV()">
+        <div class="power__title">
+            <i class="fa fa-download"></i><span>Download</span>
+        </div>
+    </div>
+</div>
+
+<div class="map-wrap">
+    <div map></div>
+</div>

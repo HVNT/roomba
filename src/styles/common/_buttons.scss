@@ -1,0 +1,244 @@
+@import "variables";
+$btnBorderRadius: 5px;
+
+@mixin gloss($glossBr: $btnBorderRadius) {
+  &::after {
+    content: "";
+    width: 100%;
+    height: 60%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0.9;
+    @include background-image(linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.1)));
+    @include border-radius($glossBr);
+    @include transition(opacity 0.1s ease-out);
+  }
+
+  &:active {
+    &::after {
+      opacity: 0.3;
+    }
+  }
+
+  &.disabled:active,
+  &[disabled]:active {
+    &:after {
+      opacity: 0.9;
+    }
+  }
+}
+
+%btn-press {
+  &:active:not(.disabled) {
+    @include translate(0, 2px);
+  }
+
+  &.disabled:active,
+  &[disabled]:active {
+    @include translate(0, 0);
+  }
+}
+
+@mixin tpBtnBg($color, $fontColor: $white) {
+  color: $fontColor;
+  background: $color;
+  border: 1px solid $color;
+  text-shadow: 0 -1px 1px darken($color, 25%);
+  outline: 0;
+  @include gloss();
+  @include box-shadow(#{0px 3px 0px darken(adjust_hue($color, 7%), 13%), inset 0 1px 3px rgba(255, 255, 255, 0.3)});
+
+  &:hover:not(:active) {
+    background: lighten($color, 5%);
+    color: $fontColor;
+  }
+
+  &:active {
+    color: $fontColor;
+    background: $color;
+    @include box-shadow(#{0px 1px 0px darken(adjust_hue($color, 7%), 13%), inset 0 1px 1px transparent});
+  }
+
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:active,
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:hover {
+    background: $color;
+    cursor: default;
+    opacity: 0.45;
+    box-shadow: none;
+  }
+}
+
+@mixin tpBtn($color: $baseColor, $fontColor: $white) {
+  position: relative;
+  display: inline-block;
+  font-size: $font-size-base;
+  line-height: $line-height;
+  text-align: center;
+  padding: 0.5em 2em;
+  cursor: pointer;
+  @include border-radius($btnBorderRadius);
+  @include box-sizing(border-box);
+  @include tpBtnBg($color);
+}
+
+.btn {
+  @include tpBtn($btn-primary-bg);
+  @extend %btn-press;
+
+  &.btn-small {
+    font-size: $font-size-base - 2px;
+    line-height: $line-height - 2px;
+  }
+
+  &.btn-large {
+    font-size: $font-size-base + 2px;
+    line-height: normal;
+  }
+
+  &.btn-primary {
+    @include tpBtnBg($btn-primary-bg);
+  }
+
+  &.btn-warning {
+    @include tpBtnBg($btn-warning-bg);
+  }
+  // Danger and error appear as red
+  &.btn-danger {
+    @include tpBtnBg($btn-danger-bg);
+  }
+  // Success appears as green
+  &.btn-success {
+    @include tpBtnBg($btn-success-bg);
+  }
+  // Info appears as a neutral blue
+  &.btn-info {
+    @include tpBtnBg($btn-info-bg);
+  }
+  // Inverse appears as dark gray
+  &.btn-inverse {
+    @include tpBtnBg($btn-inverse-bg);
+  }
+}
+
+// Cross-browser Jank
+// --------------------------------------------------
+
+button.btn,
+input[type="submit"].btn {
+
+  // Firefox 3.6 only I believe
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
+
+  // IE7 has some default padding on button controls
+  *padding-top: 3px;
+  *padding-bottom: 3px;
+  &.btn-large {
+    *padding-top: 7px;
+    *padding-bottom: 7px;
+  }
+  &.btn-small {
+    *padding-top: 3px;
+    *padding-bottom: 3px;
+  }
+  &.btn-mini {
+    *padding-top: 1px;
+    *padding-bottom: 1px;
+  }
+}
+
+@mixin icon-action($color: $brand-primary) {
+  color: $color;
+  cursor: pointer;
+  &:hover {
+    color: darken($color, 10%);
+  }
+}
+
+.icon-action {
+  @include icon-action($gray);
+}
+
+.icon-action--primary {
+  @include icon-action($brand-primary);
+}
+
+.icon-action--white {
+  @include icon-action($white);
+}
+
+.icon-action--yellow {
+  @include icon-action($yellow);
+}
+
+.icon-action--danger {
+  @include icon-action($brand-danger);
+}
+
+.icon-action--warning {
+  @include icon-action($brand-warning);
+}
+
+.icon-action--success {
+  @include icon-action($brand-success);
+}
+
+@mixin icon-btn-bg($color: $brand-primary) {
+  color: $color;
+  &:hover {
+    background: $color;
+  }
+
+  &:active {
+    background: darken($color, 10%);
+  }
+}
+
+.icon-btn {
+  cursor: pointer;
+  padding: $padding-small-horizontal;
+  @include icon-btn-bg($gray);
+
+  &:hover {
+    color: $white;
+  }
+}
+
+.icon-btn--danger {
+  @include icon-btn-bg($brand-danger);
+}
+
+.icon-btn--success {
+  @include icon-btn-bg($brand-success);
+}
+
+.icon-btn--primary {
+  @include icon-btn-bg($brand-primary);
+}
+
+.icon-btn--white {
+  @include icon-btn-bg($white);
+}
+
+.btn--square {
+  font-size: 24px;
+  width: 35px;
+  padding: 5px;
+}
+
+.text-btn {
+  cursor: pointer;
+  @include transition(text-shadow 0.3s ease-out);
+  &:hover {
+    cursor: pointer;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.55);
+    @include transition(text-shadow 0.3s ease-out);
+  }
+}

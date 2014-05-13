@@ -1,0 +1,273 @@
+.toggler {
+  position: relative;
+
+  &.toggled {
+    .collapse {
+      opacity: 0;
+    }
+  }
+
+  &.toggled.toggler--inverse {
+    > .toggler__header {
+      color: $gray;
+    }
+  }
+}
+
+.toggler__header {
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  padding: $grid-gutter-width * 3 / 4 $grid-gutter-width;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  line-height: 1;
+  background: $gray-lighter;
+  color: $gray-dark;
+  @include box-shadow(0 2px rgba(0, 0, 0, 0.3));
+  @include transition(all 0.1s ease-out);
+
+  &:hover {
+    background: lighten($gray-lighter, 2%);
+    color: darken($gray-dark, 5%);
+  }
+  &:active {
+    background: darken($gray-lighter, 2%);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    @include transition(all 0.1s ease-out);
+  }
+}
+
+.toggler__body {
+  @extend .inner-container;
+}
+
+.toggler__list {
+  padding: ($grid-gutter-width / 2) 0;
+  > li {
+    position: relative;
+    cursor: pointer;
+    padding: ($grid-gutter-width/4) $grid-gutter-width;
+
+    &:hover, &.active {
+      background: rgba(0, 0, 0, 0.3);
+      > a {
+        color: white;
+      }
+    }
+
+    &.active {
+      border-left: 5px solid $brand-primary;
+      @include box-shadow(#{inset 0 1px 1px rgba(0, 0, 0, 0.3)});
+      > a {
+        font-weight: bold;
+      }
+    }
+
+    &:active {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    > .badge {
+      position: absolute;
+      // Same as list padding, but -1 for shadow
+      top: ($grid-gutter-width/4) - 1;
+      right: $grid-gutter-width;
+    }
+  }
+}
+
+.toggler__list--segmented {
+  padding: 0 ($grid-gutter-width / 2);
+  > li {
+    position: relative;
+    cursor: pointer;
+    &.active {
+      border-left: 5px solid $brand-primary;
+      @include box-shadow(#{inset 0 1px 1px rgba(0, 0, 0, 0.3)});
+      > a {
+        font-weight: bold;
+      }
+    }
+
+    > .badge {
+      position: absolute;
+      // Same as list padding, but -1 for shadow
+      top: ($grid-gutter-width/4) - 1;
+      right: $grid-gutter-width;
+    }
+
+    .toggler__segment {
+      padding: $grid-gutter-width * 3 / 4 $grid-gutter-width;
+      &:hover {
+        background: rgba(0, 0, 0, 0.3);
+        > a {
+          color: white;
+        }
+      }
+    }
+
+    .toggler__segment--danger {
+      &:hover, &.active {
+        background: $brand-danger;
+        color: $state-danger-bg;
+        > a {
+          color: $state-danger-bg;
+        }
+      }
+    }
+    .toggler__segment--success {
+      &:hover, &.active {
+        background: $brand-success;
+        color: $state-success-bg;
+        > a {
+          color: $state-success-bg;
+        }
+      }
+    }
+
+  }
+}
+
+
+.toggler--info {
+  > .toggler__header {
+    color: $state-info-text;
+    background: $state-info-bg;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    @include box-shadow(0 2px darken($state-info-bg, 5%));
+
+    &:hover {
+      color: lighten($state-info-text, 5%);
+    }
+
+    &:active {
+      background: darken($state-info-bg, 5%);
+    }
+
+  }
+
+  > .toggler__list {
+    color: $gray-lighter;
+    text-shadow: 0 -1px 1px darken($gray-darker, 25%);
+  }
+}
+
+.toggler--primary {
+  background: $state-info-bg;
+  > .toggler__header {
+    color: $white;
+    background: $brand-primary;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    @include box-shadow(0 2px darken($brand-primary, 10%));
+
+    &:hover {
+      background: lighten($brand-primary, 5%);
+    }
+
+    &:active {
+      background: darken($brand-primary, 1%);
+    }
+
+  }
+
+  > .toggler__list,
+  .toggler__body {
+    color: $gray-dark;
+    text-shadow: 0 1px $white;
+  }
+}
+
+.toggler--inverse {
+  background: $gray-darker;
+  > .toggler__header {
+    color: $gray-light;
+    background: $gray-dark;
+    text-shadow: 0 1px $gray-darker;
+    @include box-shadow(0 2px darken($gray-dark, 10%));
+
+    &:hover {
+      color: $gray-lighter;
+    }
+
+    &:active {
+      background: darken($gray-dark, 5%);
+    }
+  }
+
+  > .toggler__list,
+  .toggler__body {
+    color: $gray-lighter;
+    text-shadow: 0 -1px 1px darken($gray-darker, 25%);
+  }
+}
+
+.toggler--success {
+  background: $state-success-bg;
+  > .toggler__header {
+    color: $white;
+    background: $brand-success;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    @include box-shadow(0 2px darken($brand-success, 10%));
+
+    &:hover {
+      background: lighten($brand-success, 5%);
+    }
+
+    &:active {
+      background: darken($brand-success, 5%);
+    }
+
+  }
+
+  > .toggler__list,
+  .toggler__body {
+
+    color: $gray-dark;
+  }
+}
+
+.toggler--danger {
+  background: $state-danger-bg;
+  > .toggler__header {
+    color: $white;
+    background: $brand-danger;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    @include box-shadow(0 2px darken($brand-danger, 10%));
+
+    &:hover {
+      background: lighten($brand-danger, 5%);
+    }
+
+    &:active {
+      background: darken($brand-danger, 5%);
+    }
+  }
+
+  > .toggler__list,
+  .toggler__body {
+    color: $gray-dark;
+  }
+}
+
+.toggler--warning {
+  background: $state-warning-bg;
+  > .toggler__header {
+    color: $white;
+    background: $brand-warning;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    @include box-shadow(0 2px darken($brand-warning, 10%));
+
+    &:hover {
+      background: lighten($brand-warning, 5%);
+    }
+
+    &:active {
+      background: darken($brand-warning, 5%);
+    }
+  }
+
+  > .toggler__list,
+  .toggler__body {
+    color: $gray-dark;
+  }
+}

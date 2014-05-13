@@ -1,10 +1,10 @@
 /**
  * Created with JetBrains WebStorm.
- * User: apledger
- * Date: 4/24/13
- * Time: 9:43 PM
+ * User: hvnt
+ * Date: 5/13/14
+ * Time: 9:43 AM
  * File:
  */
 
 
-angular.bootstrap(document, ['roomba.app']);
+angular.bootstrap(document, ['rescour.roomba']);

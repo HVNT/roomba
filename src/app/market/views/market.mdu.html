@@ -1,0 +1,118 @@
+<div class="market"
+     ng-class="{'market--collapsed-left': MarketState.filterCollapsed,
+                'market--collapsed-middle': MarketState.listCollapsed}">
+
+    <!--FILTERS BEGIN-->
+    <div class="market__box market__box--left bg-solid--inverse" ng-controller="FilterCtrl">
+        <div class="powers">
+            <div class="power" ng-class="{'power--primary': MarketState.filterCollapsed}"
+                 ng-click="toggleFilterCollapsed()">
+                <div class="power__title">
+                    <i class="fa"
+                       ng-class="{'fa-chevron-right': MarketState.filterCollapsed,
+                                  'fa-chevron-left': !MarketState.filterCollapsed}"></i>
+                </div>
+            </div>
+            <div class="power hint--top"
+                 data-hint="Reset Search"
+                 ng-click="loadSearch()">
+                <div class="power__title">
+                    <i class="fa fa-refresh"></i>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-container">
+            <div class="input-dropdown dropdown">
+                <div class="input-dropdown__overlay input-dropdown__overlay--blue input-dropdown__overlay--action"
+                     ng-show="dimensions.modified" ng-click="saveSearch()">
+                    Click to Save
+                    <div class="input-dropdown__btn input-dropdown__btn--left" ng-click="refreshSearch($event)">
+                        <i class="fa fa-times"></i>
+                    </div>
+                </div>
+
+                <div class="input-dropdown__overlay input-dropdown__overlay--gray input-dropdown__overlay--default"
+                     ng-hide="selectedSearch || dimensions.modified">
+                    My Searches
+                </div>
+
+                <input class="input-dropdown__input"
+                       type="text"
+                       placeholder="Untitled Search"
+                       ng-model="dimensions.title" saved-search-input ng-readonly="dimensions.readonly"/>
+
+                <!--Dropdown Menu-->
+                <div class="input-dropdown__btn input-dropdown__btn--right input-dropdown__btn--toggle" dropdown-toggle>
+                    <i
+                            class="fa fa-caret-down"></i></div>
+
+                <ul class="dropdown__list">
+                    <li ng-click="loadSearch()"><i class="fa fa-file-text"></i><a href="javascript:">New
+                        Search</a></li>
+                    <div class="divider"></div>
+                    <li ng-repeat="search in savedSearches | orderBy: 'title'"
+                        ng-class="{'active': search.isSelected}"
+                        ng-click="loadSearch(search)">
+                        <a href="javascript:">{{search.title}}</a>
+
+                        <div class="dropdown__item-btn" ng-click="deleteSearch(search, $event)">
+                            <i class="fa fa-times" ng-hide="search.$spinner"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!--Range Filters-->
+            <div class="toggler toggler--inverse" ng-repeat="range in dimensions.getRange() | orderBy:orderByWeight()"
+                 ng-if="!range.hidden">
+                <header class="toggler__header hint--info hint--top"
+                        ng-click="toggleNA(range)"
+                        data-hint="{{ range.excludeNA && 'Show NA' || 'Hide NA' }}">
+                    <h6 class="caps">
+                        {{ range.title }} &nbsp;
+                        <i class="fa fa-minus-circle" ng-show="range.excludeNA"></i>
+
+                        <span class="pull-right">
+                            {{ range.lowSelected | integer }} - {{ range.highSelected | integer | checkBounds:range.highBound }}
+                        </span>
+                    </h6>
+                </header>
+                <div class="toggler__body">
+                    <div class="slider" slider></div>
+                </div>
+            </div>
+
+            <!--Discrete Filters-->
+            <div class="toggler toggler--inverse"
+                 ng-repeat="discrete in dimensions.getDiscrete() | orderBy:orderByWeight()"
+                 ng-class="{'toggled': discrete.collapse}">
+
+                <header class="toggler__header"
+                        ng-click="discrete.collapse = !discrete.collapse">
+
+                    <h6 class="caps">
+                        {{discrete.title}}
+                        <span class="pull-right">
+                            <i ng-class="{'fa fa-chevron-up': !discrete.collapse, 'fa fa-chevron-down': discrete.collapse}"></i>
+                        </span>
+                    </h6>
+                </header>
+
+                <ul class="toggler__list" collapse="discrete.collapse">
+                    <li ng-class="{'active': value.isSelected }" ng-repeat="value in discrete.values"
+                        ng-click="filter(discrete, value)">
+                        {{value.title | ellipsis:26}}
+
+                        <span class="badge badge--{{value.badge}}">{{value.predict}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--FILTERS END-->
+
+    <!--LIST BEGIN-->
+    <div ui-view></div>
+    <!--LIST END-->
+
+</div>
