@@ -1,3 +1,18 @@
-yo ya bitch
+<div class="alert alert-dismissable"  ng-if="alert" ng-class="alert.class ? 'alert-' + alert.class : null">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"
+            ng-click="clearAlert()">&times;</button>
+    <strong>{{alert.class | capitalize}}!</strong> {{alert.msg}}
+</div>
+
+<header class="main-header">
+    <a href="/mduListings/stage" class="main-logo">
+        <img class="main-logo__img" src="/assets/img/logo-fitted.png" alt="REscour"/>
+    </a>
+    <ul class="header-nav pull-right">
+        <li class="header-nav__item header-nav__item--active"><a href="/mduListings/stage">Roomba</a></li>
+        <li class="header-nav__item hint--left" data-hint="Account"><a href="/account"><i class="fa fa-user header-nav__icon-btn"></i></a></li>
+        <li class="header-nav__item hint--left" data-hint="Logout"><a href="/logout"><i class="fa fa-power-off header-nav__icon-btn"></i></a></li>
+    </ul>
+</header>
 
 <div ui-view></div>

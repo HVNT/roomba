@@ -8,4 +8,3 @@ app/components
 .gitattributes
 libpeerconnection.log
 dist
-config.rb

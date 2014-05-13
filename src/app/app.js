@@ -72,20 +72,20 @@ angular.module('rescour.roomba',
             $rootScope.rootState.loaded = true;
         });
     })
-//    .controller('AppCtrl',
-//    function ($scope, $modal) {
-//        $scope.openFeedbackModal = function () {
-//            $modal.open({
-//                backdrop: true,
-//                keyboard: true,
-//                backdropClick: true,
-//                dialogFade: true,
-//                backdropFade: true,
-//                templateUrl: '/app/scrapes/templates/scrapes.modals.feedback.html?v=' + Date.now().feedback,
-//                controller: 'FeedbackModalCtrl'
-//            });
-//        };
-//    })
+    .controller('AppCtrl',
+    function ($scope, $modal) {
+        $scope.openFeedbackModal = function () {
+            $modal.open({
+                backdrop: true,
+                keyboard: true,
+                backdropClick: true,
+                dialogFade: true,
+                backdropFade: true,
+                templateUrl: '/app/scrapes/templates/scrapes.modals.feedback.html?v=' + Date.now().feedback,
+                controller: 'FeedbackModalCtrl'
+            });
+        };
+    })
     .controller('FeedbackModalCtrl',
     function ($scope, $http, $modalInstance, $timeout, Environment, User) {
         $scope.feedback = {

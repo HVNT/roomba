@@ -20,10 +20,8 @@ angular.module('rescour.roomba')
         $urlRouterProvider
             .when('/mduListings', '/mduListings/stage')
             .when('/mduListings/', '/mduListings/stage')
-            .when('/mduListings/stage/', '/mduListings/stage');
-//                .when('/scrapes/:scrapeId', '/scrapes/:scrapeId/unmatched')
-//                .when('/scrapes/:scrapeId/', '/scrapes/:scrapeId/unmatched')
-//                .when('/scrapes/:scrapeId/unmatched/', '/scrapes/:scrapeId/unmatched');
+            .when('/mduListings/stage/', '/mduListings/stage')
+            .when('/mduListings/review/', '/mduListings/review');
 
         $stateProvider
             .state('mduListings', {
@@ -46,39 +44,39 @@ angular.module('rescour.roomba')
                     }
                 }
             })
+
+            /* STAGE */
             .state('mduListings.stage', {
                 templateUrl: '/app/mduListings/stage/views/mduListings.stage.html',
                 url: '/stage',
                 controller: 'StageCtrl'
+            })
+            .state('mduListings.stage.todo.details', {
+                templateUrl: '/app/mduListings/stage/views/mduListings.stage.todo.details.html',
+                url: '/:itemId',
+                controller: 'StageToDoDetailsCtrl'
+            })
+            .state('mduListings.stage.done.details', {
+                templateUrl: '/app/mduListings/stage/views/mduListings.stage.done.details.html',
+                url: '/:itemId',
+                controller: 'StageDoneDetailsCtrl'
+            })
+
+            /* REVIEW */
+            .state('mduListings.review', {
+                templateUrl: '/app/mduListings/review/views/mduListings.review.html',
+                url: '/review',
+                controller: 'ReviewCtrl'
+            })
+            .state('mduListings.review.done.details', {
+                templateUrl: '/app/mduListings/review/views/mduListings.review.done.details.html',
+                url: '/:itemId',
+                controller: 'ReviewDoneDetailsCtrl'
+            })
+            .state('mduListings.review.production.details', {
+                templateUrl: '/app/mduListings/review/views/mduListings.review.production.details.html',
+                url: '/:itemId',
+                controller: 'ReviewProductionDetailsCtrl'
             });
-//                .state('scrapes.run', {
-//                    abstract: true,
-//                    url: '/:scrapeId',
-//                    controller: 'ScrapesRunCtrl',
-//                    templateUrl: '/app/scrapes/views/scrapes.run.html'
-//                })
-//                .state('scrapes.run.subset', {
-//                    url: '/:subset',
-//                    views: {
-//                        "left": {
-//                            templateUrl: function ($stateParams) {
-//                                return '/app/scrapes/views/scrapes.run.fragment-trees.' + $stateParams.subset + '.html'
-//                            },
-//                            controller: function($stateParams) {
-//                                // for camel casing
-//                                var subset = $stateParams.subset.charAt(0).toUpperCase() + $stateParams.subset.slice(1);
-//                                return 'ScrapesRun' + subset + 'FragmentTreesCtrl'
-//                            }
-//                        },
-//                        "right": {
-//                            templateUrl: function () {
-//                                return '/app/scrapes/views/scrapes.run.prototype-instances.html'
-//                            },
-//                            controller: function() {
-//                                return 'ScrapesRunPrototypeInstancesCtrl'
-//                            }
-//                        }
-//                    }
-//                })
 
     });

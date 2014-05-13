@@ -103,6 +103,36 @@ $collapsed-width: 51px;
   right: 0;
 }
 
+.dashboard__box-left-list {
+  top: 0;
+  left: 200px;
+  right: 50%;
+  bottom: 0;
+  position: absolute;
+}
+.dashboard__box-right-list {
+  top: 0;
+  left: 50%;
+  bottom: 0;
+  right: 200px;
+  position: absolute;
+}
+.dashboard__box--left-filter-col {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  position: absolute;
+}
+
+.dashboard__box--right-filter-col {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 200px;
+  position: absolute;
+}
+
 .dashboard__box--light {
   background: $white;
 }

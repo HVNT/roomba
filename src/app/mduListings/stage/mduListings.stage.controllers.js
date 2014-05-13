@@ -11,4 +11,12 @@ angular.module('rescour.roomba')
     .controller('StageCtrl',
     function ($scope) {
 
+    })
+    .controller('StageToDoDetailsCtrl',
+    function ($scope) {
+
+    })
+    .controller('StageDoneDetailsCtrl',
+    function ($scope) {
+
     });

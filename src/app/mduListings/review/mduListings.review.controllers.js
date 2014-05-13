@@ -11,4 +11,12 @@ angular.module('rescour.roomba')
     .controller('ReviewCtrl',
     function ($scope) {
 
+    })
+    .controller('ReviewToDoDetailsCtrl',
+    function ($scope) {
+
+    })
+    .controller('ReviewDoneDetailsCtrl',
+    function ($scope) {
+
     });
