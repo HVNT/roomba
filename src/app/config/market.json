@@ -1,8 +1,8 @@
 {
-    "listings": {
-        "title": "Listings",
-        "key": "listings",
-        "path": "/listings/",
+    "mdu_listings": {
+        "title": "mdu_listings",
+        "key": "mdu_listings",
+        "path": "/mdu_listings/",
         "dimensions": {
             "discrete": {
                 "broker": {
@@ -46,12 +46,6 @@
                 "type": "textarea"
             },
             {
-                "title": "Year Built",
-                "weight": 3000,
-                "key": "yearBuilt",
-                "type": "text"
-            },
-            {
                 "title": "Page",
                 "weight": 2,
                 "key": "page",
@@ -69,11 +63,6 @@
                 "key": "broker"
             },
             {
-                "title": "# Units",
-                "weight": 10,
-                "key": "numUnits"
-            },
-            {
                 "title": "Flyer",
                 "weight": 9,
                 "key": "flyer"
@@ -87,18 +76,6 @@
                 "title": "Marketing URL",
                 "weight": 8,
                 "key": "marketingUrl"
-            },
-            {
-                "title": "Property Type",
-                "weight": 9,
-                "key": "propertyType",
-                "type": "typeahead",
-                "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes", "Portfolio"]
-            },
-            {
-                "title": "Acres",
-                "weight": 9,
-                "key": "acres"
             },
             {
                 "title": "Call For Offers",
@@ -120,9 +97,22 @@
                 "typeahead": ["Marketing", "Marketing - Past Due", "Under Contract", "Under LOI", "Sold", "Expired"]
             },
             {
+                "title": "Property Type",
+                "weight": 9,
+                "key": "mdu.propertyType",
+                "type": "typeahead",
+                "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes", "Portfolio"]
+            },
+            {
+                "title": "Year Built",
+                "weight": 3000,
+                "key": "mdu.yearBuilt",
+                "type": "text"
+            },
+            {
                 "title": "Address",
                 "weight": 2,
-                "key": "address",
+                "key": "mdu.address",
                 "fields": [
                     {
                         "title": "Street 1",
@@ -153,60 +143,39 @@
                 ]
             },
             {
+                "title": "# Units",
+                "weight": 10,
+                "key": "mdu.numUnits"
+            },
+            {
+                "title": "Acres",
+                "weight": 9,
+                "key": "mdu.acres"
+            },
+            {
                 "title": "County",
                 "weight": 1,
-                "key": "county"
+                "key": "mdu.county"
             },
             {
                 "title": "Assessor Url",
                 "weight": 0,
-                "key": "assessorUrl"
+                "key": "mdu.assessorUrl"
             }
         ],
         "models": [
             {
-                "title": "Comments",
-                "key": "comments",
-                "weight": 200,
+                "title": "Images",
+                "path": "/images/",
+                "key": "images",
                 "fields": [
                     {
-                        "key": "text",
-                        "title": "Text"
-                    }
-                ]
-            },
-            {
-                "title": "Unit Mix",
-                "key": "unitMix",
-                "weight": 100,
-                "fields": [
-                    {
-                        "key": "type",
-                        "title": "Type",
-                        "type": "typeahead",
-                        "typeahead": [
-                            "1 BR / 1 BA", "1 BR / 1.5 BA", "1 BR / 2 BA",
-                            "2 BR / 1 BA", "2 BR / 1.5 BA", "2 BR / 2 BA", "2 BR / 2.5 BA", "2 BR / 3 BA",
-                            "3 BR / 1 BA", "3 BR / 1.5 BA", "3 BR / 2 BA", "3 BR / 2.5 BA", "3 BR / 3 BA", "3 BR / 3.5 BA", "3 BR / 4 BA",
-                            "4 BR / 1 BA", "4 BR / 1.5 BA", "4 BR / 2 BA", "4 BR / 2.5 BA", "4 BR / 3 BA", "4 BR / 3.5 BA", "4 BR / 4 BA",
-                            "1 BR / 1 BA TH", "1 BR / 1.5 BA TH",  "1 BR / 2 BA TH",
-                            "2 BR / 1 BA TH", "2 BR / 1.5 BA TH", "2 BR / 2 BA TH", "2 BR / 2.5 BA TH", "2 BR / 3 BA TH",
-                            "3 BR / 1 BA TH", "3 BR / 1.5 BA TH", "3 BR / 2 BA TH", "3 BR / 2.5 BA TH", "3 BR / 3 BA TH", "3 BR / 3.5 BA TH", "3 BR / 4 BA TH",
-                            "4 BR / 1 BA TH", "4 BR / 1.5 BA TH", "4 BR / 2 BA TH", "4 BR / 2.5 BA TH", "4 BR / 3 BA TH", "4 BR / 3.5 BA TH", "4 BR / 4 BA TH",
-                            "Average", "Studio", "Efficiency"
-                        ]
+                        "key": "url",
+                        "title": "URL"
                     },
                     {
-                        "key": "units",
-                        "title": "Units"
-                    },
-                    {
-                        "key": "sqft",
-                        "title": "Sq Ft"
-                    },
-                    {
-                        "key": "rent",
-                        "title": "Rent"
+                        "key": "weight",
+                        "title": "Weight"
                     }
                 ]
             },
@@ -236,7 +205,7 @@
             {
                 "title": "Sales History",
                 "weight": 9,
-                "key": "salesHistory",
+                "key": "mdu.salesHistory",
                 "fields": [
                     {
                         "key": "date",
@@ -271,7 +240,7 @@
             {
                 "title": "Tax History",
                 "weight": 9,
-                "key": "taxHistory",
+                "key": "mdu.taxHistory",
                 "fields": [
                     {
                         "key": "year",
@@ -294,7 +263,7 @@
             {
                 "title": "News",
                 "weight": 9,
-                "key": "comps",
+                "key": "mdu.news",
                 "fields": [
                     {
                         "key": "link",
@@ -309,40 +278,39 @@
                         "title": "Body"
                     }
                 ]
-            }
-        ],
-        "resources": [
-            {
-                "title": "Contacts",
-                "key": "contacts",
-                "path": "/contacts/",
-                "fields": [
-                    {
-                        "key": "name",
-                        "title": "Name"
-                    },
-                    {
-                        "key": "email",
-                        "title": "Email"
-                    },
-                    {
-                        "key": "phone",
-                        "title": "Phone"
-                    }
-                ]
             },
             {
-                "title": "Images",
-                "path": "/images/",
-                "key": "images",
+                "title": "Unit Mix",
+                "key": "mdu.unitMix",
+                "weight": 100,
                 "fields": [
                     {
-                        "key": "url",
-                        "title": "URL"
+                        "key": "type",
+                        "title": "Type",
+                        "type": "typeahead",
+                        "typeahead": [
+                            "1 BR / 1 BA", "1 BR / 1.5 BA", "1 BR / 2 BA",
+                            "2 BR / 1 BA", "2 BR / 1.5 BA", "2 BR / 2 BA", "2 BR / 2.5 BA", "2 BR / 3 BA",
+                            "3 BR / 1 BA", "3 BR / 1.5 BA", "3 BR / 2 BA", "3 BR / 2.5 BA", "3 BR / 3 BA", "3 BR / 3.5 BA", "3 BR / 4 BA",
+                            "4 BR / 1 BA", "4 BR / 1.5 BA", "4 BR / 2 BA", "4 BR / 2.5 BA", "4 BR / 3 BA", "4 BR / 3.5 BA", "4 BR / 4 BA",
+                            "1 BR / 1 BA TH", "1 BR / 1.5 BA TH",  "1 BR / 2 BA TH",
+                            "2 BR / 1 BA TH", "2 BR / 1.5 BA TH", "2 BR / 2 BA TH", "2 BR / 2.5 BA TH", "2 BR / 3 BA TH",
+                            "3 BR / 1 BA TH", "3 BR / 1.5 BA TH", "3 BR / 2 BA TH", "3 BR / 2.5 BA TH", "3 BR / 3 BA TH", "3 BR / 3.5 BA TH", "3 BR / 4 BA TH",
+                            "4 BR / 1 BA TH", "4 BR / 1.5 BA TH", "4 BR / 2 BA TH", "4 BR / 2.5 BA TH", "4 BR / 3 BA TH", "4 BR / 3.5 BA TH", "4 BR / 4 BA TH",
+                            "Average", "Studio", "Efficiency"
+                        ]
                     },
                     {
-                        "key": "weight",
-                        "title": "Weight"
+                        "key": "units",
+                        "title": "Units"
+                    },
+                    {
+                        "key": "sqft",
+                        "title": "Sq Ft"
+                    },
+                    {
+                        "key": "rent",
+                        "title": "Rent"
                     }
                 ]
             }
