@@ -1,0 +1,351 @@
+{
+    "listings": {
+        "title": "Listings",
+        "key": "listings",
+        "path": "/listings/",
+        "dimensions": {
+            "discrete": {
+                "broker": {
+                    "title": "Broker",
+                    "weight": 10
+                },
+                "tags": {
+                    "title": "Tags",
+                    "weight": 10,
+                    "restrict": ["edited", "published", "raw", "unpublished", "flagged", "conflict"],
+                    "multi": true
+                },
+                "status": {
+                    "title": "Property Status",
+                    "weight": 5
+                },
+                "state": {
+                    "title": "State",
+                    "nested": "address",
+                    "weight": 5
+                }
+            },
+            "range": {
+                "numUnits": {
+                    "title": "# of Units",
+                    "weight": 5
+                }
+            }
+        },
+        "fields": [
+            {
+                "title": "Title",
+                "weight": 5000,
+                "key": "title",
+                "type": "text"
+            },
+            {
+                "title": "Comment",
+                "weight": 6000,
+                "key": "comment",
+                "type": "textarea"
+            },
+            {
+                "title": "Year Built",
+                "weight": 3000,
+                "key": "yearBuilt",
+                "type": "text"
+            },
+            {
+                "title": "Page",
+                "weight": 2,
+                "key": "page",
+                "type": "text"
+            },
+            {
+                "title": "Description",
+                "weight": 8,
+                "key": "description",
+                "type": "textarea"
+            },
+            {
+                "title": "Broker",
+                "weight": 10,
+                "key": "broker"
+            },
+            {
+                "title": "# Units",
+                "weight": 10,
+                "key": "numUnits"
+            },
+            {
+                "title": "Flyer",
+                "weight": 9,
+                "key": "flyer"
+            },
+            {
+                "title": "Price",
+                "weight": 8,
+                "key": "price"
+            },
+            {
+                "title": "Marketing URL",
+                "weight": 8,
+                "key": "marketingUrl"
+            },
+            {
+                "title": "Property Type",
+                "weight": 9,
+                "key": "propertyType",
+                "type": "typeahead",
+                "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes", "Portfolio"]
+            },
+            {
+                "title": "Acres",
+                "weight": 9,
+                "key": "acres"
+            },
+            {
+                "title": "Call For Offers",
+                "weight": 9,
+                "key": "callForOffers",
+                "type": "date"
+            },
+            {
+                "title": "Date Posted",
+                "weight": 9,
+                "key": "datePosted",
+                "type": "date"
+            },
+            {
+                "title": "Property Status",
+                "weight": 9,
+                "key": "status",
+                "type": "typeahead",
+                "typeahead": ["Marketing", "Marketing - Past Due", "Under Contract", "Under LOI", "Sold", "Expired"]
+            },
+            {
+                "title": "Address",
+                "weight": 2,
+                "key": "address",
+                "fields": [
+                    {
+                        "title": "Street 1",
+                        "key": "street1"
+                    },
+                    {
+                        "title": "City",
+                        "key": "city"
+                    },
+                    {
+                        "title": "State",
+                        "key": "state"
+                    },
+                    {
+                        "title": "Zip",
+                        "key": "zip"
+                    },
+                    {
+                        "title": "Latitude",
+                        "key": "latitude",
+                        "readonly": true
+                    },
+                    {
+                        "title": "Longitude",
+                        "key": "longitude",
+                        "readonly": true
+                    }
+                ]
+            },
+            {
+                "title": "County",
+                "weight": 1,
+                "key": "county"
+            },
+            {
+                "title": "Assessor Url",
+                "weight": 0,
+                "key": "assessorUrl"
+            }
+        ],
+        "models": [
+            {
+                "title": "Comments",
+                "key": "comments",
+                "weight": 200,
+                "fields": [
+                    {
+                        "key": "text",
+                        "title": "Text"
+                    }
+                ]
+            },
+            {
+                "title": "Unit Mix",
+                "key": "unitMix",
+                "weight": 100,
+                "fields": [
+                    {
+                        "key": "type",
+                        "title": "Type",
+                        "type": "typeahead",
+                        "typeahead": [
+                            "1 BR / 1 BA", "1 BR / 1.5 BA", "1 BR / 2 BA",
+                            "2 BR / 1 BA", "2 BR / 1.5 BA", "2 BR / 2 BA", "2 BR / 2.5 BA", "2 BR / 3 BA",
+                            "3 BR / 1 BA", "3 BR / 1.5 BA", "3 BR / 2 BA", "3 BR / 2.5 BA", "3 BR / 3 BA", "3 BR / 3.5 BA", "3 BR / 4 BA",
+                            "4 BR / 1 BA", "4 BR / 1.5 BA", "4 BR / 2 BA", "4 BR / 2.5 BA", "4 BR / 3 BA", "4 BR / 3.5 BA", "4 BR / 4 BA",
+                            "1 BR / 1 BA TH", "1 BR / 1.5 BA TH",  "1 BR / 2 BA TH",
+                            "2 BR / 1 BA TH", "2 BR / 1.5 BA TH", "2 BR / 2 BA TH", "2 BR / 2.5 BA TH", "2 BR / 3 BA TH",
+                            "3 BR / 1 BA TH", "3 BR / 1.5 BA TH", "3 BR / 2 BA TH", "3 BR / 2.5 BA TH", "3 BR / 3 BA TH", "3 BR / 3.5 BA TH", "3 BR / 4 BA TH",
+                            "4 BR / 1 BA TH", "4 BR / 1.5 BA TH", "4 BR / 2 BA TH", "4 BR / 2.5 BA TH", "4 BR / 3 BA TH", "4 BR / 3.5 BA TH", "4 BR / 4 BA TH",
+                            "Average", "Studio", "Efficiency"
+                        ]
+                    },
+                    {
+                        "key": "units",
+                        "title": "Units"
+                    },
+                    {
+                        "key": "sqft",
+                        "title": "Sq Ft"
+                    },
+                    {
+                        "key": "rent",
+                        "title": "Rent"
+                    }
+                ]
+            },
+            {
+                "title": "Tour Dates",
+                "key": "tourDates",
+                "weight": 10,
+                "fields": [
+                    {
+                        "key": "date",
+                        "title": "Date",
+                        "type": "date"
+                    }
+                ]
+            },
+            {
+                "title": "Portfolio",
+                "key": "portfolio",
+                "weight": 10,
+                "fields": [
+                    {
+                        "key": "title",
+                        "title": "Title"
+                    }
+                ]
+            },
+            {
+                "title": "Sales History",
+                "weight": 9,
+                "key": "salesHistory",
+                "fields": [
+                    {
+                        "key": "date",
+                        "title": "Date"
+                    },
+                    {
+                        "key": "buyer",
+                        "title": "Buyer"
+                    },
+                    {
+                        "key": "seller",
+                        "title": "Seller"
+                    },
+                    {
+                        "key": "price",
+                        "title": "Price"
+                    },
+                    {
+                        "key": "pricePerUnit",
+                        "title": "Price / Unit"
+                    },
+                    {
+                        "key": "source",
+                        "title": "Source"
+                    },
+                    {
+                        "key": "sourceUrl",
+                        "title": "Source Url"
+                    }
+                ]
+            },
+            {
+                "title": "Tax History",
+                "weight": 9,
+                "key": "taxHistory",
+                "fields": [
+                    {
+                        "key": "year",
+                        "title": "Year"
+                    },
+                    {
+                        "key": "taxAssessment",
+                        "title": "Tax Assessment"
+                    },
+                    {
+                        "key": "propertyTaxes",
+                        "title": "Property Taxes"
+                    },
+                    {
+                        "key": "millRate",
+                        "title": "Mill Rate"
+                    }
+                ]
+            },
+            {
+                "title": "News",
+                "weight": 9,
+                "key": "comps",
+                "fields": [
+                    {
+                        "key": "link",
+                        "title": "Link"
+                    },
+                    {
+                        "key": "title",
+                        "title": "Title"
+                    },
+                    {
+                        "key": "body",
+                        "title": "Body"
+                    }
+                ]
+            }
+        ],
+        "resources": [
+            {
+                "title": "Contacts",
+                "key": "contacts",
+                "path": "/contacts/",
+                "fields": [
+                    {
+                        "key": "name",
+                        "title": "Name"
+                    },
+                    {
+                        "key": "email",
+                        "title": "Email"
+                    },
+                    {
+                        "key": "phone",
+                        "title": "Phone"
+                    }
+                ]
+            },
+            {
+                "title": "Images",
+                "path": "/images/",
+                "key": "images",
+                "fields": [
+                    {
+                        "key": "url",
+                        "title": "URL"
+                    },
+                    {
+                        "key": "weight",
+                        "title": "Weight"
+                    }
+                ]
+            }
+        ]
+    }
+}

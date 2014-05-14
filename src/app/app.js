@@ -29,8 +29,8 @@ angular.module('rescour.roomba',
         cfpLoadingBarProvider.includeSpinner = false;
 
         $urlRouterProvider
-            .when('', '/mduListings/stage')
-            .when('/', '/mduListings/stage');
+            .when('', '/mduListings/stage/list')
+            .when('/', '/mduListings/stage/list');
     })
     .run(function ($rootScope, $state, $stateParams) {
         $rootScope.$state = $state;

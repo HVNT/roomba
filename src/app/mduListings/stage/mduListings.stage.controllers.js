@@ -12,6 +12,15 @@ angular.module('rescour.roomba')
     function ($scope) {
 
     })
+    .controller('StageListCtrl',
+    function ($scope) {
+
+
+        $scope.openToDoDetails = function (mduListing) {
+            $scope.go('mduListings.stage.todo.details');
+        }
+
+    })
     .controller('StageToDoDetailsCtrl',
     function ($scope) {
 
