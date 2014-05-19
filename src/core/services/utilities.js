@@ -59,13 +59,13 @@ angular.module('rescour.services')
         this.generateString = function(numWords, wordLength) {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" +
-                "0123456789~!@#= ";
+                "0123456789~!@#=";
             var length = wordLength || 6;
             for(var x = 0; x < numWords; x++) {
                 for(var i = 0; i <= length - 1; i++) {
                     text += possible.charAt(Math.floor(Math.random() * possible.length));
                 }
-                text += " ";
+                if (x < numWords - 1) text += ' ';
             }
             return text;
         };
@@ -78,6 +78,25 @@ angular.module('rescour.services')
                 randomNum = Math.floor(Math.random() * (high - low) + low);
             }
             return randomNum;
+        };
+
+        this.randomTime = function() {
+            return new Date(new Date(2014,1,30).getTime() + Math.random() * (new Date(2011,10,30).getTime()
+                - new Date(1900, 1,30).getTime()));
+        };
+
+        this.randomDate = function(start, end) {
+            return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+        };
+
+        this.randomUrl = function(length) {
+            var randomString = '';
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" +
+                "0123456789";
+            for(var i = 0; i <= length - 1; i++) {
+                randomString += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            return 'www.' + randomString + '.com';
         };
 
     });

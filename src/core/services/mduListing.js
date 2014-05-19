@@ -209,9 +209,9 @@ angular.module('rescour.services')
             return MDU;
         };
     })
-    .factory('MDUMarket',
-    function (MDU) {
-        return new thotpod.Marketplace(MDU, {
+    .factory('MDUListingMarket',
+    function (MDUListing) {
+        return new thotpod.Marketplace(MDUListing, {
             sortBy: {
                 predicate: 'datePosted',
                 reverse: false

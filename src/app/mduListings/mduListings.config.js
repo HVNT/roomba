@@ -38,18 +38,35 @@ angular.module('rescour.roomba')
                 controller: 'MduListingsCtrl',
                 url: '/mduListings',
                 resolve: {
-                    load: function ($q, $log) {
-//                            var swifferRunsDefer;
-//                            swifferRunsDefer = $q.defer();
+//                    load: function ($q, $log, MDUListingFactory, MDUListingMarketplace) {
 //
-//                            SwifferRun.query().then(function (response) {
-//                                SwifferRunMarket.initialize(SwifferRun.dimensions, response.data.collection);
-//                                $log.debug('Swiffer Run Market Initialized: ', SwifferRunMarket);
-//                                swifferRunsDefer.resolve(response);
-//                            });
+//                        (function () {
+//                            var defer = $q.defer(),
+//                                path = '/config/market.json';
+//                            $http.get(path).then(function (response) {
+//                                    console.log(response);
+//                                    defer.resolve(response);
+//                                }, function (data, status, headers, config) {
+//                                    console.log('error');
+//                                    defer.reject(data);
+//                                });
+//                            return defer.promise;
+//                        })().then(function (response) {
+//                            console.log(response);
+//                        }, function(fuck) {
+//                            console.log(fuck);
+//                        });
 //
-//                            return swifferRunsDefer.promise;
-                    }
+//
+//                        var mduListingsDefer = $q.defer();
+//
+//                        MDUListingFactory.query().then(function (response) {
+//                            MDUListingMarketplace.initialize(MDUListingFactory.dimensions, response.data.collection);
+//                            $log.debug('MDU Listing Market Initialized: ', MDUListingMarket);
+//                            mduListingsDefer.resolve(response);
+//                        });
+//                        return mduListingsDefer.promise;
+//                    }
                 }
             })
 

@@ -37,130 +37,154 @@
                 "title": "Title",
                 "weight": 5000,
                 "key": "title",
-                "type": "text"
+                "type": "text",
+                "mock": "text-med"
             },
             {
                 "title": "Comment",
                 "weight": 6000,
                 "key": "comment",
-                "type": "textarea"
+                "type": "textarea",
+                "mock": "text-lrg"
             },
             {
                 "title": "Page",
                 "weight": 2,
                 "key": "page",
-                "type": "text"
+                "type": "text",
+                "mock": "url"
             },
             {
                 "title": "Description",
                 "weight": 8,
                 "key": "description",
-                "type": "textarea"
+                "type": "textarea",
+                "mock": "text-lrg"
             },
             {
                 "title": "Broker",
                 "weight": 10,
-                "key": "broker"
+                "key": "broker",
+                "mock": "text-sml"
             },
             {
                 "title": "Flyer",
                 "weight": 9,
-                "key": "flyer"
+                "key": "flyer",
+                "mock": "url"
             },
             {
                 "title": "Price",
                 "weight": 8,
-                "key": "price"
+                "key": "price",
+                "mock": "int-5"
             },
             {
                 "title": "Marketing URL",
                 "weight": 8,
-                "key": "marketingUrl"
+                "key": "marketingUrl",
+                "mock": "url"
             },
             {
                 "title": "Call For Offers",
                 "weight": 9,
                 "key": "callForOffers",
-                "type": "date"
+                "type": "date",
+                "mock": "date"
             },
             {
                 "title": "Date Posted",
                 "weight": 9,
                 "key": "datePosted",
-                "type": "date"
+                "type": "date",
+                "mock": "date"
             },
             {
                 "title": "Property Status",
                 "weight": 9,
                 "key": "status",
                 "type": "typeahead",
-                "typeahead": ["Marketing", "Marketing - Past Due", "Under Contract", "Under LOI", "Sold", "Expired"]
+                "typeahead": ["Marketing", "Marketing - Past Due", "Under Contract", "Under LOI", "Sold", "Expired"],
+                "mock": "prop-status"
             },
             {
                 "title": "Property Type",
                 "weight": 9,
                 "key": "mdu.propertyType",
                 "type": "typeahead",
-                "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes", "Portfolio"]
+                "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes", "Portfolio"],
+                "mock": "prop-type"
             },
             {
                 "title": "Year Built",
                 "weight": 3000,
                 "key": "mdu.yearBuilt",
-                "type": "text"
+                "type": "text",
+                "mock": "int-4"
             },
             {
                 "title": "Address",
                 "weight": 2,
                 "key": "mdu.address",
+                "mock": "address",
                 "fields": [
                     {
                         "title": "Street 1",
-                        "key": "street1"
+                        "key": "street1",
+                        "mock": "text-sml"
                     },
                     {
                         "title": "City",
-                        "key": "city"
+                        "key": "city",
+                        "mock": "text-sml"
                     },
                     {
                         "title": "State",
-                        "key": "state"
+                        "key": "state",
+                        "mock": "text-sml"
                     },
                     {
                         "title": "Zip",
-                        "key": "zip"
+                        "key": "zip",
+                        "mock": "int-5"
                     },
                     {
                         "title": "Latitude",
                         "key": "latitude",
-                        "readonly": true
+                        "readonly": true,
+                        "mock": "lat"
                     },
                     {
                         "title": "Longitude",
                         "key": "longitude",
-                        "readonly": true
+                        "readonly": true,
+                        "mock": "long"
                     }
                 ]
             },
             {
                 "title": "# Units",
                 "weight": 10,
-                "key": "mdu.numUnits"
+                "key": "mdu.numUnits",
+                "mock": "int-3"
             },
             {
                 "title": "Acres",
                 "weight": 9,
-                "key": "mdu.acres"
+                "key": "mdu.acres",
+                "mock": "int-3"
             },
             {
                 "title": "County",
                 "weight": 1,
-                "key": "mdu.county"
+                "key": "mdu.county",
+                "mock": "text-med"
             },
             {
                 "title": "Assessor Url",
                 "weight": 0,
-                "key": "mdu.assessorUrl"
+                "key": "mdu.assessorUrl",
+                "mock": "url"
             }
         ],
         "models": [
