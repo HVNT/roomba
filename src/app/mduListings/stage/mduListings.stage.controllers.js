@@ -12,19 +12,19 @@ angular.module('rescour.roomba')
     function ($scope, Environment, $http, $q) {
 
     })
-    .controller('StageListCtrl',
-    function ($scope) {
+    .controller('StageListCtrl', function ($scope) {
 
         $scope.openToDoDetails = function (mduListing) {
             $scope.go('mduListings.stage.todo.details', { itemId: mduListing.id});
         }
 
     })
-    .controller('StageToDoDetailsCtrl',
-    function ($scope) {
+    .controller('StageToDoNewMduListingCtrl', function ($scope) {
 
     })
-    .controller('StageDoneDetailsCtrl',
-    function ($scope) {
+    .controller('StageToDoDetailsCtrl', function ($scope) {
+
+    })
+    .controller('StageDoneDetailsCtrl', function ($scope) {
 
     });

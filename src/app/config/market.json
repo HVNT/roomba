@@ -1,6 +1,6 @@
 {
     "mdu_listings": {
-        "title": "mdu_listings",
+        "title": "MDU Listings",
         "key": "mdu_listings",
         "path": "/mdu_listings/",
         "dimensions": {
@@ -8,26 +8,11 @@
                 "broker": {
                     "title": "Broker",
                     "weight": 10
-                },
-                "tags": {
-                    "title": "Tags",
-                    "weight": 10,
-                    "restrict": ["edited", "published", "raw", "unpublished", "flagged", "conflict"],
-                    "multi": true
-                },
-                "status": {
-                    "title": "Property Status",
-                    "weight": 5
-                },
-                "state": {
-                    "title": "State",
-                    "nested": "address",
-                    "weight": 5
                 }
             },
             "range": {
-                "numUnits": {
-                    "title": "# of Units",
+                "price": {
+                    "title": "Price",
                     "weight": 5
                 }
             }
@@ -39,13 +24,6 @@
                 "key": "title",
                 "type": "text",
                 "mock": "text-med"
-            },
-            {
-                "title": "Comment",
-                "weight": 6000,
-                "key": "comment",
-                "type": "textarea",
-                "mock": "text-lrg"
             },
             {
                 "title": "Page",

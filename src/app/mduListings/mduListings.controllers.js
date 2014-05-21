@@ -7,11 +7,17 @@
  */
 
 angular.module('rescour.roomba')
+    .controller('MduListingsCtrl', function ($scope, MduConfig) {
+        console.log(MduConfig);
+        /**
+        Naming:
+            if singular -> capitalize first char
+            if plural   -> camel-case
+         **/
+        $scope.MduListing = MduConfig[0];
+        $scope.MduListingMarket = MduConfig[1];
+        $scope.mduListingDimensions = $scope.MduListingMarket.getDimensions();
+        $scope.mduListings = $scope.MduListingMarket.visibleItems;
+        console.log($scope.mduListings);
 
-    .controller('MduListingsCtrl',
-    function ($scope) {
-//        $scope.ScrapeState = ScrapeState;
-//        $scope.toggleFilterCollapsed = function () {
-//            ScrapeState.isFilterCollapsed = !ScrapeState.isFilterCollapsed;
-//        };
     });

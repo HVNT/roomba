@@ -23,6 +23,7 @@ angular.module('rescour.roomba')
             .when('/mduListings/stage', '/mduListings/stage/list')
             .when('/mduListings/stage/', '/mduListings/stage/list')
             .when('/mduListings/stage/list/', '/mduListings/stage/list')
+            .when('/mduListings/stage/todo/newMduListing/', '/mduListings/stage/todo/newMduListing')
             .when('/mduListings/stage/todo/details/', '/mduListings/stage/todo/details')
             .when('/mduListings/stage/done/details/', '/mduListings/stage/done/details')
             .when('/mduListings/review/', '/mduListings/review/list')
@@ -35,38 +36,29 @@ angular.module('rescour.roomba')
             .state('mduListings', {
                 abstract: true,
                 templateUrl: '/app/mduListings/views/mduListings.html',
-                controller: 'MduListingsCtrl',
                 url: '/mduListings',
+                controller: 'MduListingsCtrl',
                 resolve: {
-//                    load: function ($q, $log, MDUListingFactory, MDUListingMarketplace) {
-//
-//                        (function () {
-//                            var defer = $q.defer(),
-//                                path = '/config/market.json';
-//                            $http.get(path).then(function (response) {
-//                                    console.log(response);
-//                                    defer.resolve(response);
-//                                }, function (data, status, headers, config) {
-//                                    console.log('error');
-//                                    defer.reject(data);
-//                                });
-//                            return defer.promise;
-//                        })().then(function (response) {
-//                            console.log(response);
-//                        }, function(fuck) {
-//                            console.log(fuck);
-//                        });
-//
-//
-//                        var mduListingsDefer = $q.defer();
-//
-//                        MDUListingFactory.query().then(function (response) {
-//                            MDUListingMarketplace.initialize(MDUListingFactory.dimensions, response.data.collection);
-//                            $log.debug('MDU Listing Market Initialized: ', MDUListingMarket);
-//                            mduListingsDefer.resolve(response);
-//                        });
-//                        return mduListingsDefer.promise;
-//                    }
+                    MduConfig: function ($http, $q, $log, Environment, MDUListingFactory, MDUListingMarketFactory) {
+                        var MDUListingDefer = $q.defer();
+
+                        $http.get('/app/config/market.json').then(function (config) {
+                            var MDUListing = MDUListingFactory(config.data.mdu_listings);
+
+                            MDUListing.query().then(function (response) {
+                                console.log(response);
+                                var MDUListingMarket = MDUListingMarketFactory(MDUListing);
+                                MDUListingMarket.initialize(MDUListing.dimensions, response.data.collection);
+                                $log.debug('MDU Listing Market Initialized: ', MDUListingMarketFactory);
+                                MDUListingDefer.resolve([MDUListing, MDUListingMarket]);
+                            }, function (response) {
+                                console.log(response);
+                            });
+                        }, function (response) {
+                            console.log(response);
+                        });
+                        return MDUListingDefer.promise;
+                    }
                 }
             })
 
@@ -80,6 +72,11 @@ angular.module('rescour.roomba')
                 templateUrl: '/app/mduListings/stage/views/mduListings.stage.list.html',
                 url: '/list',
                 controller: 'StageListCtrl'
+            })
+            .state('mduListings.stage.todo.newMduListing', {
+                templateUrl: '/app/mduListings/stage/views/mduListings.stage.todo.newMduListing.html',
+                url: '/newMduListing',
+                controller: 'StageToDoDetailsCtrl'
             })
             .state('mduListings.stage.todo.details', {
                 templateUrl: '/app/mduListings/stage/views/mduListings.stage.todo.details.html',

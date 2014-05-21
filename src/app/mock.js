@@ -11,7 +11,8 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
     .run(function ($httpBackend, $http, $timeout, $log, Utilities) {
 
         var MDU_LISTINGS_COUNT = 10,
-            MDU_CONFIG;
+            MDU_CONFIG,
+            mockMDUListings;
         var fakeUser = {
             company: 'Fake Company',
             email: 'bob@fakecompany.com',
@@ -23,28 +24,26 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
             id: '1'
         };
 
-        $httpBackend.whenGET(/app\/config\//).passThrough();
-
-        $http.get('/app/config/market.json').then(function(response) {
+        $http.get('/app/config/market.json').then(function (response) {
             MDU_CONFIG = response.data;
             initialize();
-        }, function(response) {
+        }, function (response) {
             console.log(response);
         });
 
-        function initialize () {
+        function initialize() {
             console.log("Booting this shit up...");
-            var dummyMDUListings = [];
+            mockMDUListings = [];
             for (var j = 0; j < MDU_LISTINGS_COUNT; j++) {
                 var mduListing = {
                     mdu: {}
                 };
-                angular.forEach(MDU_CONFIG.mdu_listings.fields, function(field) {
+                angular.forEach(MDU_CONFIG.mdu_listings.fields, function (field) {
                     var mduKey = null;
                     if (field.mock) {
                         switch (field.mock) {
                             case('text-sml'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = Utilities.generateString(1);
                                 } else {
@@ -52,7 +51,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 }
                                 break;
                             case('text-med'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = Utilities.generateString(3);
                                 } else {
@@ -60,7 +59,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 }
                                 break;
                             case('text-lrg'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = Utilities.generateString(8);
                                 } else {
@@ -68,7 +67,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 }
                                 break;
                             case('int-3'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = Utilities.generateNum(1, 100, false);
                                 } else {
@@ -76,7 +75,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 }
                                 break;
                             case('int-4'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = Utilities.generateNum(1000, 2000, false);
                                 } else {
@@ -84,7 +83,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 }
                                 break;
                             case('int-5'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = Utilities.generateNum(10000, 99999, false);
                                 } else {
@@ -92,7 +91,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 }
                                 break;
                             case('dollar'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = Utilities.generateNum(5, 50000, true);
                                 } else {
@@ -100,7 +99,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 }
                                 break;
                             case('date'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = Utilities.randomTime();
                                 } else {
@@ -109,24 +108,24 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 break;
                             case('prop-status'):
                                 var propStatuses = ["Marketing", "Marketing - Past Due", "Under Contract", "Under LOI", "Sold", "Expired"];
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
-                                    mduListing.mdu[mduKey] = propStatuses[Math.floor(Math.random()*propStatuses.length)];
+                                    mduListing.mdu[mduKey] = propStatuses[Math.floor(Math.random() * propStatuses.length)];
                                 } else {
-                                    mduListing[field.key] = propStatuses[Math.floor(Math.random()*propStatuses.length)];
+                                    mduListing[field.key] = propStatuses[Math.floor(Math.random() * propStatuses.length)];
                                 }
                                 break;
                             case('prop-type'):
                                 var propTypes = ["Apartment", "Condo", "Land", "Mobile Homes", "Portfolio"];
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
-                                    mduListing.mdu[mduKey] = propTypes[Math.floor(Math.random()*propTypes.length)];
+                                    mduListing.mdu[mduKey] = propTypes[Math.floor(Math.random() * propTypes.length)];
                                 } else {
-                                    mduListing[field.key] = propTypes[Math.floor(Math.random()*propTypes.length)];
+                                    mduListing[field.key] = propTypes[Math.floor(Math.random() * propTypes.length)];
                                 }
                                 break;
                             case('url'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = Utilities.randomUrl(10);
                                 } else {
@@ -134,14 +133,14 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 }
                                 break;
                             case('address'):
-                                if(field.key.charAt(3) == '.') {
+                                if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
                                     mduListing.mdu[mduKey] = {};
                                 } else {
                                     mduListing[field.key] = {};
                                 }
                                 //whatever
-                                angular.forEach(field.fields, function(addressField) {
+                                angular.forEach(field.fields, function (addressField) {
                                     mduListing.mdu[mduKey][addressField.key] = null;
                                 });
                                 // didnt want to refactor and didnt want to do another nested switch..
@@ -149,8 +148,8 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 mduListing.mdu[mduKey].city = Utilities.generateString(2);
                                 mduListing.mdu[mduKey].state = Utilities.generateString(1);
                                 mduListing.mdu[mduKey].zip = Utilities.generateNum(10000, 99999, false);
-                                mduListing.mdu[mduKey].latitude = Utilities.generateNum(-90, 90, false);
-                                mduListing.mdu[mduKey].longitude = Utilities.generateNum(-180, 180, false);
+                                mduListing.mdu[mduKey].latitude = Utilities.generateNum(-90, 90, true);
+                                mduListing.mdu[mduKey].longitude = Utilities.generateNum(-180, 180, true);
                                 break;
                             default:
                                 break;
@@ -159,8 +158,8 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                         console.log(field.key + "   fuckkkkked");
                     }
                 });
-                mduListing.id = Utilities.generateNum(100000000, 999999999, true);
-                dummyMDUListings.push(mduListing);
+                mduListing.id = Utilities.generateNum(100000000, 999999999, false);
+                mockMDUListings.push(mduListing);
             }
 
             $httpBackend.whenGET('/auth/user/').respond([fakeUser]);
@@ -173,10 +172,11 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
 
             /* Gets all edited mdu_listing data */
             $httpBackend.whenGET(/\/mdu_listings\/$/).respond(function (method, url, data, headers) {
-                return [200, {
-                    status: 'N/A',
-                    collection: []
-                }, {}];
+                return [200,
+                    {
+                        status: 'N/A',
+                        collection: mockMDUListings
+                    }, {}];
             });
             /* Returns raw data for an mdu_listing */
             $httpBackend.whenGET(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
@@ -202,6 +202,28 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
             });
         }
 
+        /* Gets all edited mdu_listing data */
+        $httpBackend.whenGET(/\/mdu_listings\/$/).respond(function (method, url, data, headers) {
+            return [200,
+                {
+                    status: 'N/A',
+                    collection: mockMDUListings
+                }, {}];
+        });
+        /* Returns raw data for an mdu_listing */
+        $httpBackend.whenGET(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
+            return [200, {
+                status: 'N/A'
+            }, {}];
+        });
+        /* Updates an mdu_listing's data or changes its workflow state */
+        $httpBackend.whenPUT(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
+            return [200, {
+                status: 'N/A'
+            }, {}];
+        });
+
+        $httpBackend.whenGET(/app\/config\//).passThrough();
         $httpBackend.whenGET(/views\//).passThrough();
         $httpBackend.whenGET(/assets\//).passThrough();
         $httpBackend.whenGET(/templates\//).passThrough();

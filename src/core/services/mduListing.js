@@ -6,8 +6,7 @@
  * File:
  */
 angular.module('rescour.services')
-    .factory('MDUListingFactory', function (Environment, $q, $http, Comment, Favorite, Hidden, CustomField, $rootScope) {
-
+    .factory('MDUListingFactory', function (Environment, $q, $http) {
         return function (config) {
             /**
              * MDUListing
@@ -15,110 +14,40 @@ angular.module('rescour.services')
              * @constructor
              */
             var MDUListing = function (data) {
-                this.id = data.id;
-                this.resourcePath = '/mdu_listings/';
-                /* id of where its stored in massive, will be an s3 url */
-                this.imagePath = Environment.name == 'mock' ? '' : Environment.path + '/pictures/';
+                /** MDU Fields **/
+                this.mdu = {};
+                this.mdu.propertyType = data.mdu.propertyType || 'None Available';
+                this.mdu.yearBuilt = data.mdu.yearBuilt || 'None Available';
+                this.mdu.numUnits = data.mdu.numUnits || 'None Available';
+                this.mdu.acres = data.mdu.acres || 'None Available';
+                this.mdu.county = data.mdu.county || 'None Available';
+                this.mdu.assessorURl = data.mdu.assessorUrl || 'None Available';
+                /* MDU Address */
+                this.mdu.address = {};
+                this.mdu.address.street1 = data.mdu.address.street1 || 'None Available';
+                this.mdu.address.city = data.mdu.address.city || 'None Available';
+                this.mdu.address.zip = data.mdu.address.zip || 'None Available';
+                this.mdu.address.latitude = data.mdu.latitude || 'None Available';
+                this.mdu.address.longitude = data.mdu.address.longitude || 'None Available';
 
+                /** MDU Listing Fields **/
                 this.title = data.title || 'Untitled Property';
-                this.description = data.description || 'No description provided.';
-                this.thumbnail = data.thumbnail ? this.imagePath + data.thumbnail : '/assets/img/apt0.jpg';
-                this.address = data.mdu.address || {
-                    street1: 'No Address Listed'
-                };
-                if (Date.parse(data.datePosted)) {
-                    this.datePosted = new Date(data.datePosted);
-                } else {
-                    this.datePosted = data.datePosted ? new Date(parseInt(data.datePosted, 10)) : new Date(parseInt(this.id.toString().slice(0, 8), 16) * 1000);
-                }
-                /* url for the flyer (listing flyer) - a listing has a flier not the MDU (broker specific) */
-                this.flyer = data.flyer;
-                if (Date.parse(data.callForOffers)) { /* day brokers are taking offers up until for listing */
-                    this.callForOffers = new Date(data.callForOffers); // broker specific
-                } else {
-                    this.callForOffers = data.callForOffers ? new Date(data.callForOffers) : undefined;
-                }
-                this.acres = data.mdu.acres; /* acres land MDU is on */
-                this.page = data.page; /* page url scraped from (broker's site) */
-
-                /** Collections **/
-                this.images = data.images || [];
-                this.tourDates = data.tourDates || [];
-                this.unitMixes = data.mdu.unitMix || [];
-                this.news = data.news || []; /* renamed comps to news */
-                this.portfolio = data.portfolio || [];
-                this.salesHistory = data.mdu.salesHistory || [];
-                this.taxHistory = data.mdu.taxHistory || [];
-
-                /** Discrete **/
-                this.state = data.mdu.address ? data.mdu.address.state : null;
-                this.broker = data.broker || null;
-                this.propertyStatus = data.propertyStatus || null;
-                this.propertyType = data.mdu.propertyType || null;
-
-                /** Range **/
-                this.location = (data.mdu.address.latitude && data.mdu.address.longitude) ?
-                    [data.mdu.address.latitude, data.mdu.address.longitude] : null;
-                this.latitude = parseFloat(data.mdu.address.latitude) || 'NA';
-                this.longitude = parseFloat(data.mdu.address.longitude) || 'NA';
-                this.yearBuilt = parseInt(data.mdu.yearBuilt, 10) || 'NA';
-                this.numberUnits = parseInt(data.mdu.numUnits, 10) || 'NA';
-                this.daysOnMarket = data.datePosted ? Math.ceil(Math.abs(Date.now() - (this.datePosted.getTime())) / (1000 * 3600 * 24)) : 'NA';
+                this.page = data.page || 'None Available';
+                this.description = data.description || 'None Available';
+                this.broker = data.broker || 'None Available';
+                this.flyer = data.flyer || 'None Available';
+                this.price = data.price  || 'None Available';
+                this.marketingUrl = data.marketingUrl  || 'None Available';
+                this.callForOffers = data.callForOffers  || 'None Available';
+                this.datePosted = data.datePosted  || 'None Available';
+                this.propertyStatus = data.propertyStatus  || 'None Available';
             };
-
-            /**
-             * @doc object
-             * @name MDU.dimensions
-             *
-             * @description Discrete and Ranged dimensions configuration for marketplace.
-             */
-            MDUListing.dimensions = {
-                discrete: {
-                    'broker': {
-                        title: 'Broker',
-                        weight: 10
-                    },
-                    'state': {
-                        title: 'State',
-                        weight: 9
-                    },
-                    'propertyStatus': {
-                        title: 'Status',
-                        weight: 8
-                    },
-                    'propertyType': {
-                        title: 'Type',
-                        weight: 7
-                    }
-                },
-                range: {
-                    'numberUnits': {
-                        title: 'Number of Units',
-                        highBound: 500,
-                        weight: 10
-                    },
-                    'yearBuilt': {
-                        title: 'Year Built',
-                        lowBound: 1930,
-                        weight: 9
-                    },
-                    'daysOnMarket': {
-                        title: 'Days on Market',
-                        highBound: 300,
-                        weight: 8
-                    },
-                    'latitude': {
-                        title: 'Latitude',
-                        weight: 9,
-                        hidden: true
-                    },
-                    'longitude': {
-                        title: 'Longitude',
-                        weight: 9,
-                        hidden: true
-                    }
-                }
-            };
+            /** MDU model properties **/
+            MDUListing.title = config.title;
+            MDUListing.key = config.key;
+            MDUListing.path = config.path;
+            MDUListing.fields = config.fields;
+            MDUListing.dimensions = config.dimensions;
 
             /**
              * @doc method
@@ -137,24 +66,34 @@ angular.module('rescour.services')
                     }, Environment.config),
                     batchLimit = 500;
 
-                (function batchItems(limit, offset) {
-                    var path = Environment.path + self.path + "?limit=" + limit + (offset ? "&offset=" + offset : "");
-
-                    $http.get(path, config).then(function (response) {
-                        items = items.concat(response.data);
-
-                        if (response.data.length < limit || response.data.length === 0) {
-                            defer.resolve(items);
-                        } else {
-                            batchItems(limit, response.data[response.data.length - 1].id);
-                        }
-                    }, function (response) {
-                        defer.reject(response);
-                    });
-
-                })(batchLimit);
-
+                var path = Environment.path + MDUListing.path;
+                $http.get(path, config).then(function (response) {
+                    defer.resolve(response);
+                }, function (response) {
+                    defer.reject(response);
+                });
                 return defer.promise;
+
+//                (function batchItems(limit, offset) {
+//                    var path = Environment.path + MDUListing.path + "?limit=" + limit + (offset ? "&offset=" + offset : "");
+//
+//                    $http.get(path, config).then(function (response) {
+//                        items = items.concat(response.data);
+//                        console.log(items);
+//
+//                        if (response.data.length < limit || response.data.length === 0) {
+//                            defer.resolve(items);
+//                        } else {
+//                            offset += batchLimit;
+//                            batchItems(limit, offset);
+//                        }
+//                    }, function (response) {
+//                        defer.reject(response);
+//                    });
+//
+//                })(batchLimit);
+//
+//                return defer.promise;
             };
 
             /**
@@ -206,15 +145,16 @@ angular.module('rescour.services')
                 return this.mdu.address.street1 || this.mdu.address.state || this.mdu.address.city;
             };
 
-            return MDU;
+            return MDUListing;
         };
     })
-    .factory('MDUListingMarket',
-    function (MDUListing) {
-        return new thotpod.Marketplace(MDUListing, {
-            sortBy: {
-                predicate: 'datePosted',
-                reverse: false
-            }
-        });
+    .factory('MDUListingMarketFactory', function () {
+        return function (MDUListing) {
+            return new thotpod.Marketplace(MDUListing, {
+                sortBy: {
+                    predicate: 'datePosted',
+                    reverse: false
+                }
+            });
+        }
     });
