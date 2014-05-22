@@ -112,9 +112,7 @@
 <script src="/app/mduListings/mduListings.config.js"></script>
 <script src="/app/mduListings/mduListings.controllers.js"></script>
 <script src="/app/mduListings/mduListings.services.js"></script>
-<script src="/app/mduListings/stage/mduListings.stage.controllers.js"></script>
 <script src="/app/mduListings/stage/mduListings.stage.services.js"></script>
-<script src="/app/mduListings/review/mduListings.review.controllers.js"></script>
 <script src="/app/mduListings/review/mduListings.review.services.js"></script>
 
 <% if (config.environment == 'mock') { %>

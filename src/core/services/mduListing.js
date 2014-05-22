@@ -14,21 +14,6 @@ angular.module('rescour.services')
              * @constructor
              */
             var MDUListing = function (data) {
-                /** MDU Fields **/
-                this.mdu = {};
-                this.mdu.propertyType = data.mdu.propertyType || 'None Available';
-                this.mdu.yearBuilt = data.mdu.yearBuilt || 'None Available';
-                this.mdu.numUnits = data.mdu.numUnits || 'None Available';
-                this.mdu.acres = data.mdu.acres || 'None Available';
-                this.mdu.county = data.mdu.county || 'None Available';
-                this.mdu.assessorURl = data.mdu.assessorUrl || 'None Available';
-                /* MDU Address */
-                this.mdu.address = {};
-                this.mdu.address.street1 = data.mdu.address.street1 || 'None Available';
-                this.mdu.address.city = data.mdu.address.city || 'None Available';
-                this.mdu.address.zip = data.mdu.address.zip || 'None Available';
-                this.mdu.address.latitude = data.mdu.latitude || 'None Available';
-                this.mdu.address.longitude = data.mdu.address.longitude || 'None Available';
 
                 /** MDU Listing Fields **/
                 this.title = data.title || 'Untitled Property';
@@ -40,7 +25,30 @@ angular.module('rescour.services')
                 this.marketingUrl = data.marketingUrl  || 'None Available';
                 this.callForOffers = data.callForOffers  || 'None Available';
                 this.datePosted = data.datePosted  || 'None Available';
-                this.propertyStatus = data.propertyStatus  || 'None Available';
+                this.status = data.status  || 'None Available'; // key should be propertyStatus
+
+                /** MDU Fields **/
+                this.mdus = [];
+                for (var i = 0; i < data.mdus.length; i++) {
+                    var mdu = {},
+                        mduData = data.mdus[i];
+                    mdu.propertyType = mduData.propertyType || 'None Available';
+                    mdu.yearBuilt = mduData.yearBuilt || 'None Available';
+                    mdu.numUnits = mduData.numUnits || 'None Available';
+                    mdu.acres = mduData.acres || 'None Available';
+                    mdu.county = mduData.county || 'None Available';
+                    mdu.assessorURl = mduData.assessorUrl || 'None Available';
+                    /* MDU Address */
+                    mdu.address = {};
+                    mdu.address.street1 = mduData.address.street1 || 'None Available';
+                    mdu.address.street2 = mduData.address.street2 || 'None Available';
+                    mdu.address.city = mduData.address.city || 'None Available';
+                    mdu.address.zip = mduData.address.zip || 'None Available';
+                    mdu.address.latitude = mduData.latitude || 'None Available';
+                    mdu.address.longitude = mduData.address.longitude || 'None Available';
+
+                    this.mdus.push(mdu);
+                }
             };
             /** MDU model properties **/
             MDUListing.title = config.title;

@@ -112,6 +112,11 @@
                         "mock": "text-sml"
                     },
                     {
+                        "title": "Street 2",
+                        "key": "street2",
+                        "mock": "text-sml"
+                    },
+                    {
                         "title": "City",
                         "key": "city",
                         "mock": "text-sml"

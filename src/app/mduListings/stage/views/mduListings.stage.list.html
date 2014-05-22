@@ -1,7 +1,36 @@
 <!--stage to-do list-->
-<div class="dashboard__box dashboard__box--left-list bg-solid--success"></div>
+<div class="dashboard__box dashboard__box--left-list bg-solid--success">
+    <!-- powers potentially here -->
+    <div class="scroll-container">
+        <ul class="inner-container">
+            <li class="card" ng-repeat="listing in mduListings">
+                <header class="card__header">
+                    <div>{{listing.title}}</div>
+                </header>
+                <div class="card__body">
+
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
 <!--stage done list-->
-<div class="dashboard__box dashboard__box--right-list bg-solid--danger"></div>
+<div class="dashboard__box dashboard__box--right-list bg-solid--danger">
+    <!-- powers potentially here -->
+    <div class="scroll-container">
+        <ul class="inner-container">
+            <li class="card" ng-repeat="listing in mduListings">
+                <header class="card__header">
+                    <div>{{listing.title}}</div>
+                </header>
+                <div class="card__body">
+
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
 
 <!--stage to-do/done details-->
 <div ui-view></div>

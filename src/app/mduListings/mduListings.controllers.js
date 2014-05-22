@@ -20,4 +20,37 @@ angular.module('rescour.roomba')
         $scope.mduListings = $scope.MduListingMarket.visibleItems;
         console.log($scope.mduListings);
 
+    })
+    /** STAGE **/
+    .controller('StageCtrl', function ($scope, Environment, $http, $q) {
+
+    })
+    .controller('StageListCtrl', function ($scope) {
+
+        $scope.openToDoDetails = function (mduListing) {
+            $scope.go('mduListings.stage.todo.details', { itemId: mduListing.id});
+        }
+
+    })
+    .controller('StageToDoNewMduListingCtrl', function ($scope) {
+
+    })
+    .controller('StageToDoDetailsCtrl', function ($scope) {
+
+    })
+    .controller('StageDoneDetailsCtrl', function ($scope) {
+
+    })
+    /** REVIEW **/
+    .controller('ReviewCtrl', function ($scope) {
+
+    })
+    .controller('ReviewListCtrl', function ($scope) {
+
+    })
+    .controller('ReviewToDoDetailsCtrl', function ($scope) {
+
+    })
+    .controller('ReviewDoneDetailsCtrl', function ($scope) {
+
     });
