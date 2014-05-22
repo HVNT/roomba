@@ -164,6 +164,8 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                 });
                 mduListing.mdus.push(mdu);
                 mduIndex++;
+                var workflowStates = ["todo", "done", "published"];
+                mduListing.workflowState = workflowStates[Math.floor(Math.random() * workflowStates.length)];
                 mduListing.id = Utilities.generateNum(100000000, 999999999, false);
                 mockMDUListings.push(mduListing);
             }

@@ -14,8 +14,9 @@ angular.module('rescour.services')
              * @constructor
              */
             var MDUListing = function (data) {
-
                 /** MDU Listing Fields **/
+                this.id = data.id || 'lol no id?';
+                this.workflowState = data.workflowState || 'lol no state?';
                 this.title = data.title || 'Untitled Property';
                 this.page = data.page || 'None Available';
                 this.description = data.description || 'None Available';
@@ -26,7 +27,6 @@ angular.module('rescour.services')
                 this.callForOffers = data.callForOffers  || 'None Available';
                 this.datePosted = data.datePosted  || 'None Available';
                 this.status = data.status  || 'None Available'; // key should be propertyStatus
-
                 /** MDU Fields **/
                 this.mdus = [];
                 for (var i = 0; i < data.mdus.length; i++) {

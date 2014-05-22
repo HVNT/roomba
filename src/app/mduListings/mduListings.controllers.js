@@ -18,8 +18,15 @@ angular.module('rescour.roomba')
         $scope.MduListingMarket = MduConfig[1];
         $scope.mduListingDimensions = $scope.MduListingMarket.getDimensions();
         $scope.mduListings = $scope.MduListingMarket.visibleItems;
-        console.log($scope.mduListings);
-
+        $scope.todoListings = [];
+        $scope.doneListings = [];
+        $scope.publishedListings = [];
+        for (var i = 0; i < $scope.mduListings.length; i++) {
+            if($scope.mduListings[i].workflowState == 'todo') $scope.todoListings.push($scope.mduListings[i]);
+            else if ($scope.mduListings[i].workflowState == 'done') $scope.doneListings.push($scope.mduListings[i]);
+            else if ($scope.mduListings[i].workflowState == 'published') $scope.publishedListings.push($scope.mduListings[i]);
+            else console.log($scope.mduListings[i], 'fucked');
+        }
     })
     /** STAGE **/
     .controller('StageCtrl', function ($scope, Environment, $http, $q) {
