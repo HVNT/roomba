@@ -88,7 +88,7 @@
             {
                 "title": "Property Type",
                 "weight": 9,
-                "key": "mdu.propertyType",
+                "key": "mdu.type",
                 "type": "typeahead",
                 "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes", "Portfolio"],
                 "mock": "prop-type"

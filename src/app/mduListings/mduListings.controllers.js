@@ -31,29 +31,32 @@ angular.module('rescour.roomba')
     /** STAGE **/
     .controller('StageCtrl', function ($scope, $state, $http, $q) {
 
-    })
-    .controller('StageListCtrl', function ($scope, $state) {
+        $scope.closeStageDetails = function () {
+            $state.go('mduListings.stage.list');
+        };
         $scope.openToDoDetails = function (mduListing) {
             console.log(mduListing);
-            $state.go('mduListings.stage.todo.details.listingId',
+            $state.go('mduListings.stage.todoDetails',
                 {
                     listingId: mduListing.id
                 });
         };
         $scope.openDoneDetails = function (mduListing) {
             console.log(mduListing);
-            $state.go('mduListings.stage.done.details.listingId',
+            $state.go('mduListings.stage.doneDetails',
                 {
                     listingId: mduListing.id
                 });
         };
         $scope.openNewMduListing = function () {
-            console.log();
             $state.go('mduListings.stage.newMduListing');
         };
 
     })
-    .controller('StageToDoDetailsCtrl', function ($scope) {
+    .controller('StageListCtrl', function ($scope, $state) {
+
+    })
+    .controller('StageTodoDetailsCtrl', function ($scope) {
 
     })
     .controller('StageDoneDetailsCtrl', function ($scope) {

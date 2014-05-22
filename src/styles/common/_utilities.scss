@@ -61,6 +61,22 @@
   margin-right: $grid-gutter-width/2 !important;
 }
 
+.gutter-double-top {
+  margin-top: $grid-gutter-width*2 !important;
+}
+
+.gutter-double-bottom {
+  margin-bottom: $grid-gutter-width*2 !important;
+}
+
+.gutter-double-left {
+  margin-left: $grid-gutter-width*2 !important;
+}
+
+.gutter-double-right {
+  margin-right: $grid-gutter-width*2 !important;
+}
+
 .gutter-cancel-top {
   margin-top: 0 !important;
 }

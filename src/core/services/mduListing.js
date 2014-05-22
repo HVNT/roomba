@@ -32,7 +32,7 @@ angular.module('rescour.services')
                 for (var i = 0; i < data.mdus.length; i++) {
                     var mdu = {},
                         mduData = data.mdus[i];
-                    mdu.propertyType = mduData.propertyType || 'None Available';
+                    mdu.type = mduData.type || 'None Available';
                     mdu.yearBuilt = mduData.yearBuilt || 'None Available';
                     mdu.numUnits = mduData.numUnits || 'None Available';
                     mdu.acres = mduData.acres || 'None Available';

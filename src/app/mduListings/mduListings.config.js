@@ -23,13 +23,13 @@ angular.module('rescour.roomba')
             .when('/mduListings/stage', '/mduListings/stage/list')
             .when('/mduListings/stage/', '/mduListings/stage/list')
             .when('/mduListings/stage/list/', '/mduListings/stage/list')
-            .when('/mduListings/stage/todo/newMduListing/', '/mduListings/stage/todo/newMduListing')
-            .when('/mduListings/stage/todo/details/', '/mduListings/stage/todo/details')
-            .when('/mduListings/stage/done/details/', '/mduListings/stage/done/details')
+            .when('/mduListings/stage/newMduListing/', '/mduListings/stage/newMduListing')
+            .when('/mduListings/stage/todoDetails/', '/mduListings/stage/todoDetails')
+            .when('/mduListings/stage/doneDetails/', '/mduListings/stage/doneDetails')
             .when('/mduListings/review/', '/mduListings/review/list')
             .when('/mduListings/review/list/', '/mduListings/review/list')
-            .when('/mduListings/review/done/details/', '/mduListings/review/done/details')
-            .when('/mduListings/review/production/details/', '/mduListings/review/production/details');
+            .when('/mduListings/review/doneDetails/', '/mduListings/review/doneDetails')
+            .when('/mduListings/review/productionDetails/', '/mduListings/review/productionDetails');
 
         $stateProvider
             /* ABSTRACT ROOT STATE */
@@ -73,14 +73,14 @@ angular.module('rescour.roomba')
                 url: '/list',
                 controller: 'StageListCtrl'
             })
-            .state('mduListings.stage.todo.details.listingId', {
-                templateUrl: '/app/mduListings/stage/views/mduListings.stage.todo.details.html',
-                url: '/:listingId',
-                controller: 'StageToDoDetailsCtrl'
+            .state('mduListings.stage.todoDetails', {
+                templateUrl: '/app/mduListings/stage/views/mduListings.stage.todoDetails.html',
+                url: '/todoDetails/:listingId',
+                controller: 'StageTodoDetailsCtrl'
             })
-            .state('mduListings.stage.done.details.listingId', {
-                templateUrl: '/app/mduListings/stage/views/mduListings.stage.done.details.html',
-                url: '/:listingId',
+            .state('mduListings.stage.doneDetails', {
+                templateUrl: '/app/mduListings/stage/views/mduListings.stage.doneDetails.html',
+                url: '/doneDetails/:listingId',
                 controller: 'StageDoneDetailsCtrl'
             })
             .state('mduListings.stage.newMduListing', {
@@ -100,14 +100,14 @@ angular.module('rescour.roomba')
                 url: '/list',
                 controller: 'ReviewListCtrl'
             })
-            .state('mduListings.review.done.details.listingId', {
-                templateUrl: '/app/mduListings/review/views/mduListings.review.done.details.html',
-                url: '/:listingId',
+            .state('mduListings.review.doneDetails', {
+                templateUrl: '/app/mduListings/review/views/mduListings.review.doneDetails.html',
+                url: '/doneDetails/:listingId',
                 controller: 'ReviewDoneDetailsCtrl'
             })
-            .state('mduListings.review.production.details.listingId', {
-                templateUrl: '/app/mduListings/review/views/mduListings.review.production.details.html',
-                url: '/:listingId',
+            .state('mduListings.review.productionDetails', {
+                templateUrl: '/app/mduListings/review/views/mduListings.review.productionDetails.html',
+                url: '/productionDetails/:listingId',
                 controller: 'ReviewProductionDetailsCtrl'
             });
 
