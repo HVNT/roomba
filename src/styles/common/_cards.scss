@@ -1,7 +1,7 @@
 .card {
   position: relative;
   margin-bottom: $grid-gutter-width;
-  background: $gray-lighter;
+  background: $white-google;
   @include box-shadow(0 2px 1px rgba(0,0,0,0.2));
 
   &.toggled {
@@ -52,6 +52,17 @@
   border-top: 1px solid $gray-light;
   border-bottom: 1px solid $gray-light;
   padding: ($grid-gutter-width * 3 / 4) $grid-gutter-width;
+}
+
+.card__btn {
+  @include box-shadow(0px 0px 10px 3px rgba(0,0,0,0.1));
+  background: white;
+  border: 0px;
+  padding: ($grid-gutter-width * 3 / 4) $grid-gutter-width;
+  cursor: pointer;
+  &:active {
+    background: $white-google;
+  }
 }
 
 .card__footer {

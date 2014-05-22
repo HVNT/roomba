@@ -73,20 +73,20 @@ angular.module('rescour.roomba')
                 url: '/list',
                 controller: 'StageListCtrl'
             })
-            .state('mduListings.stage.todo.newMduListing', {
-                templateUrl: '/app/mduListings/stage/views/mduListings.stage.todo.newMduListing.html',
-                url: '/newMduListing',
-                controller: 'StageToDoDetailsCtrl'
-            })
-            .state('mduListings.stage.todo.details', {
+            .state('mduListings.stage.todo.details.listingId', {
                 templateUrl: '/app/mduListings/stage/views/mduListings.stage.todo.details.html',
-                url: '/:itemId',
+                url: '/:listingId',
                 controller: 'StageToDoDetailsCtrl'
             })
-            .state('mduListings.stage.done.details', {
+            .state('mduListings.stage.done.details.listingId', {
                 templateUrl: '/app/mduListings/stage/views/mduListings.stage.done.details.html',
-                url: '/:itemId',
+                url: '/:listingId',
                 controller: 'StageDoneDetailsCtrl'
+            })
+            .state('mduListings.stage.newMduListing', {
+                templateUrl: '/app/mduListings/stage/views/mduListings.stage.newMduListing.html',
+                url: '/newMduListing',
+                controller: 'StageNewMduListingCtrl'
             })
 
             /* REVIEW STATES*/
@@ -100,14 +100,14 @@ angular.module('rescour.roomba')
                 url: '/list',
                 controller: 'ReviewListCtrl'
             })
-            .state('mduListings.review.done.details', {
+            .state('mduListings.review.done.details.listingId', {
                 templateUrl: '/app/mduListings/review/views/mduListings.review.done.details.html',
-                url: '/:itemId',
+                url: '/:listingId',
                 controller: 'ReviewDoneDetailsCtrl'
             })
-            .state('mduListings.review.production.details', {
+            .state('mduListings.review.production.details.listingId', {
                 templateUrl: '/app/mduListings/review/views/mduListings.review.production.details.html',
-                url: '/:itemId',
+                url: '/:listingId',
                 controller: 'ReviewProductionDetailsCtrl'
             });
 

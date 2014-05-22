@@ -10,7 +10,7 @@
 angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
     .run(function ($httpBackend, $http, $timeout, $log, Utilities) {
 
-        var MDU_LISTINGS_COUNT = 10,
+        var MDU_LISTINGS_COUNT = 20,
             MDU_COUNT = 1,
             MDU_CONFIG,
             mockMDUListings;

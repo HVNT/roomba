@@ -1,14 +1,22 @@
 <!--stage to-do list-->
-<div class="dashboard__box dashboard__box--left-list bg-solid--success">
+<div class="dashboard__box dashboard__box--left-list bg-solid--white">
     <!-- powers potentially here -->
     <div class="scroll-container">
         <ul class="inner-container">
-            <li class="card" ng-repeat="listing in mduListings">
+            <li class="card" ng-click="openNewMduListing()">
+                <div class="card__btn text-center">
+                    New MDU Listing
+                </div>
+            </li>
+            <li class="card" ng-repeat="listing in todoListings">
                 <header class="card__header">
-                    <div>{{listing.title}}</div>
+                    <div>{{listing.title}}
+                        <i class="fa fa-angle-right pull-right gutter-half-right"
+                            style="cursor:pointer;" ng-click="openToDoDetails(listing)"></i>
+                    </div>
                 </header>
                 <div class="card__body">
-
+                    <p>{{listing.description}}</p>
                 </div>
             </li>
         </ul>
@@ -16,21 +24,24 @@
 </div>
 
 <!--stage done list-->
-<div class="dashboard__box dashboard__box--right-list bg-solid--danger">
+<div class="dashboard__box dashboard__box--right-list bg-solid--white">
     <!-- powers potentially here -->
     <div class="scroll-container">
         <ul class="inner-container">
-            <li class="card" ng-repeat="listing in mduListings">
+            <li class="card" ng-repeat="listing in doneListings">
                 <header class="card__header">
-                    <div>{{listing.title}}</div>
+                    <div>{{listing.title}}
+                        <i class="fa fa-angle-right pull-right gutter-half-right"
+                                style="cursor:pointer;" ng-click="openDoneDetails(listing)"></i>
+                    </div>
                 </header>
                 <div class="card__body">
-
+                    <p>{{listing.description}}</p>
                 </div>
             </li>
         </ul>
     </div>
 </div>
 
-<!--stage to-do/done details-->
+<!--stage to-do/done details || stage newMduListing-->
 <div ui-view></div>

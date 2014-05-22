@@ -7,8 +7,7 @@
  */
 
 angular.module('rescour.roomba')
-    .controller('MduListingsCtrl', function ($scope, MduConfig) {
-        console.log(MduConfig);
+    .controller('MduListingsCtrl', function ($scope, $state, MduConfig) {
         /**
         Naming:
             if singular -> capitalize first char
@@ -27,25 +26,40 @@ angular.module('rescour.roomba')
             else if ($scope.mduListings[i].workflowState == 'published') $scope.publishedListings.push($scope.mduListings[i]);
             else console.log($scope.mduListings[i], 'fucked');
         }
+        $scope.MduListingInDetails = false;
     })
     /** STAGE **/
-    .controller('StageCtrl', function ($scope, Environment, $http, $q) {
+    .controller('StageCtrl', function ($scope, $state, $http, $q) {
 
     })
-    .controller('StageListCtrl', function ($scope) {
-
+    .controller('StageListCtrl', function ($scope, $state) {
         $scope.openToDoDetails = function (mduListing) {
-            $scope.go('mduListings.stage.todo.details', { itemId: mduListing.id});
-        }
-
-    })
-    .controller('StageToDoNewMduListingCtrl', function ($scope) {
+            console.log(mduListing);
+            $state.go('mduListings.stage.todo.details.listingId',
+                {
+                    listingId: mduListing.id
+                });
+        };
+        $scope.openDoneDetails = function (mduListing) {
+            console.log(mduListing);
+            $state.go('mduListings.stage.done.details.listingId',
+                {
+                    listingId: mduListing.id
+                });
+        };
+        $scope.openNewMduListing = function () {
+            console.log();
+            $state.go('mduListings.stage.newMduListing');
+        };
 
     })
     .controller('StageToDoDetailsCtrl', function ($scope) {
 
     })
     .controller('StageDoneDetailsCtrl', function ($scope) {
+
+    })
+    .controller('StageNewMduListingCtrl', function ($scope) {
 
     })
     /** REVIEW **/

@@ -8,6 +8,7 @@
   color: darken($color, 5%);
 }
 
+/** Button colors **/
 .btn-bg--danger {
   @include tpBtnBg($btn-danger-bg);
 }
@@ -24,6 +25,7 @@
   @include tpBtnBg($btn-inverse-bg);
 }
 
+/** Background colors **/
 .bg-solid--danger {
   background: $brand-danger !important;
 }
@@ -48,14 +50,22 @@
   background: $gray !important;
 }
 
-.bg-solid--white {
-  background: $white !important;
-}
-
 .bg--textured {
   background: $body-bg;
 }
 
+
+/** 50 Shades of White nigga **/
+.bg-solid--white {
+  background: $white !important;
+}
+
+.bg-solid--white-google {
+  background: $white-google !important;
+}
+
+
+/* Text Colors */
 .text-color--danger {
   color: $brand-danger !important;
 }

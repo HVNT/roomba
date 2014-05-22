@@ -1,0 +1,23 @@
+<div>
+    <div class="dashboard__overlay--left-col-large">
+        0 fuckz
+
+    </div>
+    <div class="dashboard__overlay--right-col-small">
+        <div class="scroll-container">
+            <ul class="inner-container">
+                <li class="card" ng-repeat="listing in todoListings">
+                    <header class="card__header">
+                        <div>{{listing.title}}
+                            <i class="fa fa-angle-right pull-right gutter-half-right"
+                               style="cursor:pointer;" ng-click="openToDoDetails(listing)"></i>
+                        </div>
+                    </header>
+                    <div class="card__body">
+                        <p>{{listing.description}}</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
