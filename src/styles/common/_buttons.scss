@@ -242,3 +242,10 @@ input[type="submit"].btn {
     @include transition(text-shadow 0.3s ease-out);
   }
 }
+
+.icon-btn--plain {
+  cursor: pointer;
+  &:hover {
+    color: $gray-darker;
+  }
+}

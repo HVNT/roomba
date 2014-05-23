@@ -3,18 +3,18 @@
         <!--DETAILS HEADER-->
         <div class="row gutter-bottom">
             <div class="col-lg-1 gutter-top">
-                <i class="fa fa-times fa-2x gutter-left"
-                   ng-click="closeStageDetails()" style="cursor:pointer;"></i>
+                <i class="fa fa-times fa-2x gutter-left icon-btn--plain"
+                   ng-click="closeStageDetails()""></i>
             </div>
             <div class="col-lg-offset-3 col-lg-4 text-center gutter-double-top">
                 <h3>New MDU Listing</h3>
             </div>
             <div class="col-lg-1 col-lg-offset-1 gutter-double-top">
-                <i class="fa fa-plus fa-2x pull-right" style="cursor:pointer;"
+                <i class="fa fa-plus fa-2x pull-right icon-btn--plain"
                    ng-click="addAddress()"></i>
             </div>
             <div class="col-lg-1 col-lg-offset-1 gutter-double-top">
-                <i class="fa fa-arrow-right fa-2x" style="cursor:pointer;"
+                <i class="fa fa-arrow-right fa-2x icon-btn--plain"
                     ng-click="openNewMduListingMatch()"></i>
             </div>
         </div>
@@ -33,7 +33,7 @@
                                    ng-model="whichAddress($index).street">
                         </div>
                         <div class="col-lg-1">
-                            <i class="fa fa-times pull-right"
+                            <i class="fa fa-times pull-right icon-btn--plain"
                                ng-show="$index > 0"
                                ng-click="closeAddressForm($index)" style="cursor:pointer;"></i>
                         </div>
@@ -44,7 +44,6 @@
                             <input type="text" placeholder="Sydney" class="form-control"
                                    ng-model="whichAddress($index).city">
                         </div>
-                        <!--state selecter -->
                     </div>
                     <div class="form-group gutter-top">
                         <div class="control-label col-lg-2">{{address.zipCode}}</div>
@@ -53,8 +52,10 @@
                                    ng-model="whichAddress($index).zipCode">
                         </div>
                         <div class="control-label col-lg-1 col-lg-offset-1">{{address.state}}</div>
-                        <div class="col-lg-2">
-                            <!--TODO ng-model="whichAddress($index).state"-->
+                        <div class="col-lg-1 col-lg-offset-1">
+                            <input type="text" placeholder="GA" class="form-control"
+                                   ng-model="whichAddress($index).state">
+                            <!--TODO make state selecter-->
                         </div>
                     </div>
                 </form>

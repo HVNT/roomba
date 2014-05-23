@@ -10,10 +10,9 @@
             </li>
             <li class="card" ng-repeat="listing in todoListings">
                 <header class="card__header">
-                    <div>{{listing.title}}
-                        <i class="fa fa-angle-right pull-right gutter-half-right"
-                            style="cursor:pointer;" ng-click="openToDoDetails(listing)"></i>
-                    </div>
+                    <span class="card__header-btn" ng-click="openToDoDetails(listing)">
+                        {{listing.title}}
+                    </span>
                 </header>
                 <div class="card__body">
                     <p>{{listing.description}}</p>
@@ -30,9 +29,8 @@
         <ul class="inner-container">
             <li class="card" ng-repeat="listing in doneListings">
                 <header class="card__header">
-                    <div>{{listing.title}}
-                        <i class="fa fa-angle-right pull-right gutter-half-right"
-                                style="cursor:pointer;" ng-click="openDoneDetails(listing)"></i>
+                    <div class="card__header-btn" ng-click="openDoneDetails(listing)">
+                        {{listing.title}}
                     </div>
                 </header>
                 <div class="card__body">

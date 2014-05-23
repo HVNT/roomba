@@ -23,6 +23,13 @@
   padding: $grid-gutter-width / 2;
 }
 
+.card__header-btn {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .card--preview-right {
   > .card__header > .preview {
     position: absolute;
