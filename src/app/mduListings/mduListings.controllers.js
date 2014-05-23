@@ -29,7 +29,7 @@ angular.module('rescour.roomba')
         $scope.MduListingInDetails = false;
     })
 /** STAGE **/
-    .controller('StageCtrl', function ($scope, $state, $http, $q) {
+    .controller('StageCtrl', function ($scope, $state, $http, $q, Environment) {
 
         $scope.closeStageDetails = function () {
             $state.go('mduListings.stage.list');
@@ -52,17 +52,6 @@ angular.module('rescour.roomba')
             $state.go('mduListings.stage.newMduListing');
         };
 
-    })
-    .controller('StageListCtrl', function ($scope) {
-
-    })
-    .controller('StageTodoDetailsCtrl', function ($scope) {
-
-    })
-    .controller('StageDoneDetailsCtrl', function ($scope) {
-
-    })
-    .controller('StageNewMduListingCtrl', function ($scope, $state, $http, $q, Environment) {
         var mduAddressModel = {
             localId: 0,
             street: 'Street',
@@ -101,11 +90,17 @@ angular.module('rescour.roomba')
             $scope.mduAddressModels.splice(index, 1);
         };
 
+        $scope.matchingMdus = [];
         $scope.openNewMduListingMatch = function () {
-            getMatchingMdus();
-            $state.go('mduListings.stage.newMduListingMatch');
+            console.log($scope.mduAddresses);
+            console.log($scope.matchingMdus);
+            getMatchingMdus().then(function(response) {
+                $scope.matchingMdus = response.data.collection;
+                $state.go('mduListings.stage.newMduListingMatch');
+            }, function (response) {
+                console.log(response);
+            });
         };
-
         function getMatchingMdus() {
             var defer = $q.defer(),
                 config = _.extend({
@@ -123,11 +118,25 @@ angular.module('rescour.roomba')
             return defer.promise;
         }
 
-    })
-    .controller('StageNewMduListingMatchCtrl', function ($scope, $state) {
         $scope.revertNewMduListing = function () {
             $state.go('mduListings.stage.newMduListing');
         };
+
+    })
+    .controller('StageListCtrl', function ($scope) {
+
+    })
+    .controller('StageTodoDetailsCtrl', function ($scope) {
+
+    })
+    .controller('StageDoneDetailsCtrl', function ($scope) {
+
+    })
+    .controller('StageNewMduListingCtrl', function ($scope, $state, $http, $q, Environment) {
+
+    })
+    .controller('StageNewMduListingMatchCtrl', function ($scope, $state) {
+
     })
     .controller('StageNewMduListingFormCtrl', function ($scope) {
 

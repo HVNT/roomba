@@ -1,7 +1,7 @@
 <div>
     <div class="dashboard__overlay--left-col-large">
         <!--DETAILS HEADER-->
-        <div class="row gutter-bottom">
+        <div class="row gutter-double-bottom">
             <div class="col-lg-1 gutter-top">
                 <i class="fa fa-times fa-2x gutter-left icon-btn--plain"
                    ng-click="closeStageDetails()"></i>
@@ -18,6 +18,38 @@
                    ng-click="openNewMduListingMatch()"></i>
             </div>
         </div>
+        <!-- MATCHING -->
+        <div class="scroll-container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="module module--bordered" ng-repeat="mduAddress in mduAddresses track by $index">
+                        <header class="module__header">
+                            <h5>{{mduAddress.street + ', '
+                                + mduAddress.city + ', '
+                                + mduAddress.state + ', '
+                                + mduAddress.zipCode}}</h5>
+                        </header>
+                        <div class="module__body">
+                            <ul class="module__select-list module__select-list--skinny">
+                                <li ng-repeat="mdu in matchingMdus[$index]" ng-click="mdu.isSelected = !mdu.isSelected">
+                                    <span class="prepend prepend--bordered" ng-class="{'bg-solid--success': mdu.isSelected}">
+                                        <i ng-class="{'fa-circle-o fadeIn': !mdu.isSelected, 'fa-check-circle text-color--white fadeIn': mdu.isSelected}"
+                                            class="fa fa-circle-o fadeIn"></i>
+                                    </span>
+                                    <h5>{{mdu.street + ', '
+                                        + mdu.city + ', '
+                                        + mdu.state + ', '
+                                        + mdu.zipCode}}</h5>
+                                    <span># units: {{mdu.numUnits}}</span>
+                                    <span>year: {{mdu.yearBuilt}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <!--TO-DO LIST-->
     <div class="dashboard__overlay--right-col-small">
