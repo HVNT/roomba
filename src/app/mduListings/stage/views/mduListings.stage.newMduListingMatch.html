@@ -1,0 +1,32 @@
+<div>
+    <div class="dashboard__overlay--left-col-large">
+        <!--DETAILS HEADER-->
+        <div class="row">
+            <div class="col-lg-1 gutter-top">
+                <i class="fa fa-times fa-2x gutter-left"
+                   ng-click="closeStageDetails()" style="cursor:pointer;"></i>
+            </div>
+            <div class="col-lg-10 text-center gutter-double-top">
+                <h3 >New MDU Listing</h3>
+            </div>
+            <div class="col-lg-1">
+
+            </div>
+        </div>
+    </div>
+    <!--TO-DO LIST-->
+    <div class="dashboard__overlay--right-col-small">
+        <div class="scroll-container">
+            <ul class="inner-container">
+                <li class="card" ng-repeat="listing in todoListings">
+                    <header class="card__header">
+                        <div>{{listing.title}}</div>
+                    </header>
+                    <div class="card__body">
+                        <p>{{listing.description}}</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -63,6 +63,50 @@ angular.module('rescour.roomba')
 
     })
     .controller('StageNewMduListingCtrl', function ($scope) {
+        var mduAddressModel = {
+            localId: 0,
+            street: 'Street',
+            city: 'City',
+            state: 'State',
+            zipCode: 'Zip Code'
+        };
+        $scope.mduAddressModels = [mduAddressModel];
+        $scope.mduAddress0 = {
+            street: null,
+            city: null,
+            state: null,
+            zipCode: null
+        };
+        $scope.mduAddresses = [$scope.mduAddress0];
+
+        $scope.whichAddress = function (index) {
+            return $scope.mduAddresses[index];
+        };
+
+        $scope.addAddress = function () {
+            var newMduAddressModel = mduAddressModel;
+            newMduAddressModel.localId++;
+            $scope.mduAddressModels.push(newMduAddressModel);
+            var mduAddressNamespace = 'mduAddress' + newMduAddressModel.localId;
+            $scope[mduAddressNamespace] = {
+                street: null,
+                city: null,
+                state: null,
+                zipCode: null
+            };
+            $scope.mduAddresses.push($scope[mduAddressNamespace]);
+        };
+
+        $scope.closeAddressForm = function (index) {
+            $scope.mduAddressModels.splice(index, 1);
+        }
+
+
+    })
+    .controller('StageNewMduListingMatchCtrl', function ($scope) {
+
+    })
+    .controller('StageNewMduListingFormCtrl', function ($scope) {
 
     })
     /** REVIEW **/

@@ -24,6 +24,8 @@ angular.module('rescour.roomba')
             .when('/mduListings/stage/', '/mduListings/stage/list')
             .when('/mduListings/stage/list/', '/mduListings/stage/list')
             .when('/mduListings/stage/newMduListing/', '/mduListings/stage/newMduListing')
+            .when('/mduListings/stage/newMduListingMatch/', '/mduListings/stage/newMduListingMatch')
+            .when('/mduListings/stage/newMduListingForm/', '/mduListings/stage/newMduListingForm')
             .when('/mduListings/stage/todoDetails/', '/mduListings/stage/todoDetails')
             .when('/mduListings/stage/doneDetails/', '/mduListings/stage/doneDetails')
             .when('/mduListings/review/', '/mduListings/review/list')
@@ -88,8 +90,18 @@ angular.module('rescour.roomba')
                 url: '/newMduListing',
                 controller: 'StageNewMduListingCtrl'
             })
+            .state('mduListings.stage.newMduListingMatch', {
+                templateUrl: '/app/mduListings/stage/views/mduListings.stage.newMduListingMatch.html',
+                url: '/newMduListingMatch',
+                controller: 'StageNewMduListingCtrlMatch'
+            })
+            .state('mduListings.stage.newMduListingForm', {
+                templateUrl: '/app/mduListings/stage/views/mduListings.stage.newMduListingForm.html',
+                url: '/newMduListingForm',
+                controller: 'StageNewMduListingFormCtrl'
+            })
 
-            /* REVIEW STATES*/
+            /* REVIEW STATES */
             .state('mduListings.review', {
                 templateUrl: '/app/mduListings/review/views/mduListings.review.html',
                 url: '/review',
