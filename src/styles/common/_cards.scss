@@ -55,13 +55,21 @@
 }
 
 .card__btn {
-  @include box-shadow(0px 0px 10px 3px rgba(0,0,0,0.1));
+  @include box-shadow(0px 0px 5px 3px rgba(0,0,0,0.1));
   background: white;
   border: 0px;
   padding: ($grid-gutter-width * 3 / 4) $grid-gutter-width;
   cursor: pointer;
   &:active {
     background: $white-google;
+  }
+}
+
+.card__btn--primary {
+  background: $state-info-text;
+  color: white;
+  &:active {
+    background: darken($state-info-text, 10%);
   }
 }
 

@@ -53,7 +53,7 @@ angular.module('rescour.roomba')
         };
 
     })
-    .controller('StageListCtrl', function ($scope, $state) {
+    .controller('StageListCtrl', function ($scope) {
 
     })
     .controller('StageTodoDetailsCtrl', function ($scope) {
@@ -62,7 +62,7 @@ angular.module('rescour.roomba')
     .controller('StageDoneDetailsCtrl', function ($scope) {
 
     })
-    .controller('StageNewMduListingCtrl', function ($scope) {
+    .controller('StageNewMduListingCtrl', function ($scope, $state) {
         var mduAddressModel = {
             localId: 0,
             street: 'Street',
@@ -99,12 +99,17 @@ angular.module('rescour.roomba')
 
         $scope.closeAddressForm = function (index) {
             $scope.mduAddressModels.splice(index, 1);
-        }
+        };
 
+        $scope.openNewMduListingMatch = function () {
+            $state.go('mduListings.stage.newMduListingMatch');
+        };
 
     })
-    .controller('StageNewMduListingMatchCtrl', function ($scope) {
-
+    .controller('StageNewMduListingMatchCtrl', function ($scope, $state) {
+        $scope.revertNewMduListing = function () {
+            $state.go('mduListings.stage.newMduListing');
+        };
     })
     .controller('StageNewMduListingFormCtrl', function ($scope) {
 

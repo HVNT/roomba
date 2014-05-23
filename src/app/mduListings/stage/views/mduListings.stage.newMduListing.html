@@ -1,39 +1,36 @@
 <div>
     <div class="dashboard__overlay--left-col-large">
         <!--DETAILS HEADER-->
-        <!--<div style="border-bottom: 1px solid rgba(0,0,0,.1)">-->
         <div class="row gutter-bottom">
             <div class="col-lg-1 gutter-top">
                 <i class="fa fa-times fa-2x gutter-left"
                    ng-click="closeStageDetails()" style="cursor:pointer;"></i>
             </div>
-            <div class="col-lg-10 text-center gutter-double-top">
+            <div class="col-lg-offset-3 col-lg-4 text-center gutter-double-top">
                 <h3>New MDU Listing</h3>
             </div>
-            <div class="col-lg-1">
-
+            <div class="col-lg-1 col-lg-offset-1 gutter-double-top">
+                <i class="fa fa-plus fa-2x pull-right" style="cursor:pointer;"
+                   ng-click="addAddress()"></i>
+            </div>
+            <div class="col-lg-1 col-lg-offset-1 gutter-double-top">
+                <i class="fa fa-arrow-right fa-2x" style="cursor:pointer;"
+                    ng-click="openNewMduListingMatch()"></i>
             </div>
         </div>
-        <!--</div>-->
+        <h4 class="text-color--info text-center">
+            Enter an address to get started (or a few)
+        </h4>
         <!--ENTER AN ADDRESS-->
         <div class="text-center scroll-container" style="margin-top:50px;">
-            <div class="row">
-                <h4 class="text-color--info col-lg-6 col-lg-offset-3">
-                    Enter an address to get started (or a few)
-                </h4>
-                <div class="col-lg-1">
-                    <i class="fa fa-plus fa-2x pull-right"
-                       ng-click="addAddress()" style="cursor:pointer;"></i>
-                </div>
-            </div>
-
-            <div ng-repeat="address in mduAddressModels track by $index">
+            <div ng-repeat="address in mduAddressModels track by $index"
+                 class="ani-repeater--simple-fade gutter-double-bottom">
                 <form class="form-horizontal" style="margin-top:75px;">
                     <div class="form-group gutter-top">
                         <div class="control-label col-lg-2">{{address.street}}</div>
                         <div class="col-lg-6 col-lg-offset-1">
                             <input type="text" placeholder="42 Wallaby Way" class="form-control"
-                                    ng-model="whichAddress($index).street">
+                                   ng-model="whichAddress($index).street">
                         </div>
                         <div class="col-lg-1">
                             <i class="fa fa-times pull-right"
@@ -52,7 +49,8 @@
                     <div class="form-group gutter-top">
                         <div class="control-label col-lg-2">{{address.zipCode}}</div>
                         <div class="col-lg-2 col-lg-offset-1">
-                            <input type="text" placeholder="66699" class="form-control">
+                            <input type="text" placeholder="66699" class="form-control"
+                                   ng-model="whichAddress($index).zipCode">
                         </div>
                         <div class="control-label col-lg-1 col-lg-offset-1">{{address.state}}</div>
                         <div class="col-lg-2">
@@ -60,11 +58,6 @@
                         </div>
                     </div>
                 </form>
-            </div>
-            <div>
-                <div class="label label-action label-action--success"
-                        style="cursor:pointer;">Next <i class="fa fa-angle-right"></i>
-                </div>
             </div>
         </div>
         <!--DETAILS FORM-->

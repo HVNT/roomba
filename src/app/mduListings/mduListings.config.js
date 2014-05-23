@@ -93,7 +93,7 @@ angular.module('rescour.roomba')
             .state('mduListings.stage.newMduListingMatch', {
                 templateUrl: '/app/mduListings/stage/views/mduListings.stage.newMduListingMatch.html',
                 url: '/newMduListingMatch',
-                controller: 'StageNewMduListingCtrlMatch'
+                controller: 'StageNewMduListingMatchCtrl'
             })
             .state('mduListings.stage.newMduListingForm', {
                 templateUrl: '/app/mduListings/stage/views/mduListings.stage.newMduListingForm.html',
