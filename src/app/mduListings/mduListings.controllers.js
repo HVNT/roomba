@@ -9,9 +9,9 @@
 angular.module('rescour.roomba')
     .controller('MduListingsCtrl', function ($scope, $state, MduConfig) {
         /**
-        Naming:
-            if singular -> capitalize first char
-            if plural   -> camel-case
+         Naming:
+         if singular -> capitalize first char
+         if plural   -> camel-case
          **/
         $scope.MduListing = MduConfig[0];
         $scope.MduListingMarket = MduConfig[1];
@@ -21,14 +21,14 @@ angular.module('rescour.roomba')
         $scope.doneListings = [];
         $scope.publishedListings = [];
         for (var i = 0; i < $scope.mduListings.length; i++) {
-            if($scope.mduListings[i].workflowState == 'todo') $scope.todoListings.push($scope.mduListings[i]);
+            if ($scope.mduListings[i].workflowState == 'todo') $scope.todoListings.push($scope.mduListings[i]);
             else if ($scope.mduListings[i].workflowState == 'done') $scope.doneListings.push($scope.mduListings[i]);
             else if ($scope.mduListings[i].workflowState == 'published') $scope.publishedListings.push($scope.mduListings[i]);
             else console.log($scope.mduListings[i], 'fucked');
         }
         $scope.MduListingInDetails = false;
     })
-    /** STAGE **/
+/** STAGE **/
     .controller('StageCtrl', function ($scope, $state, $http, $q) {
 
         $scope.closeStageDetails = function () {
@@ -62,7 +62,7 @@ angular.module('rescour.roomba')
     .controller('StageDoneDetailsCtrl', function ($scope) {
 
     })
-    .controller('StageNewMduListingCtrl', function ($scope, $state) {
+    .controller('StageNewMduListingCtrl', function ($scope, $state, $http, $q, Environment) {
         var mduAddressModel = {
             localId: 0,
             street: 'Street',
@@ -102,8 +102,26 @@ angular.module('rescour.roomba')
         };
 
         $scope.openNewMduListingMatch = function () {
+            getMatchingMdus();
             $state.go('mduListings.stage.newMduListingMatch');
         };
+
+        function getMatchingMdus() {
+            var defer = $q.defer(),
+                config = _.extend({
+                    cache: true,
+                    params: $scope.mduAddresses
+                }, Environment.config);
+
+            var path = Environment.path + '/mdus/';
+            $http.get(path, {}, config).then(function (response) {
+                console.log(response);
+                defer.resolve(response);
+            }, function (response) {
+                defer.reject(response);
+            });
+            return defer.promise;
+        }
 
     })
     .controller('StageNewMduListingMatchCtrl', function ($scope, $state) {
@@ -114,7 +132,7 @@ angular.module('rescour.roomba')
     .controller('StageNewMduListingFormCtrl', function ($scope) {
 
     })
-    /** REVIEW **/
+/** REVIEW **/
     .controller('ReviewCtrl', function ($scope) {
 
     })
