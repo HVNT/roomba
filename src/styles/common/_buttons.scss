@@ -248,4 +248,27 @@ input[type="submit"].btn {
   &:hover {
     color: $gray-darker;
   }
+  &:active {
+    color: darken($gray-darker, 10%);
+  }
+}
+
+.icon-btn--plain-danger {
+  cursor: pointer;
+  &:hover {
+    color: $brand-danger;
+  }
+  &:active {
+    color: darken($brand-danger, 10%);
+  }
+}
+
+.icon-btn--plain-primary {
+  cursor: pointer;
+  &:hover {
+    color: $state-info-text;
+  }
+  &:active {
+    color: darken($state-info-text, 10%);
+  }
 }

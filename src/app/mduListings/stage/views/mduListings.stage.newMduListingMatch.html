@@ -3,7 +3,7 @@
         <!--DETAILS HEADER-->
         <div class="row gutter-double-bottom">
             <div class="col-lg-1 gutter-top">
-                <i class="fa fa-times fa-2x gutter-left icon-btn--plain"
+                <i class="fa fa-times fa-2x gutter-left icon-btn--plain-danger"
                    ng-click="closeStageDetails()"></i>
             </div>
             <div class="col-lg-offset-3 col-lg-4 text-center gutter-double-top">
@@ -15,35 +15,44 @@
             </div>
             <div class="col-lg-1 gutter-double-top">
                 <i class="fa fa-arrow-right fa-2x icon-btn--plain"
-                   ng-click="openNewMduListingMatch()"></i>
+                   ng-click="openNewMduListingAddress()"></i>
             </div>
         </div>
+        <h4 class="text-color--info text-center">
+            Match your addresses with their appropriate MDUs.
+        </h4>
         <!-- MATCHING -->
-        <div class="scroll-container">
+        <div class="scroll-container" style="padding-bottom: 200px; margin-top:75px;">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
-                    <div class="module module--bordered" ng-repeat="mduAddress in mduAddresses track by $index">
-                        <header class="module__header">
-                            <h5>{{mduAddress.street + ', '
+                    <div class="module module--bordered-shadow gutter-double-bottom"
+                         ng-repeat="mduAddress in mduAddresses track by $index">
+                        <header class="module__header--white-google">
+                            <h5>{{mduAddress.street1 + ', '
                                 + mduAddress.city + ', '
-                                + mduAddress.state + ', '
-                                + mduAddress.zipCode}}</h5>
+                                + mduAddress.state + ' - '
+                                + mduAddress.zip}}</h5>
                         </header>
-                        <div class="module__body">
-                            <ul class="module__select-list module__select-list--skinny">
-                                <li ng-repeat="mdu in matchingMdus[$index]" ng-click="mdu.isSelected = !mdu.isSelected">
-                                    <span class="prepend prepend--bordered" ng-class="{'bg-solid--success': mdu.isSelected}">
+                        <div class="module__body" ng-if="matchingMdus[$index].length > 0">
+                            <ul class="module__select-list module__select-list--light module__select-list--skinny">
+                                <li ng-repeat="mdu in matchingMdus[$index]" ng-click="selectMdu(mdu, $parent.$index)">
+                                    <span class="prepend"
+                                          ng-class="{'bg-solid--success': mdu.isSelected, 'bg-solid--white': !mdu.isSelected}">
                                         <i ng-class="{'fa-circle-o fadeIn': !mdu.isSelected, 'fa-check-circle text-color--white fadeIn': mdu.isSelected}"
-                                            class="fa fa-circle-o fadeIn"></i>
+                                           class="fa fa-circle-o fadeIn"></i>
                                     </span>
-                                    <h5>{{mdu.street + ', '
-                                        + mdu.city + ', '
-                                        + mdu.state + ', '
-                                        + mdu.zipCode}}</h5>
-                                    <span># units: {{mdu.numUnits}}</span>
-                                    <span>year: {{mdu.yearBuilt}}</span>
+                                    <h5>{{mdu.address.street1 + ', '
+                                        + mdu.address.city + ', '
+                                        + mdu.address.state + ' - '
+                                        + mdu.address.zip}}
+                                        </br><span>Number of units: {{mdu.numUnits}}</span>
+                                        </br><span>Year: {{mdu.yearBuilt}}</span>
+                                    </h5>
                                 </li>
                             </ul>
+                        </div>
+                        <div class="module__body" ng-if="matchingMdus[$index].length == 0">
+                            <p>No matching MDUs where found in the proximity.</p>
                         </div>
                     </div>
                 </div>

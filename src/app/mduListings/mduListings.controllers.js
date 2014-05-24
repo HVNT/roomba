@@ -54,17 +54,19 @@ angular.module('rescour.roomba')
 
         var mduAddressModel = {
             localId: 0,
-            street: 'Street',
+            street1: 'Street',
+            //street2
             city: 'City',
             state: 'State',
-            zipCode: 'Zip Code'
+            zip: 'Zip Code'
         };
         $scope.mduAddressModels = [mduAddressModel];
         $scope.mduAddress0 = {
-            street: null,
-            city: null,
-            state: null,
-            zipCode: null
+            street1: 'test remove for',
+            //street2
+            city: 'production',
+            state: 'GA',
+            zip: 30332
         };
         $scope.mduAddresses = [$scope.mduAddress0];
 
@@ -76,32 +78,38 @@ angular.module('rescour.roomba')
             var newMduAddressModel = mduAddressModel;
             newMduAddressModel.localId++;
             $scope.mduAddressModels.push(newMduAddressModel);
+
             var mduAddressNamespace = 'mduAddress' + newMduAddressModel.localId;
             $scope[mduAddressNamespace] = {
-                street: null,
+                street1: null,
+                //street2
                 city: null,
                 state: null,
-                zipCode: null
+                zip: null
             };
             $scope.mduAddresses.push($scope[mduAddressNamespace]);
         };
-
-        $scope.closeAddressForm = function (index) {
+        $scope.removeAddressForm = function (index) {
+            $scope.mduAddresses.splice(index, 1);
             $scope.mduAddressModels.splice(index, 1);
         };
 
         $scope.matchingMdus = [];
+
         $scope.openNewMduListingMatch = function () {
-            console.log($scope.mduAddresses);
-            console.log($scope.matchingMdus);
-            getMatchingMdus().then(function(response) {
+            getMatchingMdus().then(function (response) {
                 $scope.matchingMdus = response.data.collection;
                 $state.go('mduListings.stage.newMduListingMatch');
             }, function (response) {
                 console.log(response);
             });
         };
-        function getMatchingMdus() {
+
+        $scope.openNewMduListingAddress = function () {
+            console.log('TODO')
+        };
+
+        function getMatchingMdus () {
             var defer = $q.defer(),
                 config = _.extend({
                     cache: true,
@@ -117,6 +125,18 @@ angular.module('rescour.roomba')
             });
             return defer.promise;
         }
+
+        $scope.selectMdu = function (mdu, index) {
+            if($scope.matchingMdus[index].length > 0) {
+                for (var i = 0; i < $scope.matchingMdus[index].length; i++) {
+                    var _mdu = $scope.matchingMdus[index][i];
+                    if (_mdu.isSelected && _mdu != mdu) {
+                        _mdu.isSelected = false;
+                    }
+                }
+            }
+            mdu.isSelected = !mdu.isSelected;
+        };
 
         $scope.revertNewMduListing = function () {
             $state.go('mduListings.stage.newMduListing');
