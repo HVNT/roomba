@@ -36,7 +36,6 @@ angular.module('rescour.services')
                     mdu.yearBuilt = mduData.yearBuilt || 'None Available';
                     mdu.numUnits = mduData.numUnits || 'None Available';
                     mdu.acres = mduData.acres || 'None Available';
-                    mdu.county = mduData.county || 'None Available';
                     mdu.assessorURl = mduData.assessorUrl || 'None Available';
                     /* MDU Address */
                     mdu.address = {};
@@ -44,7 +43,8 @@ angular.module('rescour.services')
                     mdu.address.street2 = mduData.address.street2 || 'None Available';
                     mdu.address.city = mduData.address.city || 'None Available';
                     mdu.address.zip = mduData.address.zip || 'None Available';
-                    mdu.address.latitude = mduData.latitude || 'None Available';
+                    mdu.address.couny = mduData.address.county || 'None Available';
+                    mdu.address.latitude = mduData.address.latitude || 'None Available';
                     mdu.address.longitude = mduData.address.longitude || 'None Available';
 
                     this.mdus.push(mdu);
@@ -103,6 +103,25 @@ angular.module('rescour.services')
 //
 //                return defer.promise;
             };
+
+            MDUListing.init = function (listingData) {
+                var defer = $q.defer(),
+                    self = this,
+                    path = Environment.path + collectionPath,
+                    config = angular.extend({}, Environment.config),
+                    body = JSON.stringify(listingData);
+
+                $http.post(path, body, config).then(
+                    function (response) {
+                        defer.resolve(response);
+                    },
+                    function (response) {
+                        // set status code
+                        defer.reject(response);
+                    }
+                );
+                return defer.promise;
+           };
 
             /**
              * @doc method

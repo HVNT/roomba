@@ -90,7 +90,7 @@
                 "weight": 9,
                 "key": "mdu.type",
                 "type": "typeahead",
-                "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes", "Portfolio"],
+                "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes"],
                 "mock": "prop-type"
             },
             {
@@ -132,6 +132,11 @@
                         "mock": "int-5"
                     },
                     {
+                        "title": "County",
+                        "key": "county",
+                        "mock": "text-med"
+                    },
+                    {
                         "title": "Latitude",
                         "key": "latitude",
                         "readonly": true,
@@ -156,12 +161,6 @@
                 "weight": 9,
                 "key": "mdu.acres",
                 "mock": "int-3"
-            },
-            {
-                "title": "County",
-                "weight": 1,
-                "key": "mdu.county",
-                "mock": "text-med"
             },
             {
                 "title": "Assessor Url",
@@ -195,17 +194,6 @@
                         "key": "date",
                         "title": "Date",
                         "type": "date"
-                    }
-                ]
-            },
-            {
-                "title": "Portfolio",
-                "key": "portfolio",
-                "weight": 10,
-                "fields": [
-                    {
-                        "key": "title",
-                        "title": "Title"
                     }
                 ]
             },
@@ -268,25 +256,6 @@
                 ]
             },
             {
-                "title": "News",
-                "weight": 9,
-                "key": "mdu.news",
-                "fields": [
-                    {
-                        "key": "link",
-                        "title": "Link"
-                    },
-                    {
-                        "key": "title",
-                        "title": "Title"
-                    },
-                    {
-                        "key": "body",
-                        "title": "Body"
-                    }
-                ]
-            },
-            {
                 "title": "Unit Mix",
                 "key": "mdu.unitMix",
                 "weight": 100,
@@ -300,7 +269,7 @@
                             "2 BR / 1 BA", "2 BR / 1.5 BA", "2 BR / 2 BA", "2 BR / 2.5 BA", "2 BR / 3 BA",
                             "3 BR / 1 BA", "3 BR / 1.5 BA", "3 BR / 2 BA", "3 BR / 2.5 BA", "3 BR / 3 BA", "3 BR / 3.5 BA", "3 BR / 4 BA",
                             "4 BR / 1 BA", "4 BR / 1.5 BA", "4 BR / 2 BA", "4 BR / 2.5 BA", "4 BR / 3 BA", "4 BR / 3.5 BA", "4 BR / 4 BA",
-                            "1 BR / 1 BA TH", "1 BR / 1.5 BA TH",  "1 BR / 2 BA TH",
+                            "1 BR / 1 BA TH", "1 BR / 1.5 BA TH", "1 BR / 2 BA TH",
                             "2 BR / 1 BA TH", "2 BR / 1.5 BA TH", "2 BR / 2 BA TH", "2 BR / 2.5 BA TH", "2 BR / 3 BA TH",
                             "3 BR / 1 BA TH", "3 BR / 1.5 BA TH", "3 BR / 2 BA TH", "3 BR / 2.5 BA TH", "3 BR / 3 BA TH", "3 BR / 3.5 BA TH", "3 BR / 4 BA TH",
                             "4 BR / 1 BA TH", "4 BR / 1.5 BA TH", "4 BR / 2 BA TH", "4 BR / 2.5 BA TH", "4 BR / 3 BA TH", "4 BR / 3.5 BA TH", "4 BR / 4 BA TH",
@@ -318,6 +287,42 @@
                     {
                         "key": "rent",
                         "title": "Rent"
+                    }
+                ]
+            }
+        ],
+        "resources": [
+            {
+                "title": "Contacts",
+                "key": "contacts",
+                "path": "/contacts/",
+                "fields": [
+                    {
+                        "key": "name",
+                        "title": "Name"
+                    },
+                    {
+                        "key": "email",
+                        "title": "Email"
+                    },
+                    {
+                        "key": "phone",
+                        "title": "Phone"
+                    }
+                ]
+            },
+            {
+                "title": "Images",
+                "path": "/images/",
+                "key": "images",
+                "fields": [
+                    {
+                        "key": "url",
+                        "title": "URL"
+                    },
+                    {
+                        "key": "weight",
+                        "title": "Weight"
                     }
                 ]
             }

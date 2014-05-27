@@ -168,12 +168,15 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 mdu[mduKey].city = Utilities.generateString(2);
                                 mdu[mduKey].state = Utilities.generateString(1);
                                 mdu[mduKey].zip = Utilities.generateNum(10000, 99999, false);
+                                mdu[mduKey].county = Utilities.generateString(2);
                                 mdu[mduKey].latitude = Utilities.generateNum(-90, 90, true);
+                                mdu[mduKey].longitude = Utilities.generateNum(-180, 180, true);
                                 matchMdu[mduKey].street1 = Utilities.generateString(3);
                                 matchMdu[mduKey].street2 = Utilities.generateString(3);
                                 matchMdu[mduKey].city = Utilities.generateString(2);
                                 matchMdu[mduKey].state = Utilities.generateString(1);
                                 matchMdu[mduKey].zip = Utilities.generateNum(10000, 99999, false);
+                                matchMdu[mduKey].county = Utilities.generateString(2);
                                 matchMdu[mduKey].latitude = Utilities.generateNum(-90, 90, true);
                                 matchMdu[mduKey].longitude = Utilities.generateNum(-180, 180, true);
                                 break;
@@ -213,6 +216,15 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
             $httpBackend.whenGET(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
                 return [200, {
                     status: 'N/A'
+                }, {}];
+            });
+            /* Creates a new mdu_listing and returns ID of new mdu_listing */
+            $httpBackend.whenPOST(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
+                return [200, {
+                    status: 'N/A',
+                    response: {
+                        id: Utilities.generateNum(1, 999999999, false)
+                    }
                 }, {}];
             });
             /* Updates an mdu_listing's data or changes its workflow state */
@@ -261,14 +273,23 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                 status: 'N/A'
             }, {}];
         });
+        /* Creates a new mdu_listing and returns ID of new mdu_listing */
+        $httpBackend.whenPOST(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
+            return [200, {
+                status: 'N/A',
+                response: {
+                    id: Utilities.generateNum(1, 999999999, false)
+                }
+            }, {}];
+        });
         /* Updates an mdu_listing's data or changes its workflow state */
         $httpBackend.whenPUT(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
             return [200, {
                 status: 'N/A'
             }, {}];
         });
-
         /* Receives collection of Addresses, returns matching MDUs */
+        // NOTE: production will return long/lat as shit will be geocoded
         $httpBackend.whenGET(/\/mdus\/$/).respond(function (method, url, data, headers) {
             var matchingMdus = [];
             // hardcoded this shit sucks i just wanted to move on to other shit and this
