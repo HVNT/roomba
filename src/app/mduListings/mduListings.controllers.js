@@ -142,6 +142,46 @@ angular.module('rescour.roomba')
             $state.go('mduListings.stage.newMduListing');
         };
 
+        /** VIEW MODEL FOR MDU LISTING FORM **/
+        $scope.newMduListingFormModel = {
+            mdus: []
+        };
+        /*******************************/
+
+        $scope.openNewMduListingForm = function () {
+            assessMatches();
+            $scope.MduListing.init($scope.newMduListingFormModel).then( function (response) {
+                console.log(response);
+            }, function (response) {
+                console.log(response);
+            });
+        };
+
+        function assessMatches () {
+            for (var i = 0; i < $scope.matchingMdus.length; i++) {
+                if ($scope.matchingMdus[i].length > 0 ) {
+                    for (var j = 0; j < $scope.matchingMdus[i].length; j++) {
+                        var mdu = $scope.matchingMdus[i][j];
+                        if (mdu.isSelected) {
+                            $scope.newMduListingFormModel.mdus[i] = mdu; // should map 1:1 w/ indexes
+                            break; // should only be 1 per index
+                        } else {
+                            if (j == $scope.matchingMdus[i].length - 1) { // at end
+                                $scope.newMduListingFormModel.mdus[i] = {}; // can do this here because of break;
+                            }
+                        }
+                    }
+                } else { // no match
+                    $scope.newMduListingFormModel.mdus[i] = {}; // no match
+                }
+            }
+            console.log($scope.newMduListingFormModel);
+        }
+
+        $scope.continueToNewMduListingForm = function () {
+            $scope.go('mduListings.stage.newMduListingForm');
+        };
+
     })
     .controller('StageListCtrl', function ($scope) {
 

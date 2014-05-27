@@ -107,7 +107,7 @@ angular.module('rescour.services')
             MDUListing.init = function (listingData) {
                 var defer = $q.defer(),
                     self = this,
-                    path = Environment.path + collectionPath,
+                    path = Environment.path + MDUListing.path,
                     config = angular.extend({}, Environment.config),
                     body = JSON.stringify(listingData);
 

@@ -219,7 +219,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                 }, {}];
             });
             /* Creates a new mdu_listing and returns ID of new mdu_listing */
-            $httpBackend.whenPOST(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
+            $httpBackend.whenPOST(/\/mdu_listings\/$/).respond(function (method, url, data, headers) {
                 return [200, {
                     status: 'N/A',
                     response: {
@@ -240,7 +240,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                 // is the absolute bare minimum i dont have any validation for why its this way
                 matchingMdus.push(matchMdus.splice(0,3));
                 matchingMdus.push([]);
-                matchingMdus.push(matchMdus.splice(0,1));
+//                matchingMdus.push(matchMdus.splice(0,1));
 
                 return [200, {
                     status: 'N/A',
@@ -274,7 +274,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
             }, {}];
         });
         /* Creates a new mdu_listing and returns ID of new mdu_listing */
-        $httpBackend.whenPOST(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
+        $httpBackend.whenPOST(/\/mdu_listings\/$/).respond(function (method, url, data, headers) {
             return [200, {
                 status: 'N/A',
                 response: {
