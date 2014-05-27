@@ -142,16 +142,29 @@ angular.module('rescour.roomba')
             $state.go('mduListings.stage.newMduListing');
         };
 
+        $scope.revertNewMduListingMatch = function () {
+            $state.go('mduListings.stage.newMduListingMatch');
+        };
+
         /** VIEW MODEL FOR MDU LISTING FORM **/
+        // reset data? --> from one place..
         $scope.newMduListingFormModel = {
+            mdus: []
+        };
+        // SHITS IMPORTANT AF YO
+        $scope.mduListingFormModel = {
             mdus: []
         };
         /*******************************/
 
         $scope.openNewMduListingForm = function () {
             assessMatches();
+
             $scope.MduListing.init($scope.newMduListingFormModel).then( function (response) {
-                console.log(response);
+                $scope.newMduListingFormModel.id = response.data.response.id;
+                $scope.mduListingFormModel = new $scope.MduListing($scope.newMduListingFormModel);
+                console.log($scope.mduListingFormModel);
+                $scope.continueToNewMduListingForm();
             }, function (response) {
                 console.log(response);
             });
@@ -167,19 +180,23 @@ angular.module('rescour.roomba')
                             break; // should only be 1 per index
                         } else {
                             if (j == $scope.matchingMdus[i].length - 1) { // at end
-                                $scope.newMduListingFormModel.mdus[i] = {}; // can do this here because of break;
+                                $scope.newMduListingFormModel.mdus[i] = {
+                                    address: {}
+                                }; // can do this here because of break;
                             }
                         }
                     }
                 } else { // no match
-                    $scope.newMduListingFormModel.mdus[i] = {}; // no match
+                    $scope.newMduListingFormModel.mdus[i] = {
+                        address: {}
+                    }; // no match
                 }
             }
             console.log($scope.newMduListingFormModel);
         }
 
         $scope.continueToNewMduListingForm = function () {
-            $scope.go('mduListings.stage.newMduListingForm');
+            $state.go('mduListings.stage.newMduListingForm');
         };
 
     })

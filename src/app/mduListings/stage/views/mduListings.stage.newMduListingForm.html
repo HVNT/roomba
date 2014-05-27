@@ -1,16 +1,20 @@
 <div>
     <div class="dashboard__overlay--left-col-large">
         <!--DETAILS HEADER-->
-        <div class="row">
+        <div class="row gutter-double-bottom">
             <div class="col-lg-1 gutter-top">
-                <i class="fa fa-times fa-2x gutter-left"
-                   ng-click="closeStageDetails()" style="cursor:pointer;"></i>
+                <i class="fa fa-times fa-2x gutter-left icon-btn--plain-danger"
+                   ng-click="closeStageDetails()"></i>
             </div>
-            <div class="col-lg-10 text-center gutter-double-top">
-                <h3 >New MDU Listing</h3>
+            <div class="col-lg-offset-3 col-lg-4 text-center gutter-double-top">
+                <h3>MDU Listing Form</h3>
             </div>
-            <div class="col-lg-1">
-
+            <div class="col-lg-1 col-lg-offset-2 gutter-double-top icon-btn--plain" style="padding-left:40px;">
+                <i class="fa fa-arrow-left fa-2x"
+                   ng-click="revertNewMduListingMatch()"></i>
+            </div>
+            <div class="col-lg-1 gutter-double-top">
+                SAVE
             </div>
         </div>
     </div>
