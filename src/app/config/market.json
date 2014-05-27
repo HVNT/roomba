@@ -20,84 +20,112 @@
         "fields": [
             {
                 "title": "Title",
-                "weight": 5000,
                 "key": "title",
                 "type": "text",
+                "rowIndex": 4,
+                "weight": 100,
                 "mock": "text-med"
             },
             {
-                "title": "Page",
-                "weight": 2,
+                "title": "Page URL",
                 "key": "page",
                 "type": "text",
+                "rowIndex": 3,
+                "weight": 110,
                 "mock": "url"
             },
             {
                 "title": "Description",
-                "weight": 8,
                 "key": "description",
                 "type": "textarea",
+                "rowIndex": 5,
+                "weight": 90,
                 "mock": "text-lrg"
             },
             {
                 "title": "Broker",
-                "weight": 10,
                 "key": "broker",
+                "type": "text",
+                "rowIndex": 1,
+                "weight": 1000,
                 "mock": "text-sml"
             },
             {
-                "title": "Flyer",
-                "weight": 9,
+                "title": "Flyer URL",
                 "key": "flyer",
+                "type": "text",
+                "rowIndex": 7,
+                "weight": 9,
                 "mock": "url"
             },
             {
-                "title": "Price",
-                "weight": 8,
+                "title": "Price Range",
                 "key": "price",
-                "mock": "int-5"
+                "type": "text",
+                "rowIndex": 5,
+                "weight": 8,
+                "mock": "price",
+                "fields": [
+                    {
+                        "title": "Low",
+                        "key": "low",
+                        "mock": "int-5"
+                    },
+                    {
+                        "title": "High",
+                        "key": "high",
+                        "mock": "int-5"
+                    }
+                ]
             },
             {
                 "title": "Marketing URL",
-                "weight": 8,
                 "key": "marketingUrl",
+                "type": "text",
+                "rowIndex": 8,
+                "weight": 8,
                 "mock": "url"
             },
             {
                 "title": "Call For Offers",
-                "weight": 9,
                 "key": "callForOffers",
                 "type": "date",
+                "rowIndex": 2,
+                "weight": 9,
                 "mock": "date"
             },
             {
                 "title": "Date Posted",
-                "weight": 9,
                 "key": "datePosted",
                 "type": "date",
+                "rowIndex": 2,
+                "weight": 9,
                 "mock": "date"
             },
             {
                 "title": "Property Status",
-                "weight": 9,
                 "key": "status",
                 "type": "typeahead",
                 "typeahead": ["Marketing", "Marketing - Past Due", "Under Contract", "Under LOI", "Sold", "Expired"],
+                "rowIndex": 1,
+                "weight": 9,
                 "mock": "prop-status"
             },
             {
                 "title": "Property Type",
-                "weight": 9,
                 "key": "mdu.type",
                 "type": "typeahead",
                 "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes"],
+                "rowIndex": 9,
+                "weight": 9,
                 "mock": "prop-type"
             },
             {
                 "title": "Year Built",
-                "weight": 3000,
                 "key": "mdu.yearBuilt",
                 "type": "text",
+                "rowIndex": 9,
+                "weight": 3000,
                 "mock": "int-4"
             },
             {
@@ -109,42 +137,56 @@
                     {
                         "title": "Street 1",
                         "key": "street1",
+                        "type": "text",
+                        "rowIndex": 11,
                         "mock": "text-sml"
                     },
                     {
                         "title": "Street 2",
                         "key": "street2",
+                        "type": "text",
                         "mock": "text-sml"
                     },
                     {
                         "title": "City",
                         "key": "city",
+                        "type": "text",
+                        "rowIndex": 12,
                         "mock": "text-sml"
                     },
                     {
                         "title": "State",
                         "key": "state",
+                        "rowIndex": 13,
+                        "weight": 50,
                         "mock": "text-sml"
                     },
                     {
                         "title": "Zip",
                         "key": "zip",
+                        "type": "text",
+                        "rowIndex": 13,
+                        "weight": 60,
                         "mock": "int-5"
                     },
                     {
                         "title": "County",
                         "key": "county",
+                        "type": "text",
+                        "rowIndex": 14,
                         "mock": "text-med"
                     },
                     {
                         "title": "Latitude",
                         "key": "latitude",
+                        "rowIndex": 15,
                         "readonly": true,
                         "mock": "lat"
                     },
                     {
                         "title": "Longitude",
                         "key": "longitude",
+                        "rowIndex": 15,
                         "readonly": true,
                         "mock": "long"
                     }
@@ -152,20 +194,24 @@
             },
             {
                 "title": "# Units",
-                "weight": 10,
                 "key": "mdu.numUnits",
+                "rowIndex": 10,
+                "weight": 10,
                 "mock": "int-3"
             },
             {
                 "title": "Acres",
-                "weight": 9,
                 "key": "mdu.acres",
+                "rowIndex": 10,
+                "weight": 9,
                 "mock": "int-3"
             },
             {
                 "title": "Assessor Url",
-                "weight": 0,
                 "key": "mdu.assessorUrl",
+                "type": "text",
+                "rowIndex": 16,
+                "weight": 0,
                 "mock": "url"
             }
         ],

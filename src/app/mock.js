@@ -180,6 +180,18 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                 matchMdu[mduKey].latitude = Utilities.generateNum(-90, 90, true);
                                 matchMdu[mduKey].longitude = Utilities.generateNum(-180, 180, true);
                                 break;
+                            case('price'):
+                                if (field.key.charAt(3) == '.') {
+                                    mduKey = field.key.slice(4, field.key.length);
+                                    mdu[mduKey] = [Utilities.generateNum(10000, 99999, false),
+                                        Utilities.generateNum(10000, 99999, false)];
+                                    matchMdu[mduKey] = [Utilities.generateNum(10000, 99999, false),
+                                        Utilities.generateNum(10000, 99999, false)];
+                                } else {
+                                    mduListing[field.key] = [Utilities.generateNum(10000, 99999, false),
+                                        Utilities.generateNum(10000, 99999, false)];
+                                }
+                                break;
                             default:
                                 break;
                         }
