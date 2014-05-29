@@ -14,6 +14,9 @@ angular.module('rescour.services')
              * @constructor
              */
             var MDUListing = function (data) {
+                /*
+                NOTE: might want to refactor to itar over all collections for finer control
+                 */
                 /** MDU Listing Fields **/
                 this.id = data.id || 'lol no id?';
                 this.workflowState = data.workflowState || 'lol no state?';
@@ -22,32 +25,43 @@ angular.module('rescour.services')
                 this.description = data.description || 'None Available';
                 this.broker = data.broker || 'None Available';
                 this.flyer = data.flyer || 'None Available';
-                this.price = data.price  || 'None Available';
                 this.marketingUrl = data.marketingUrl  || 'None Available';
                 this.callForOffers = data.callForOffers  || 'None Available';
                 this.datePosted = data.datePosted  || 'None Available';
                 this.status = data.status  || 'None Available'; // key should be propertyStatus
+                // might want to itar
+                this.price = data.price  || [];
+                this.images = data.images || [];
+                this.tourDates = data.tourDates || [];
+                this.contacts = data.contacts || [];
                 /** MDU Fields **/
                 this.mdus = [];
-                for (var i = 0; i < data.mdus.length; i++) {
-                    var mdu = {},
-                        mduData = data.mdus[i];
-                    mdu.type = mduData.type || 'None Available';
-                    mdu.yearBuilt = mduData.yearBuilt || 'None Available';
-                    mdu.numUnits = mduData.numUnits || 'None Available';
-                    mdu.acres = mduData.acres || 'None Available';
-                    mdu.assessorURl = mduData.assessorUrl || 'None Available';
-                    /* MDU Address */
-                    mdu.address = {};
-                    mdu.address.street1 = mduData.address.street1 || 'None Available';
-                    mdu.address.street2 = mduData.address.street2 || 'None Available';
-                    mdu.address.city = mduData.address.city || 'None Available';
-                    mdu.address.zip = mduData.address.zip || 'None Available';
-                    mdu.address.couny = mduData.address.county || 'None Available';
-                    mdu.address.latitude = mduData.address.latitude || 'None Available';
-                    mdu.address.longitude = mduData.address.longitude || 'None Available';
+                if(data.mdus.length > 0) {
+                    for (var i = 0; i < data.mdus.length; i++) {
+                        var mdu = {},
+                            mduData = data.mdus[i];
+                        mdu.type = mduData.type || 'None Available';
+                        mdu.yearBuilt = mduData.yearBuilt || 'None Available';
+                        mdu.numUnits = mduData.numUnits || 'None Available';
+                        mdu.acres = mduData.acres || 'None Available';
+                        mdu.assessorUrl = mduData.assessorUrl || 'None Available';
+                        // might want to itar
+                        mdu.unitMix = mduData.unitMix || [];
+                        mdu.salesHistory = mduData.salesHistory || [];
+                        mdu.taxHistory = mduData.taxHistory || [];
+                        /* MDU Address */
+                        mdu.address = {};
+                        mdu.address.street1 = mduData.address.street1 || 'None Available';
+                        mdu.address.street2 = mduData.address.street2 || 'None Available';
+                        mdu.address.city = mduData.address.city || 'None Available';
+                        mdu.address.state = mduData.address.state || 'None Available';
+                        mdu.address.zip = mduData.address.zip || 'None Available';
+                        mdu.address.county = mduData.address.county || 'None Available';
+                        mdu.address.latitude = mduData.address.latitude || 'None Available';
+                        mdu.address.longitude = mduData.address.longitude || 'None Available';
 
-                    this.mdus.push(mdu);
+                        this.mdus.push(mdu);
+                    }
                 }
             };
             /** MDU model properties **/
@@ -122,6 +136,27 @@ angular.module('rescour.services')
                 );
                 return defer.promise;
            };
+
+            MDUListing.prototype.update = function () {
+                console.log(this);
+                var defer = $q.defer(),
+                    self = this,
+                    path = Environment.path + MDUListing.path + self.id,
+                    config = angular.extend({}, Environment.config),
+                    body = JSON.stringify(self);
+
+                $http.put(path, body, config).then(
+                    function (response) {
+                        defer.resolve(response);
+                    },
+                    function (response) {
+                        // set status code
+                        defer.reject(response);
+                    }
+                );
+                return defer.promise;
+
+            };
 
             /**
              * @doc method

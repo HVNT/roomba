@@ -19,118 +19,136 @@
         },
         "fields": [
             {
-                "title": "Title",
-                "key": "title",
-                "type": "text",
-                "rowIndex": 4,
-                "weight": 100,
-                "mock": "text-med"
-            },
-            {
-                "title": "Page URL",
-                "key": "page",
-                "type": "text",
-                "rowIndex": 3,
-                "weight": 110,
-                "mock": "url"
-            },
-            {
-                "title": "Description",
-                "key": "description",
-                "type": "textarea",
-                "rowIndex": 5,
-                "weight": 90,
-                "mock": "text-lrg"
-            },
-            {
                 "title": "Broker",
                 "key": "broker",
                 "type": "text",
-                "rowIndex": 1,
                 "weight": 1000,
+                "fieldWidth": 2,
                 "mock": "text-sml"
-            },
-            {
-                "title": "Flyer URL",
-                "key": "flyer",
-                "type": "text",
-                "rowIndex": 7,
-                "weight": 9,
-                "mock": "url"
-            },
-            {
-                "title": "Price Range",
-                "key": "price",
-                "type": "text",
-                "rowIndex": 5,
-                "weight": 8,
-                "mock": "price",
-                "fields": [
-                    {
-                        "title": "Low",
-                        "key": "low",
-                        "mock": "int-5"
-                    },
-                    {
-                        "title": "High",
-                        "key": "high",
-                        "mock": "int-5"
-                    }
-                ]
-            },
-            {
-                "title": "Marketing URL",
-                "key": "marketingUrl",
-                "type": "text",
-                "rowIndex": 8,
-                "weight": 8,
-                "mock": "url"
-            },
-            {
-                "title": "Call For Offers",
-                "key": "callForOffers",
-                "type": "date",
-                "rowIndex": 2,
-                "weight": 9,
-                "mock": "date"
-            },
-            {
-                "title": "Date Posted",
-                "key": "datePosted",
-                "type": "date",
-                "rowIndex": 2,
-                "weight": 9,
-                "mock": "date"
             },
             {
                 "title": "Property Status",
                 "key": "status",
                 "type": "typeahead",
                 "typeahead": ["Marketing", "Marketing - Past Due", "Under Contract", "Under LOI", "Sold", "Expired"],
-                "rowIndex": 1,
-                "weight": 9,
+                "weight": 1000,
+                "fieldWidth": 2,
                 "mock": "prop-status"
+            },
+            {
+                "title": "Call For Offers",
+                "key": "callForOffers",
+                "type": "date",
+                "weight": 990,
+                "fieldWidth": 2,
+                "mock": "date"
+            },
+            {
+                "title": "Date Posted",
+                "key": "datePosted",
+                "type": "date",
+                "weight": 990,
+                "fieldWidth": 2,
+                "mock": "date"
+            },
+            {
+                "title": "Page URL",
+                "key": "page",
+                "type": "text",
+                "weight": 980,
+                "fieldWidth": 7,
+                "mock": "url"
+            },
+            {
+                "title": "Title",
+                "key": "title",
+                "type": "text",
+                "weight": 970,
+                "fieldWidth": 7,
+                "mock": "text-med"
+            },
+            {
+                "title": "Description",
+                "key": "description",
+                "type": "textarea",
+                "weight": 960,
+                "fieldWidth": 7,
+                "mock": "text-lrg"
+            },
+            {
+                "title": "Price Range",
+                "key": "price",
+                "type": "text",
+                "weight": 950,
+                "mock": "price",
+                "fields": [
+                    {
+                        "title": "Low",
+                        "key": "low",
+                        "weight": 950,
+                        "fieldWidth": 1,
+                        "mock": "int-5"
+                    },
+                    {
+                        "title": "High",
+                        "key": "high",
+                        "weight": 950,
+                        "fieldWidth": 1,
+                        "mock": "int-5"
+                    }
+                ]
+            },
+            {
+                "title": "Flyer URL",
+                "key": "flyer",
+                "type": "text",
+                "weight": 940,
+                "fieldWidth": 7,
+                "mock": "url"
+            },
+            {
+                "title": "Marketing URL",
+                "key": "marketingUrl",
+                "type": "text",
+                "weight": 930,
+                "fieldWidth": 7,
+                "mock": "url"
             },
             {
                 "title": "Property Type",
                 "key": "mdu.type",
                 "type": "typeahead",
                 "typeahead": ["Apartment", "Condo", "Land", "Mobile Homes"],
-                "rowIndex": 9,
-                "weight": 9,
+                "weight": 900,
+                "fieldWidth": 3,
                 "mock": "prop-type"
             },
             {
                 "title": "Year Built",
                 "key": "mdu.yearBuilt",
                 "type": "text",
-                "rowIndex": 9,
-                "weight": 3000,
+                "weight": 900,
+                "fieldWidth": 1,
                 "mock": "int-4"
             },
             {
+                "title": "# Units",
+                "key": "mdu.numUnits",
+                "type": "text",
+                "weight": 890,
+                "fieldWidth": 2,
+                "mock": "int-3"
+            },
+            {
+                "title": "Acres",
+                "key": "mdu.acres",
+                "weight": 890,
+                "fieldWidth": 2,
+                "mock": "int-3"
+            },
+            {
                 "title": "Address",
-                "weight": 2,
+                "weight": 880,
                 "key": "mdu.address",
                 "mock": "address",
                 "fields": [
@@ -138,80 +156,72 @@
                         "title": "Street 1",
                         "key": "street1",
                         "type": "text",
-                        "rowIndex": 11,
+                        "weight": 880,
+                        "fieldWidth": 7,
                         "mock": "text-sml"
                     },
                     {
                         "title": "Street 2",
                         "key": "street2",
                         "type": "text",
+                        "hidden": true,
                         "mock": "text-sml"
                     },
                     {
                         "title": "City",
                         "key": "city",
                         "type": "text",
-                        "rowIndex": 12,
+                        "weight": 870,
+                        "fieldWidth": 7,
                         "mock": "text-sml"
                     },
                     {
                         "title": "State",
                         "key": "state",
-                        "rowIndex": 13,
-                        "weight": 50,
+                        "weight": 860,
+                        "fieldWidth": 1,
                         "mock": "text-sml"
                     },
                     {
                         "title": "Zip",
                         "key": "zip",
                         "type": "text",
-                        "rowIndex": 13,
-                        "weight": 60,
+                        "weight": 860,
+                        "fieldWidth": 2,
                         "mock": "int-5"
                     },
                     {
                         "title": "County",
                         "key": "county",
                         "type": "text",
-                        "rowIndex": 14,
+                        "weight": 850,
+                        "fieldWidth": 7,
                         "mock": "text-med"
                     },
                     {
                         "title": "Latitude",
                         "key": "latitude",
-                        "rowIndex": 15,
+                        "weight": 850,
+                        "fieldWidth": 2,
                         "readonly": true,
                         "mock": "lat"
                     },
                     {
                         "title": "Longitude",
                         "key": "longitude",
-                        "rowIndex": 15,
+                        "weight": 850,
+                        "fieldWidth": 2,
                         "readonly": true,
                         "mock": "long"
                     }
                 ]
             },
             {
-                "title": "# Units",
-                "key": "mdu.numUnits",
-                "rowIndex": 10,
-                "weight": 10,
-                "mock": "int-3"
-            },
-            {
-                "title": "Acres",
-                "key": "mdu.acres",
-                "rowIndex": 10,
-                "weight": 9,
-                "mock": "int-3"
-            },
-            {
                 "title": "Assessor Url",
                 "key": "mdu.assessorUrl",
                 "type": "text",
-                "rowIndex": 16,
-                "weight": 0,
+                "weight": 840,
+                "fieldWidth": 7,
                 "mock": "url"
             }
         ],

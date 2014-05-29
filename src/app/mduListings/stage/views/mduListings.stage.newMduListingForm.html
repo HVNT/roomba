@@ -1,36 +1,436 @@
 <div>
-    <div class="dashboard__overlay--left-col-large">
-        <!--DETAILS HEADER-->
-        <div class="row gutter-double-bottom">
-            <div class="col-lg-1 gutter-top">
-                <i class="fa fa-times fa-2x gutter-left icon-btn--plain-danger"
-                   ng-click="closeStageDetails()"></i>
-            </div>
-            <div class="col-lg-offset-3 col-lg-4 text-center gutter-double-top">
-                <h3>MDU Listing Form</h3>
-            </div>
-            <div class="col-lg-1 col-lg-offset-2 gutter-double-top icon-btn--plain" style="padding-left:40px;">
-                <i class="fa fa-arrow-left fa-2x"
-                   ng-click="revertNewMduListingMatch()"></i>
-            </div>
-            <div class="col-lg-1 gutter-double-top">
-                SAVE
-            </div>
+<div class="dashboard__overlay--left-col-large">
+<!--DETAILS HEADER-->
+<div class="row gutter-double-bottom">
+    <div class="col-lg-1 gutter-top">
+        <i class="fa fa-times fa-2x gutter-left icon-btn--plain-danger"
+           ng-click="closeStageDetails()"></i>
+    </div>
+    <div class="col-lg-offset-3 col-lg-4 text-center gutter-double-top">
+        <h3>MDU Listing Form</h3>
+    </div>
+    <div class="col-lg-1 col-lg-offset-2 gutter-double-top icon-btn--plain" style="padding-left:40px;">
+        <i class="fa fa-arrow-left fa-2x"
+           ng-click="revertNewMduListingMatch()"></i>
+    </div>
+    <div class="col-lg-1 gutter-double-top">
+        <i class="fa fa-save fa-2x icon-btn--plain-primary"
+           ng-click="saveMduListingForm()"></i>
+    </div>
+</div>
+<!--MDU LISTING FORM-->
+<div class="scroll-container" style="padding-bottom:250px;">
+<div>
+<form novalidate class="form-horizontal">
+<!-- I was ngRepeat(ing) over MduConfigModel but it did not give me the fine
+grain control I wanted to optimize the form -->
+
+<!-- LISTING SPECIFIC FIELDS -->
+<div class="form-group gutter-bottom">
+    <div class="control-label col-lg-2">
+        Broker
+    </div>
+    <div class="col-lg-offset-1 col-lg-2">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.broker">
+    </div>
+    <div class="control-label col-lg-2">
+        Property Status
+    </div>
+    <div class="col-lg-offset-1 col-lg-2">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.status">
+    </div>
+</div>
+<div class="form-group gutter-bottom">
+    <div class="control-label col-lg-2">
+        Date Posted
+    </div>
+    <div class="col-lg-offset-1 col-lg-2">
+        <div class="input-group">
+            <input type="text" class="form-control"
+                   ng-blur="updateMduListing()"
+                   ng-model="mduListingFormModel.datePosted" is-open="datePostedOpen"
+                   min-date="minDate" max-date="'2015-06-22'" datepicker-popup="dd-MMMM-yyyy"
+                   datepicker-options="datePostedOptions" show-button-bar="false" ng-required="true"/>
+              <span class="input-group-btn" style="margin-top:0px;">
+                <button type="button" class="bs-btn bs-btn-default"
+                        ng-click="openMduListingDatePosted($event)" style="margin:0; line-height:1.4557;">
+                    <i class="fa fa-calendar"></i>
+                </button>
+              </span>
         </div>
     </div>
-    <!--TO-DO LIST-->
-    <div class="dashboard__overlay--right-col-small">
-        <div class="scroll-container">
-            <ul class="inner-container">
-                <li class="card" ng-repeat="listing in todoListings">
-                    <header class="card__header">
-                        <div>{{listing.title}}</div>
-                    </header>
-                    <div class="card__body">
-                        <p>{{listing.description}}</p>
-                    </div>
-                </li>
-            </ul>
+    <div class="control-label col-lg-2">
+        Call For Offers
+    </div>
+    <div class="col-lg-offset-1 col-lg-2">
+        <div class="input-group">
+            <input type="text" class="form-control"
+                   ng-blur="updateMduListing()"
+                   ng-model="mduListingFormModel.callForOffers" is-open="callForOffersOpen"
+                   min-date="minDate" max-date="'2015-06-22'" datepicker-popup="dd-MMMM-yyyy"
+                   datepicker-options="callForOffersOptions" show-button-bar="false" ng-required="true"/>
+              <span class="input-group-btn">
+                <button type="button" class="bs-btn bs-btn-default"
+                        ng-click="openMduListingCallForOffers($event)" style="margin:0; line-height:1.4557;">
+                    <i class="fa fa-calendar"></i>
+                </button>
+              </span>
         </div>
     </div>
+</div>
+<div class="form-group gutter-bottom">
+    <div class="control-label col-lg-2">
+        Page URL
+    </div>
+    <div class="col-lg-offset-1 col-lg-7">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.page">
+    </div>
+</div>
+<div class="form-group gutter-bottom">
+    <div class="control-label col-lg-2">
+        Title
+    </div>
+    <div class="col-lg-offset-1 col-lg-7">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.title">
+    </div>
+</div>
+<div class="form-group gutter-bottom">
+    <div class="control-label col-lg-2">
+        Description
+    </div>
+    <div class="col-lg-offset-1 col-lg-7">
+        <textarea type="text" class="form-control"
+                  ng-blur="updateMduListing()"
+                  ng-model="mduListingFormModel.description"></textarea>
+    </div>
+</div>
+<div class="form-group gutter-bottom">
+    <div class="control-label col-lg-2">
+        Price Range
+    </div>
+    <div class="control-label col-lg-1">
+        High
+    </div>
+    <div class="col-lg-2 col-lg-offset-1">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.price[0]">
+    </div>
+    <div class="control-label col-lg-1">
+        Low
+    </div>
+    <div class="col-lg-2 col-lg-offset-1">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.price[1]">
+    </div>
+</div>
+<div class="form-group gutter-bottom">
+    <div class="control-label col-lg-2">
+        Flyer URL
+    </div>
+    <div class="col-lg-offset-1 col-lg-7">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.flyer">
+    </div>
+</div>
+<div class="form-group">
+    <div class="control-label col-lg-2">
+        Marketing URL
+    </div>
+    <div class="col-lg-offset-1 col-lg-7">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.marketingUrl">
+    </div>
+</div>
+
+<!-- MDU SPECIFIC FIELDS -->
+<div class="gutter-double-top">
+<!-- NAV -->
+<div class="gutter-left" ng-repeat="mdu in mduListingFormModel.mdus" style="margin-bottom:50px;">
+                            <span style="float:left;" ng-click="activateMduForm($index)"
+                                  ng-style="{width: '{{100 / mduListingFormModel.mdus.length}}%'}">
+                                MDU {{$index}}</span>
+</div>
+<!-- FIELDS -->
+<div class="form-group gutter-bottom">
+    <div class="control-label col-lg-2">
+        Property Type
+    </div>
+    <div class="col-lg-offset-1 col-lg-2">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].type">
+    </div>
+    <div class="control-label col-lg-2">
+        Year Built
+    </div>
+    <div class="col-lg-offset-1 col-lg-2">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].yearBuilt">
+    </div>
+</div>
+<div class="form-group gutter-bottom">
+    <div class="control-label col-lg-2">
+        No. of Units
+    </div>
+    <div class="col-lg-offset-1 col-lg-2">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].numUnits">
+    </div>
+    <div class="control-label col-lg-2">
+        Acres
+    </div>
+    <div class="col-lg-offset-1 col-lg-2">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].acres">
+    </div>
+</div>
+<div class="form-group">
+    <div class="control-label col-lg-2">
+        Street
+    </div>
+    <div class="col-lg-offset-1 col-lg-7">
+        <input type="text" placeholder="42 Wallaby Way" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].address.street1">
+    </div>
+</div>
+<div class="form-group">
+    <div class="control-label col-lg-2">
+        City
+    </div>
+    <div class="col-lg-offset-1 col-lg-7">
+        <input type="text" placeholder="Sydney" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].address.city">
+    </div>
+</div>
+<div class="form-group">
+    <div class="control-label col-lg-2">
+        Zip Code
+    </div>
+    <div class="col-lg-2 col-lg-offset-1">
+        <input type="text" placeholder="66699" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].address.zip">
+    </div>
+    <div class="control-label col-lg-1 col-lg-offset-1">
+        State
+    </div>
+    <div class="col-lg-2 col-lg-offset-1">
+        <input type="text" placeholder="GA" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].address.state">
+        <!--TODO make state selecter-->
+    </div>
+</div>
+<div class="form-group">
+    <div class="control-label col-lg-2">
+        County
+    </div>
+    <div class="col-lg-offset-1 col-lg-7">
+        <input type="text" placeholder="Fulton County" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].address.county">
+    </div>
+</div>
+<div class="form-group">
+    <div class="control-label col-lg-2">
+        Assessor URL
+    </div>
+    <div class="col-lg-offset-1 col-lg-7">
+        <input type="text" class="form-control"
+               ng-blur="updateMduListing()"
+               ng-model="mduListingFormModel.mdus[activeMduFormIndex].assessorUrl">
+    </div>
+</div>
+
+<!-- SALES HISTORY -->
+<div class="row">
+    <div class="col-lg-offset-1 col-lg-10">
+        <div class="group-editor gutter-double-top">
+            <h4 class="gutter-bottom" style="float:left;">Sales History</h4>
+            <i class="fa fa-2x  pull-right"
+               ng-class="{'fa-times': showNewSalesHistoryFields, 'fa-plus-square': !showNewSalesHistoryFields,
+                                'icon-btn--plain-danger': showNewSalesHistoryFields, 'icon-btn--plain-primary': !showNewSalesHistoryFields}"
+               ng-click="toggleNewSalesHistoryFields()"></i>
+            <table class="table">
+                <thead>
+                <tr ng-if="showNewSalesHistoryFields">
+                    <th><input class="text" placeholder="Date" ng-model="whichSalesHistoryModel().date"></th>
+                    <th><input class="text" placeholder="Buyer" ng-model="whichSalesHistoryModel().buyer"></th>
+                    <th><input class="text" placeholder="Seller" ng-model="whichSalesHistoryModel().seller"></th>
+                    <th><input class="text" placeholder="Price" ng-model="whichSalesHistoryModel().price"></th>
+                    <th><input class="text" placeholder="Source" ng-model="whichSalesHistoryModel().source"></th>
+                    <th><input class="text" placeholder="Source Url" ng-model="whichSalesHistoryModel().sourceUrl"></th>
+                    <th class="table-icon-action table-icon-success">
+                        <i class="fa fa-plus icon-btn--plain-success" ng-click="addMduListingFormSalesHistory()"></i>
+                    </th>
+                </tr>
+                <tr ng-if="!showNewSalesHistoryFields">
+                    <th>Date</th>
+                    <th>Buyer</th>
+                    <th>Seller</th>
+                    <th>Price</th>
+                    <th>Source</th>
+                    <th>Source URL</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="salesHistory in mduListingFormModel.mdus[activeMduFormIndex].salesHistory track by $index">
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="salesHistory.date"></td>
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="salesHistory.buyer"></td>
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="salesHistory.seller">
+                    </td>
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="salesHistory.price"></td>
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="salesHistory.source">
+                    </td>
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="salesHistory.sourceUrl">
+                    </td>
+                    <td class="table-icon-action table-icon-error">
+                        <i class="fa fa-times icon-btn--plain-danger"
+                           ng-click="removeMduListingFormSalesHistory($index)"></i>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- TAX HISTORY -->
+<div class="row">
+    <div class="col-lg-offset-1 col-lg-10">
+        <div class="group-editor gutter-double-top">
+            <h4 class="gutter-bottom" style="float:left;">Tax History</h4>
+            <i class="fa fa-2x  pull-right"
+               ng-class="{'fa-times': showNewTaxHistoryFields, 'fa-plus-square': !showNewTaxHistoryFields,
+                                'icon-btn--plain-danger': showNewTaxHistoryFields, 'icon-btn--plain-primary': !showNewTaxHistoryFields}"
+               ng-click="toggleNewTaxHistoryFields()"></i>
+            <table class="table">
+                <thead>
+                <tr ng-if="showNewTaxHistoryFields">
+                    <th><input class="text" placeholder="Year" ng-model="whichTaxHistoryModel().year"></th>
+                    <th><input class="text" placeholder="Tax Assessment"
+                               ng-model="whichTaxHistoryModel().taxAssessment"></th>
+                    <th><input class="text" placeholder="Property Taxes"
+                               ng-model="whichTaxHistoryModel().propertyTaxes"></th>
+                    <th class="table-icon-action table-icon-success">
+                        <i class="fa fa-plus icon-btn--plain-success" ng-click="addMduListingFormTaxHistory()"></i>
+                    </th>
+                </tr>
+                <tr ng-if="!showNewTaxHistoryFields">
+                    <th>Date</th>
+                    <th>Tax Assessment</th>
+                    <th>Property Taxes</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="taxHistory in mduListingFormModel.mdus[activeMduFormIndex].taxHistory track by $index">
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="taxHistory.year"></td>
+                    <td><input class="text field-input" ng-blur="updateMduListing()"
+                               ng-model="taxHistory.taxAssessment"></td>
+                    <td><input class="text field-input" ng-blur="updateMduListing()"
+                               ng-model="taxHistory.propertyTaxes"></td>
+                    <td class="table-icon-action table-icon-error">
+                        <i class="fa fa-times icon-btn--plain-danger"
+                           ng-click="removeMduListingFormTaxHistory($index)"></i>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- CONTACTS -->
+<div class="row">
+    <div class="col-lg-offset-1 col-lg-10">
+        <div class="group-editor gutter-double-top">
+            <h4 class="gutter-bottom" style="float:left;">Contacts</h4>
+            <i class="fa fa-2x  pull-right"
+               ng-class="{'fa-times': showNewContactFields, 'fa-plus-square': !showNewContactFields,
+                                'icon-btn--plain-danger': showNewContactFields, 'icon-btn--plain-primary': !showNewContactFields}"
+               ng-click="toggleNewContactFields()"></i>
+            <table class="table">
+                <thead>
+                <tr ng-if="showNewContactFields">
+                    <th><input class="text" placeholder="Name" ng-model="whichContactModel().name"></th>
+                    <th><input class="text" placeholder="Email" ng-model="whichContactModel().email"></th>
+                    <th><input class="text" placeholder="Phone" ng-model="whichContactModel().phone"></th>
+                    <th class="table-icon-action table-icon-success">
+                        <i class="fa fa-plus icon-btn--plain-success" ng-click="addMduListingFormContact()"></i>
+                    </th>
+                </tr>
+                <tr ng-if="!showNewContactFields">
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="contact in mduListingFormModel.contacts track by $index">
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="contact.name"></td>
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="contact.email"></td>
+                    <td><input class="text field-input" ng-blur="updateMduListing()" ng-model="contact.phone"></td>
+                    <td class="table-icon-action table-icon-error">
+                        <i class="fa fa-times icon-btn--plain-danger"
+                           ng-click="removeMduListingFormContact($index)"></i>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- IMAGES -->
+<div class="row">
+    <div class="col-lg-1 col-lg-10">
+        i'm images.. fuck me
+    </div>
+</div>
+
+</div>
+
+
+</form>
+
+
+</div>
+</div>
+
+</div>
+<!--TO-DO LIST-->
+<div class="dashboard__overlay--right-col-small">
+    <div class="scroll-container">
+        <ul class="inner-container">
+            <li class="card" ng-repeat="listing in todoListings">
+                <header class="card__header">
+                    <div>{{listing.title}}</div>
+                </header>
+                <div class="card__body">
+                    <p>{{listing.description}}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
 </div>

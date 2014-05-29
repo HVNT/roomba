@@ -45,14 +45,15 @@ angular.module('rescour.roomba')
                         var MDUListingDefer = $q.defer();
 
                         $http.get('/app/config/market.json').then(function (config) {
-                            var MDUListing = MDUListingFactory(config.data.mdu_listings);
+                            var MDUConfig = config.data.mdu_listings;
+                            var MDUListing = MDUListingFactory(MDUConfig);
 
                             MDUListing.query().then(function (response) {
                                 console.log(response);
                                 var MDUListingMarket = MDUListingMarketFactory(MDUListing);
                                 MDUListingMarket.initialize(MDUListing.dimensions, response.data.collection);
                                 $log.debug('MDU Listing Market Initialized: ', MDUListingMarketFactory);
-                                MDUListingDefer.resolve([MDUListing, MDUListingMarket]);
+                                MDUListingDefer.resolve([MDUListing, MDUListingMarket, MDUConfig]);
                             }, function (response) {
                                 console.log(response);
                             });

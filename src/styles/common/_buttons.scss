@@ -272,3 +272,13 @@ input[type="submit"].btn {
     color: darken($state-info-text, 10%);
   }
 }
+
+.icon-btn--plain-success {
+  cursor: pointer;
+  &:hover {
+    color: $brand-success;
+  }
+  &:active {
+    color: darken($brand-success, 10%);
+  }
+}

@@ -304,3 +304,97 @@ table {
 
   }
 }
+
+.group-editor {
+
+
+  &.model-editor {
+//    h4.action {
+//      @include header-button($blue);
+//    }
+    .dropdown {
+      position: absolute;
+    }
+  }
+
+  .cell-view {
+    img {
+      margin: 15px;
+      display: block;
+      height: 100px;
+    }
+  }
+
+  .input-preview {
+    position: absolute;
+    left: 0;
+  }
+
+  .table-icon-action {
+    cursor: pointer;
+    font-size: 16px;
+    background: transparent;
+    text-align: center;
+    vertical-align: middle;
+    width: 35px;
+  }
+
+  .input-overlay {
+    color: $brand-primary;
+  }
+
+  .table-input-action {
+    font-size: 10px;
+    position: absolute;
+    right: 0;
+    padding: 5px;
+    top: 5px;
+    color: white;
+    cursor: pointer;
+    @include border-radius(4px);
+  }
+
+  table {
+    padding: 15px;
+
+    td {
+      position: relative;
+    }
+
+    .hover-display {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+
+      i {
+        color: red;
+      }
+    }
+
+    tr:hover {
+
+      & > .hover-display {
+        display: block;
+      }
+    }
+  }
+
+  input {
+//    outline: none;
+//    background: transparent;
+    color: $black;
+    width: 90%;
+
+//    &:hover {
+//      background: rgba(0, 0, 0, 0.1);
+//    }
+    &:focus {
+      outline: 0px !important;
+    }
+
+    .field-input {
+    }
+  }
+
+}

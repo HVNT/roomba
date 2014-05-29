@@ -13,8 +13,10 @@ angular.module('rescour.roomba')
          if singular -> capitalize first char
          if plural   -> camel-case
          **/
+        console.log(MduConfig);
         $scope.MduListing = MduConfig[0];
         $scope.MduListingMarket = MduConfig[1];
+        $scope.MduConfigModel = MduConfig[2];
         $scope.mduListingDimensions = $scope.MduListingMarket.getDimensions();
         $scope.mduListings = $scope.MduListingMarket.visibleItems;
         $scope.todoListings = [];
@@ -109,7 +111,7 @@ angular.module('rescour.roomba')
             console.log('TODO')
         };
 
-        function getMatchingMdus () {
+        function getMatchingMdus() {
             var defer = $q.defer(),
                 config = _.extend({
                     cache: true,
@@ -127,7 +129,7 @@ angular.module('rescour.roomba')
         }
 
         $scope.selectMdu = function (mdu, index) {
-            if($scope.matchingMdus[index].length > 0) {
+            if ($scope.matchingMdus[index].length > 0) {
                 for (var i = 0; i < $scope.matchingMdus[index].length; i++) {
                     var _mdu = $scope.matchingMdus[index][i];
                     if (_mdu.isSelected && _mdu != mdu) {
@@ -147,20 +149,23 @@ angular.module('rescour.roomba')
         };
 
         /** VIEW MODEL FOR MDU LISTING FORM **/
-        // reset data? --> from one place..
+            // reset data? --> from one place..
         $scope.newMduListingFormModel = {
             mdus: []
         };
         // SHITS IMPORTANT AF YO
         $scope.mduListingFormModel = {
-            mdus: []
+            mdus: [],
+            images: [],
+            tourDates: [],
+            contacts: []
         };
         /*******************************/
 
         $scope.openNewMduListingForm = function () {
             assessMatches();
 
-            $scope.MduListing.init($scope.newMduListingFormModel).then( function (response) {
+            $scope.MduListing.init($scope.newMduListingFormModel).then(function (response) {
                 $scope.newMduListingFormModel.id = response.data.response.id;
                 $scope.mduListingFormModel = new $scope.MduListing($scope.newMduListingFormModel);
                 console.log($scope.mduListingFormModel);
@@ -170,9 +175,9 @@ angular.module('rescour.roomba')
             });
         };
 
-        function assessMatches () {
+        function assessMatches() {
             for (var i = 0; i < $scope.matchingMdus.length; i++) {
-                if ($scope.matchingMdus[i].length > 0 ) {
+                if ($scope.matchingMdus[i].length > 0) {
                     for (var j = 0; j < $scope.matchingMdus[i].length; j++) {
                         var mdu = $scope.matchingMdus[i][j];
                         if (mdu.isSelected) {
@@ -197,6 +202,123 @@ angular.module('rescour.roomba')
 
         $scope.continueToNewMduListingForm = function () {
             $state.go('mduListings.stage.newMduListingForm');
+        };
+
+        $scope.activeMduFormIndex = 0;
+
+        $scope.activateMduForm = function (index) {
+            $scope.activeMduFormIndex = index;
+        };
+
+        //////////////////////////////////////////////////////////////////////////////
+        /* DATE PICKER SHIT */
+        // date posted
+        $scope.datePostedOptions = {
+            formatYear: 'yy'
+        };
+        $scope.openMduListingDatePosted = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.datePostedOpen = true;
+        };
+        // call for offers
+        $scope.callForOffersOptions = {
+            formatYear: 'yy'
+        };
+        $scope.openMduListingCallForOffers = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.callForOffersOpen = true;
+        };
+
+        //////////////////////////////////////////////////////////////////////////////
+        /* CONTACT FIELD SHIT */
+        $scope.showNewContactFields = false;
+        $scope.toggleNewContactFields = function () {
+            $scope.showNewContactFields = !$scope.showNewContactFields;
+            $scope['tempContactModel' + $scope.mduListingFormModel.contacts.length] = {};
+        };
+        $scope.addMduListingFormContact = function () {
+            if ($scope['tempContactModel' + $scope.mduListingFormModel.contacts.length]) {
+                $scope['tempContactModel' + $scope.mduListingFormModel.contacts.length].id = null;
+                $scope.mduListingFormModel.contacts.push($scope['tempContactModel' + $scope.mduListingFormModel.contacts.length]);
+                $scope.showNewContactFields = !$scope.showNewContactFields;
+                $scope.updateMduListing();
+            }
+        };
+        $scope.removeMduListingFormContact = function (idx) {
+            $scope.mduListingFormModel.contacts.splice(idx, 1);
+            $scope.updateMduListing();
+        };
+        $scope.whichContactModel = function () {
+            return $scope['tempContactModel' + $scope.mduListingFormModel.contacts.length];
+        };
+
+        //////////////////////////////////////////////////////////////////////////////
+        /* SALES HISTORY FIELD SHIT */
+        $scope.showNewSalesHistoryFields = false;
+        $scope.toggleNewSalesHistoryFields = function () {
+            $scope.showNewSalesHistoryFields = !$scope.showNewSalesHistoryFields;
+            $scope['tempSalesHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length] = {};
+        };
+        $scope.addMduListingFormSalesHistory = function () {
+            if ($scope['tempSalesHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length]) {
+                $scope['tempSalesHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length].id = null;
+                $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.push($scope['tempSalesHistoryModel'
+                    + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length]);
+                $scope.showNewSalesHistoryFields = !$scope.showNewSalesHistoryFields;
+                $scope.updateMduListing();
+            }
+        };
+        $scope.removeMduListingFormSalesHistory = function (idx) {
+            $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.splice(idx, 1);
+            $scope.updateMduListing();
+        };
+        $scope.whichSalesHistoryModel = function () {
+            return $scope['tempSalesHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length];
+        };
+
+        //////////////////////////////////////////////////////////////////////////////
+        /* TAX HISTORY FIELD SHIT */
+        $scope.showNewTaxHistoryFields = false;
+        $scope.toggleNewTaxHistoryFields = function () {
+            $scope.showNewTaxHistoryFields = !$scope.showNewTaxHistoryFields;
+            $scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length] = {};
+        };
+        $scope.addMduListingFormTaxHistory = function () {
+            if ($scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length]) {
+                $scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length].id = null;
+                $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.push($scope['tempTaxHistoryModel'
+                    + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length]);
+                $scope.showNewTaxHistoryFields = !$scope.showNewTaxHistoryFields;
+                $scope.updateMduListing();
+            }
+        };
+        $scope.removeMduListingFormTaxHistory = function (idx) {
+            $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.splice(idx, 1);
+            $scope.updateMduListing();
+        };
+        $scope.whichTaxHistoryModel = function () {
+            return $scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length];
+        };
+
+        /* FORM AXNS AND SHIT */
+        $scope.updateMduListing = function () {
+            $scope.mduListingFormModel.update().then(function (response) {
+                console.log(response);
+            }, function (response) {
+                console.log(response);
+            });
+        };
+
+        $scope.saveMduListingForm = function () {
+            // put in to-do and set workflow state for demo
+            $scope.mduListingFormModel.workflowState = 'todo';
+            $scope.todoListings.push($scope.mduListingFormModel);
+
+            // some kind of check here??
+            $state.go('mduListings.stage.list');
+            console.log($scope.mduListingFormModel);
         };
 
     })

@@ -240,7 +240,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                 }, {}];
             });
             /* Updates an mdu_listing's data or changes its workflow state */
-            $httpBackend.whenPUT(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
+            $httpBackend.whenPUT(/\/mdu_listings\/[0-9]/).respond(function (method, url, data, headers) {
                 return [200, {
                     status: 'N/A'
                 }, {}];
@@ -295,7 +295,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
             }, {}];
         });
         /* Updates an mdu_listing's data or changes its workflow state */
-        $httpBackend.whenPUT(/\/mdu_listings\/[0-9]$/).respond(function (method, url, data, headers) {
+        $httpBackend.whenPUT(/\/mdu_listings\/[0-9]/).respond(function (method, url, data, headers) {
             return [200, {
                 status: 'N/A'
             }, {}];
