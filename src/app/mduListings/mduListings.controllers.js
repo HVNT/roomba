@@ -176,6 +176,7 @@ angular.module('rescour.roomba')
         };
 
         function assessMatches() {
+            console.log($scope.matchingMdus);
             for (var i = 0; i < $scope.matchingMdus.length; i++) {
                 if ($scope.matchingMdus[i].length > 0) {
                     for (var j = 0; j < $scope.matchingMdus[i].length; j++) {
@@ -209,6 +210,38 @@ angular.module('rescour.roomba')
         $scope.activateMduForm = function (index) {
             $scope.activeMduFormIndex = index;
         };
+
+        //////////////////////////////////////////////////////////////////////////////
+        /* DROPDOWN SHIT */
+        /*  NOTE: This shit will be deleted if we move to iterating over the config cus then we will
+            just have this shit at the appropriate $index */
+        // broker
+        $scope.brokerTypeahead = [
+            "ARA", "Brown Realty Advisors", "Cushman & Wakefield", "CBRE", "Jones Lang LaSalle", "Capital Advisors",
+            "Capstone", "Engler Financial Group", "HFF", "Hendricks Berkadia", "IPA", "MHA", "Mays Vetter", "Moran & Company",
+            "Muskin Commercial", "Rock Apartment Advisors", "Transwestern", "Walchle Lear"
+        ];
+        // unit mix
+        $scope.unitMixTypeahead = [
+            "1 BR / 1 BA", "1 BR / 1.5 BA", "1 BR / 2 BA",
+            "2 BR / 1 BA", "2 BR / 1.5 BA", "2 BR / 2 BA", "2 BR / 2.5 BA", "2 BR / 3 BA",
+            "3 BR / 1 BA", "3 BR / 1.5 BA", "3 BR / 2 BA", "3 BR / 2.5 BA", "3 BR / 3 BA", "3 BR / 3.5 BA", "3 BR / 4 BA",
+            "4 BR / 1 BA", "4 BR / 1.5 BA", "4 BR / 2 BA", "4 BR / 2.5 BA", "4 BR / 3 BA", "4 BR / 3.5 BA", "4 BR / 4 BA",
+            "1 BR / 1 BA TH", "1 BR / 1.5 BA TH", "1 BR / 2 BA TH",
+            "2 BR / 1 BA TH", "2 BR / 1.5 BA TH", "2 BR / 2 BA TH", "2 BR / 2.5 BA TH", "2 BR / 3 BA TH",
+            "3 BR / 1 BA TH", "3 BR / 1.5 BA TH", "3 BR / 2 BA TH", "3 BR / 2.5 BA TH", "3 BR / 3 BA TH", "3 BR / 3.5 BA TH", "3 BR / 4 BA TH",
+            "4 BR / 1 BA TH", "4 BR / 1.5 BA TH", "4 BR / 2 BA TH", "4 BR / 2.5 BA TH", "4 BR / 3 BA TH", "4 BR / 3.5 BA TH", "4 BR / 4 BA TH",
+            "Average", "Studio", "Efficiency"
+        ];
+        // property status
+        $scope.propertyStatusTypeahead = [
+            "Marketing", "Marketing - Past Due", "Under Contract", "Under LOI", "Sold", "Expired"
+        ];
+        // property type
+        $scope.propertyTypeTypeahead = [
+            "Apartment", "Condo", "Land", "Mobile Homes"
+        ];
+
 
         //////////////////////////////////////////////////////////////////////////////
         /* DATE PICKER SHIT */
@@ -300,6 +333,30 @@ angular.module('rescour.roomba')
         };
         $scope.whichTaxHistoryModel = function () {
             return $scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length];
+        };
+
+        //////////////////////////////////////////////////////////////////////////////
+        /* UNIT MIX FIELD SHIT */
+        $scope.showNewUnitMixFields = false;
+        $scope.toggleNewUnitMixFields = function () {
+            $scope.showNewUnitMixFields = !$scope.showNewUnitMixFields;
+            $scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length] = {};
+        };
+        $scope.addMduListingFormUnitMix = function () {
+            if ($scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length]) {
+                $scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length].id = null;
+                $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.push($scope['tempUnitMixModel'
+                    + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length]);
+                $scope.showNewUnitMixFields = !$scope.showNewUnitMixFields;
+                $scope.updateMduListing();
+            }
+        };
+        $scope.removeMduListingFormUnitMix = function (idx) {
+            $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.splice(idx, 1);
+            $scope.updateMduListing();
+        };
+        $scope.whichUnitMixModel = function () {
+            return $scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length];
         };
 
         /* FORM AXNS AND SHIT */
