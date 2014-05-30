@@ -364,6 +364,16 @@ module.exports = function (grunt) {
                         src: [
                             '**/*.html'
                         ]
+                    },
+                    {
+                        expand: true,
+                        dot: false,
+                        flatten: false,
+                        cwd: '<%= yeoman.stage %>',
+                        dest: '<%= yeoman.dist %>/prod',
+                        src: [
+                            'config/**/*'
+                        ]
                     }
                 ]
             }

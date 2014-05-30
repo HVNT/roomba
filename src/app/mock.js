@@ -26,7 +26,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
             id: '1'
         };
 
-        $http.get('/app/config/market.json').then(function (response) {
+        $http.get('/app/environment/market.json').then(function (response) {
             MDU_CONFIG = response.data;
             initialize();
         }, function (response) {

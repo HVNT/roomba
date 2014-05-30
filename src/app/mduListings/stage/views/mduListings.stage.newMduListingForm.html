@@ -30,7 +30,7 @@ grain control I wanted to optimize the form -->
     <div class="control-label col-lg-2">
         Broker
     </div>
-    <div class="col-lg-offset-1 col-lg-3">
+    <div class="col-lg-offset-1 col-lg-2">
         <!--<input type="text" class="form-control" ng-blur="updateMduListing()" ng-model="mduListingFormModel.broker">-->
         <!--ng-switch-when="dropdown"-->
         <div class="input-dropdown dropdown clearfix" style="margin:0;">
@@ -69,7 +69,7 @@ grain control I wanted to optimize the form -->
     <div class="control-label col-lg-2">
         Date Posted
     </div>
-    <div class="col-lg-offset-1 col-lg-3">
+    <div class="col-lg-offset-1 col-lg-2">
         <div class="input-group">
             <input type="text" class="form-input"
                    ng-blur="updateMduListing()"
@@ -87,7 +87,7 @@ grain control I wanted to optimize the form -->
     <div class="control-label col-lg-2">
         Call For Offers
     </div>
-    <div class="col-lg-offset-1 col-lg-3">
+    <div class="col-lg-offset-1 col-lg-2">
         <div class="input-group">
             <input type="text" class="form-input"
                    ng-blur="updateMduListing()"
@@ -108,7 +108,7 @@ grain control I wanted to optimize the form -->
         Page URL
     </div>
     <div class="col-lg-offset-1 col-lg-7">
-        <input type="text" class="form-input" ng-blur="updateMduListing()" ng-model="mduListingFormModel.page">
+        <input type="text" class="form-input" placeholder="www.spencersgay.com" ng-blur="updateMduListing()" ng-model="mduListingFormModel.page">
     </div>
 </div>
 <div class="form-group gutter-bottom">
@@ -132,17 +132,11 @@ grain control I wanted to optimize the form -->
     <div class="control-label col-lg-2">
         Price Range
     </div>
-    <div class="control-label col-lg-1">
-        High
-    </div>
     <div class="col-lg-2 col-lg-offset-1">
-        <input type="text" class="form-input" ng-blur="updateMduListing()" ng-model="mduListingFormModel.price[0]">
+        <input type="text" class="form-input" placeholder="High" ng-blur="updateMduListing()" ng-model="mduListingFormModel.price[0]">
     </div>
-    <div class="control-label col-lg-1">
-        Low
-    </div>
-    <div class="col-lg-2 col-lg-offset-1">
-        <input type="text" class="form-input" ng-blur="updateMduListing()" ng-model="mduListingFormModel.price[1]">
+    <div class="col-lg-2 col-lg-offset-3">
+        <input type="text" class="form-input" placeholder="Low" ng-blur="updateMduListing()" ng-model="mduListingFormModel.price[1]">
     </div>
 </div>
 <div class="form-group gutter-bottom">
@@ -150,7 +144,7 @@ grain control I wanted to optimize the form -->
         Flyer URL
     </div>
     <div class="col-lg-offset-1 col-lg-7">
-        <input type="text" class="form-input" ng-blur="updateMduListing()" ng-model="mduListingFormModel.flyer">
+        <input type="text" class="form-input" placeholder="www.spencersgay.com/buttsex" ng-blur="updateMduListing()" ng-model="mduListingFormModel.flyer">
     </div>
 </div>
 <div class="form-group">
@@ -158,7 +152,7 @@ grain control I wanted to optimize the form -->
         Marketing URL
     </div>
     <div class="col-lg-offset-1 col-lg-7">
-        <input type="text" class="form-input" ng-blur="updateMduListing()" ng-model="mduListingFormModel.marketingUrl">
+        <input type="text" class="form-input" placeholder="www.spencersgay.com/bbg" ng-blur="updateMduListing()" ng-model="mduListingFormModel.marketingUrl">
     </div>
 </div>
 
@@ -220,14 +214,24 @@ grain control I wanted to optimize the form -->
         Property Type
     </div>
     <div class="col-lg-offset-1 col-lg-2">
-        <input type="text" class="form-input" ng-blur="updateMduListing()"
-               ng-model="mduListingFormModel.mdus[activeMduFormIndex].type">
+        <div class="input-dropdown dropdown clearfix" style="margin:0;">
+            <input class="input-dropdown__input" ng-model="mduListingFormModel.mdus[activeMduFormIndex].type" ng-blur="updateMduListing()"
+                   typeahead="type for type in propertyTypeTypeahead | limitTo:8" typeahead-editable="false"/>
+            <div class="input-dropdown__btn input-dropdown__btn--right input-dropdown__btn--toggle" dropdown-toggle>
+                <i class="fa fa-caret-down"></i>
+            </div>
+            <ul class="dropdown__list">
+                <li ng-repeat="type in propertyTypeTypeahead" ng-click="mduListingFormModel.mdus[activeMduFormIndex].type = type" ng-class="{'active': type == mduListingFormModel.mdus[activeMduFormIndex].type}">
+                    <a href="javascript:">{{ type }}</a>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="control-label col-lg-2">
         Year Built
     </div>
     <div class="col-lg-offset-1 col-lg-2">
-        <input type="text" class="form-input" ng-blur="updateMduListing()"
+        <input type="text" class="form-input" ng-blur="updateMduListing()" placeholder="1996"
                ng-model="mduListingFormModel.mdus[activeMduFormIndex].yearBuilt">
     </div>
 </div>
@@ -236,14 +240,14 @@ grain control I wanted to optimize the form -->
         No. of Units
     </div>
     <div class="col-lg-offset-1 col-lg-2">
-        <input type="text" class="form-input" ng-blur="updateMduListing()"
+        <input type="text" class="form-input" ng-blur="updateMduListing()" placeholder="100"
                ng-model="mduListingFormModel.mdus[activeMduFormIndex].numUnits">
     </div>
     <div class="control-label col-lg-2">
         Acres
     </div>
     <div class="col-lg-offset-1 col-lg-2">
-        <input type="text" class="form-input" ng-blur="updateMduListing()"
+        <input type="text" class="form-input" ng-blur="updateMduListing()" placeholder="3.14"
                ng-model="mduListingFormModel.mdus[activeMduFormIndex].acres">
     </div>
 </div>
@@ -277,9 +281,20 @@ grain control I wanted to optimize the form -->
         State
     </div>
     <div class="col-lg-2 col-lg-offset-1">
-        <input type="text" placeholder="GA" class="form-input" ng-blur="updateMduListing()"
-               ng-model="mduListingFormModel.mdus[activeMduFormIndex].address.state">
-        <!--TODO make state selecter-->
+        <!--<input type="text" placeholder="GA" class="form-input" ng-blur="updateMduListing()"-->
+               <!--ng-model="mduListingFormModel.mdus[activeMduFormIndex].address.state">-->
+        <div class="input-dropdown dropdown clearfix" style="margin:0;">
+            <input class="input-dropdown__input" ng-model="mduListingFormModel.mdus[activeMduFormIndex].address.state" ng-blur="updateMduListing()"
+                   typeahead="state for state in statesTypeahead | limitTo:8" typeahead-editable="false"/>
+            <div class="input-dropdown__btn input-dropdown__btn--right input-dropdown__btn--toggle" dropdown-toggle>
+                <i class="fa fa-caret-down"></i>
+            </div>
+            <ul class="dropdown__list">
+                <li ng-repeat="state in statesTypeahead" ng-click="mduListingFormModel.mdus[activeMduFormIndex].address.state = state" ng-class="{'active': state == mduListingFormModel.mdus[activeMduFormIndex].address.state}">
+                    <a href="javascript:">{{ state }}</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 <div class="form-group">
@@ -407,7 +422,22 @@ grain control I wanted to optimize the form -->
             <table class="table">
                 <thead>
                 <tr ng-if="showNewUnitMixFields">
-                    <th><input class="text form-input--white" placeholder="Type" ng-model="whichUnitMixModel().type"></th>
+                    <th>
+                        <!--<input class="text form-input--white" placeholder="Type" ng-model="whichUnitMixModel().type">-->
+                        <div class="input-dropdown dropdown clearfix" style="margin:0;">
+                            <input class="input-dropdown__input" ng-model="mduListingFormModel.mdus[activeMduFormIndex].unitMix" ng-blur="updateMduListing()"
+                                   typeahead="unitMix for unitMix in unitMixTypeahead | limitTo:8" typeahead-editable="false"/>
+                            <div class="input-dropdown__btn input-dropdown__btn--right input-dropdown__btn--toggle" dropdown-toggle>
+                                <i class="fa fa-caret-down"></i>
+                            </div>
+                            <ul class="dropdown__list">
+                                <li ng-repeat="unitMix in unitMixTypeahead" ng-click="mduListingFormModel.mdus[activeMduFormIndex].unitMix = unitMix"
+                                    ng-class="{'active': unitMix == mduListingFormModel.mdus[activeMduFormIndex].unitMix}">
+                                    <a href="javascript:">{{ unitMix }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
                     <th><input class="text form-input--white" placeholder="Units" ng-model="whichUnitMixModel().units"></th>
                     <th><input class="text form-input--white" placeholder="Sq Ft" ng-model="whichUnitMixModel().sqft"></th>
                     <th><input class="text form-input--white" placeholder="Rent" ng-model="whichUnitMixModel().rent"></th>

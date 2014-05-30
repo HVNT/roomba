@@ -212,7 +212,7 @@ angular.module('rescour.roomba')
         };
 
         //////////////////////////////////////////////////////////////////////////////
-        /* DROPDOWN SHIT */
+        /* DROPDOWN TYPEAHEAD SHIT */
         /*  NOTE: This shit will be deleted if we move to iterating over the config cus then we will
             just have this shit at the appropriate $index */
         // broker
@@ -240,6 +240,16 @@ angular.module('rescour.roomba')
         // property type
         $scope.propertyTypeTypeahead = [
             "Apartment", "Condo", "Land", "Mobile Homes"
+        ];
+        // states
+        $scope.statesTypeahead = [
+            'Alaska', 'Alabama', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
+            'District Of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Kansas',
+            'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
+            'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
+            'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+            'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
+            'West Virginia', 'Wisconsin', 'Wyoming'
         ];
 
 
