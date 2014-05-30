@@ -1,0 +1,154 @@
+<div ng-controller="RentMetricsCtrl" chunk="rentComps" chunk-size="5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="module module--info toggler" ng-class="{'toggled': !rentMetricsDimensions.collapse}">
+                <header class="module__header">
+                    <h5>Rent Metrics
+                        <span class="module__badge gutter-left">BETA</span>
+                        <span class="pull-right text-btn"
+                              ng-click="rentMetricsDimensions.collapse = !rentMetricsDimensions.collapse">
+                            <i class="fa gutter-half-left"
+                               ng-class="{'fa-chevron-down': !rentMetricsDimensions.show, 'fa-chevron-up': rentMetricsDimensions.show}"></i>
+                        </span>
+                    </h5>
+                </header>
+                <div class="module__body" collapse="!rentMetricsDimensions.collapse">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-12 col-sm-12">
+                            <div class="toggler toggler--inverse"
+                                 ng-repeat="range in rentMetricsDimensions.getRange()">
+
+                                <header class="toggler__header">
+                                    <h6 class="caps">
+                                        {{ range.title }}
+                                        <span class="pull-right"> {{ range.lowSelected | number: 1 }} - {{ range.highSelected | checkBounds:range.highBound | number: 1 }} </span>
+                                    </h6>
+                                </header>
+
+                                <div class="toggler__body">
+                                    <div class="slider" slider></div>
+                                </div>
+
+                            </div>
+
+                            <div class="toggler toggler--inverse"
+                                 ng-repeat="discrete in rentMetricsDimensions.getDiscrete()"
+                                 ng-class="{'toggled': discrete.collapse}">
+
+                                <header class="toggler__header"
+                                        ng-click="discrete.collapse = !discrete.collapse">
+
+                                    <h6 class="caps">
+                                        {{ discrete.title }}
+                                        <span class="pull-right">
+                                            <i ng-class="{'fa fa-chevron-up': !discrete.collapse, 'fa fa-chevron-down': discrete.collapse}"></i>
+                                        </span>
+                                    </h6>
+                                </header>
+
+                                <ul class="toggler__list" collapse="discrete.collapse">
+                                    <li ng-class="{'active': value.isSelected }" ng-repeat="value in discrete.values"
+                                        ng-click="filter(discrete, value)">
+                                        {{ value.title | ellipsis:26 }}
+                                        <span class="pull-right badge badge--{{value.badge}}">{{ value.predict }}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-12 col-sm-12">
+                            <div class="module module--skinny">
+                                <header class="module__header">Averages</header>
+                                <div class="module__body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Rent</th>
+                                            <th>Sq Ft</th>
+                                            <th>Count</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="average in rentMetrics.getAverages() | orderBy: 'bedrooms'">
+                                            <td>{{ average.type }}</td>
+                                            <td>{{ average.rent / average.count | currency }}</td>
+                                            <td>{{ average.sqft / average.count | number:0 }}</td>
+                                            <td>{{ average.count }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="rentMetrics.spinner">
+        <div class="col-lg-12">
+            <div class="spinner">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-repeat="comp in chunk">
+        <div class="col-lg-12">
+            <div class="module module--skinny module--bordered">
+                <header class="module__header"><h5>{{ comp.address }} <span class="pull-right">{{ comp.distance_mi | number:2 }} miles</span>
+                </h5></header>
+                <div class="module__body">
+                    <div class="row">
+                        <div class="col-lg-3" ng-if="comp.images.length">
+                            <div class="preview" ng-click="openCarouselModal(comp.images, comp.images[0])">
+                                <div class="preview__mask">
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <img class="preview__img" ng-src="{{ comp.images[0].url }}" alt=""/>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12"
+                             ng-class="{'col-lg-9': comp.images.length, 'col-lg-12': !comp.images.length}">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Rent</th>
+                                    <th>Sq Ft</th>
+                                    <th>Rent / Sq Ft</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="unit in comp.latest_prices"
+                                    ng-class="{'text-color--info bg-solid--info': selectedTypes[unit.type]}">
+                                    <td>
+                                        {{ unit.type }}
+                                    </td>
+                                    <td>
+                                        {{ unit.rent && (unit.rent | currency) || "" }}
+                                    </td>
+                                    <td>
+                                        {{ unit.sq_ft }}
+                                    </td>
+                                    <td>
+                                        {{ unit.rent_per_sq_ft && (unit.rent_per_sq_ft | currency) || "" }}
+                                    </td>
+                                    <td>
+                                        {{ unit.rent_posted_date && (unit.rent_posted_date | date) || "" }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

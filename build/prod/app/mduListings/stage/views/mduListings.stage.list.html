@@ -1,0 +1,45 @@
+<!--stage to-do list-->
+<div class="dashboard__box dashboard__box--left-list bg-solid--white">
+    <!-- powers potentially here -->
+    <div class="scroll-container">
+        <ul class="inner-container">
+            <li class="card" ng-click="openNewMduListing()">
+                <div class="card__btn text-center">
+                    New MDU Listing
+                </div>
+            </li>
+            <li class="card" ng-repeat="listing in todoListings">
+                <header class="card__header">
+                    <span class="card__header-btn" ng-click="openToDoDetails(listing)">
+                        {{listing.title}}
+                    </span>
+                </header>
+                <div class="card__body">
+                    <p>{{listing.description}}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--stage done list-->
+<div class="dashboard__box dashboard__box--right-list bg-solid--white">
+    <!-- powers potentially here -->
+    <div class="scroll-container">
+        <ul class="inner-container">
+            <li class="card" ng-repeat="listing in doneListings">
+                <header class="card__header">
+                    <div class="card__header-btn" ng-click="openDoneDetails(listing)">
+                        {{listing.title}}
+                    </div>
+                </header>
+                <div class="card__body">
+                    <p>{{listing.description}}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--stage to-do/done details || stage newMduListing-->
+<div ui-view></div>

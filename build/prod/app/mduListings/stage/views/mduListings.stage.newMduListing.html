@@ -1,0 +1,83 @@
+<div>
+    <div class="dashboard__overlay--left-col-large">
+        <!--DETAILS HEADER-->
+        <div class="row gutter-double-bottom">
+            <div class="col-lg-1 gutter-top">
+                <i class="fa fa-times fa-2x gutter-left icon-btn--plain-danger"
+                   ng-click="closeStageDetails()"></i>
+            </div>
+            <div class="col-lg-offset-3 col-lg-4 text-center gutter-double-top">
+                <h3>New MDU Listing</h3>
+            </div>
+            <div class="col-lg-1 col-lg-offset-1 gutter-double-top">
+                <i class="fa fa-plus fa-2x pull-right icon-btn--plain-primary"
+                   ng-click="addAddress()"></i>
+            </div>
+            <div class="col-lg-1 col-lg-offset-1 gutter-double-top">
+                <i class="fa fa-arrow-right fa-2x icon-btn--plain"
+                    ng-click="openNewMduListingMatch()"></i>
+            </div>
+        </div>
+        <h4 class="text-color--info text-center">
+            Enter an address to get started (or a few)
+        </h4>
+        <!--ENTER AN ADDRESS-->
+        <div class="text-center scroll-container" style="margin-top:50px; padding-bottom:225px;">
+            <div ng-repeat="address in mduAddressModels track by $index"
+                 class="ani-repeater--simple-fade gutter-double-bottom">
+                <form class="form-horizontal" style="margin-top:25px;">
+                    <div class="form-group gutter-top">
+                        <div class="control-label col-lg-offset-1 col-lg-1">{{address.street1}}</div>
+                        <div class="col-lg-6 col-lg-offset-1">
+                            <input type="text" placeholder="42 Wallaby Way" class="form-control"
+                                   ng-model="whichAddress($index).street1">
+                        </div>
+                        <div class="col-lg-1">
+                            <i class="fa fa-times pull-right icon-btn--plain-danger"
+                               ng-show="$index > 0"
+                               ng-click="removeAddressForm($index)" style="cursor:pointer;"></i>
+                        </div>
+                    </div>
+                    <div class="form-group gutter-top">
+                        <div class="control-label col-lg-offset-1 col-lg-1">{{address.city}}</div>
+                        <div class="col-lg-6 col-lg-offset-1">
+                            <input type="text" placeholder="Sydney" class="form-control"
+                                   ng-model="whichAddress($index).city">
+                        </div>
+                    </div>
+                    <div class="form-group gutter-top">
+                        <div class="control-label col-lg-2">{{address.zip}}</div>
+                        <div class="col-lg-2 col-lg-offset-1">
+                            <input type="text" placeholder="66699" class="form-control"
+                                   ng-model="whichAddress($index).zip">
+                        </div>
+                        <div class="control-label col-lg-1 col-lg-offset-1">{{address.state}}</div>
+                        <div class="col-lg-1 col-lg-offset-1">
+                            <input type="text" placeholder="GA" class="form-control"
+                                   ng-model="whichAddress($index).state">
+                            <!--TODO make state selecter-->
+                        </div>
+                    </div>
+                </form>
+                <div class="form-divider--line"></div>
+            </div>
+        </div>
+        <!--DETAILS FORM-->
+
+    </div>
+    <!--TO-DO LIST-->
+    <div class="dashboard__overlay--right-col-small">
+        <div class="scroll-container">
+            <ul class="inner-container">
+                <li class="card" ng-repeat="listing in todoListings">
+                    <header class="card__header">
+                        <div>{{listing.title}}</div>
+                    </header>
+                    <div class="card__body">
+                        <p>{{listing.description}}</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
