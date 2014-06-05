@@ -265,8 +265,8 @@ angular.module('rescour.services')
              * @name getRawData
              * @methodOf MDUListing.prototype
              *
-             * @description Returns raw data for an
-             * mdu_listing
+             * @description Returns raw data for a
+             * MDU Listing
              *
              * @returns {HttpPromise} Future Promise
              */
@@ -274,10 +274,9 @@ angular.module('rescour.services')
                 var defer = $q.defer(),
                     self = this,
                     path = Environment.path + MDUListing.rawPath + self.id,
-                    config = angular.extend({}, Environment.config),
-                    body = JSON.stringify(self);
+                    config = angular.extend({}, Environment.config);
 
-                $http.get(path, body, config).then(
+                $http.get(path, config).then(
                     function (response) {
                         defer.resolve(response);
                     },
@@ -294,7 +293,8 @@ angular.module('rescour.services')
              * @name getStatus
              * @methodOf MDUListing.prototype
              *
-             * @description Returns CSS class suffix based off mduListingStatus.
+             * @description Returns CSS class suffix based off
+             * MDU Listing status
              *
              * @returns {String} CSS class suffix
              */

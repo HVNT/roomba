@@ -479,7 +479,9 @@ angular.module('rescour.roomba')
             return $scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length];
         };
 
+        //////////////////////////////////////////////////////////////////////////////
         /* FORM AXNS AND SHIT */
+        //////////////////////////////////////////////////////////////////////////////
         $scope.updateMduListing = function () {
             console.log($scope.mduListingFormModel);
 
@@ -487,10 +489,11 @@ angular.module('rescour.roomba')
             $scope.mduListingFormModel.update().then(function (response) {
 
             }, function (response) {
-
+                //set status code
             });
         };
 
+        // this method seems fucky as fuck
         $scope.saveMduListingForm = function () {
             // put in to-do and set workflow state for demo
             $scope.mduListingFormModel.workflowState = 'todo';
@@ -503,7 +506,18 @@ angular.module('rescour.roomba')
             resetMduListingFormModel();
             // some kind of check here??
             $state.go('mduListings.stage.list');
-            console.log($scope.mduListingFormModel);
+        };
+
+        /* WORKFLOW STATE SHIT */
+        $scope.toWorkflowStateDone = function () {
+            transformMduListingFormModel();
+            $scope.mduListingFormModel.toWorkflowStateDone().then(function (response) {
+                $scope.doneListings.push($scope.mduListingFormModel);
+                resetMduListingFormModel();
+                $state.go('mduListings.stage.list');
+            }, function (response) {
+                //set status code
+            });
         };
 
         function transformMduListingFormModel () {

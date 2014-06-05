@@ -18,6 +18,11 @@
             SAVE
         </button>
     </div>
+    <div class="col-lg-1 gutter-double-top">
+        <button class="simple-btn simple-btn--success" ng-click="toWorkflowStateDone()">
+            <i class="fa fa-check-square-o" style="margin-right: 3px;"></i>DONE
+        </button>
+    </div>
 </div>
 <!--MDU LISTING FORM-->
 <div class="scroll-container" style="padding-bottom:250px;">
@@ -182,7 +187,7 @@ grain control I wanted to optimize the form -->
                         </div>
                     </div>
                     <div class="col-lg-1">
-                        <button class="simple-btn simple-btn--primary simle-btn__hug-floor pull-right"
+                        <button class="simple-btn simple-btn--primary simle-btn__hug-floor pull-right" style="margin-top: 5px;"
                                 ng-click="addMduListingFormTourDate()">
                             <i class="fa fa-plus"></i>
                         </button>
@@ -317,6 +322,8 @@ grain control I wanted to optimize the form -->
     <div class="col-lg-1">
         <div class="input-dropdown dropdown clearfix" style="margin:0;">
             <input ng-init="yearsBuiltInputActive = false;"
+                   placeholder="{{mduListingFormModel.mdus[activeMduFormIndex].yearsBuilt[0].value
+                   || mduListingFormModel.mdus[activeMduFormIndex].yearsBuilt[0] || 'N/A'}}"
                    ng-focus="yearsBuiltInputActive = true;" ng-blur="yearsBuiltInputActive = false;"
                    class="input-dropdown__input" ng-model="whichYearBuiltModel().value"/>
 
@@ -569,7 +576,7 @@ grain control I wanted to optimize the form -->
                                ng-model="whichSalesHistoryModel().source">
                     </div>
                     <div class="col-lg-offset-1 col-lg-5">
-                        <input class="text form-input--white" placeholder="Source Url"
+                        <input class="text form-input--white" placeholder="Source URL"
                                ng-model="whichSalesHistoryModel().sourceUrl">
                     </div>
                     <div class="col-lg-1">
