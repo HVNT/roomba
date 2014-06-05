@@ -29,7 +29,7 @@
                     <div class="form-group gutter-top">
                         <div class="control-label col-lg-offset-1 col-lg-1">{{address.street1}}</div>
                         <div class="col-lg-6 col-lg-offset-1">
-                            <input type="text" placeholder="42 Wallaby Way" class="form-control"
+                            <input type="text" placeholder="42 Wallaby Way" class="form-control form-input--white"
                                    ng-model="whichAddress($index).street1">
                         </div>
                         <div class="col-lg-1">
@@ -41,19 +41,19 @@
                     <div class="form-group gutter-top">
                         <div class="control-label col-lg-offset-1 col-lg-1">{{address.city}}</div>
                         <div class="col-lg-6 col-lg-offset-1">
-                            <input type="text" placeholder="Sydney" class="form-control"
+                            <input type="text" placeholder="Sydney" class="form-control form-input--white"
                                    ng-model="whichAddress($index).city">
                         </div>
                     </div>
                     <div class="form-group gutter-top">
                         <div class="control-label col-lg-2">{{address.zip}}</div>
                         <div class="col-lg-2 col-lg-offset-1">
-                            <input type="text" placeholder="66699" class="form-control"
+                            <input type="text" placeholder="66699" class="form-control form-input--white"
                                    ng-model="whichAddress($index).zip">
                         </div>
                         <div class="control-label col-lg-1 col-lg-offset-1">{{address.state}}</div>
                         <div class="col-lg-1 col-lg-offset-1">
-                            <input type="text" placeholder="GA" class="form-control"
+                            <input type="text" placeholder="GA" class="form-control form-input--white"
                                    ng-model="whichAddress($index).state">
                             <!--TODO make state selecter-->
                         </div>
@@ -67,17 +67,17 @@
     </div>
     <!--TO-DO LIST-->
     <div class="dashboard__overlay--right-col-small">
-        <div class="scroll-container">
-            <ul class="inner-container">
-                <li class="card" ng-repeat="listing in todoListings">
-                    <header class="card__header">
-                        <div>{{listing.title}}</div>
-                    </header>
-                    <div class="card__body">
-                        <p>{{listing.description}}</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
+        <!--<div class="scroll-container">-->
+            <!--<ul class="inner-container">-->
+                <!--<li class="card" ng-repeat="listing in todoListings">-->
+                    <!--<header class="card__header">-->
+                        <!--<div>{{listing.title}}</div>-->
+                    <!--</header>-->
+                    <!--<div class="card__body">-->
+                        <!--<p>{{listing.description}}</p>-->
+                    <!--</div>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
     </div>
 </div>

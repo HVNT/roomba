@@ -1,7 +1,10 @@
 <div class="dashboard">
 
     <!--left filters-->
-    <div class="dashboard__box dashboard__box--left-col-small bg-solid--white"></div>
+    <div class="dashboard__box dashboard__box--left-col-small bg-solid--white" style="padding-left:40px;">
+        <button class="simple-btn simple-btn--primary gutter-top" ng-click="openNewMduListing()">CREATE LISTING</button>
+
+    </div>
     <!--stage list-->
     <div ui-view></div>
     <!--right filters-->

@@ -44,9 +44,10 @@ angular.module('rescour.roomba')
                     MduConfig: function ($http, $q, $log, Environment, MDUListingFactory, MDUListingMarketFactory) {
                         var MDUListingDefer = $q.defer();
 
-                        $http.get('/app/environment/market.json').then(function (config) {
+                        $http.get('/app/config/market.json').then(function (config) {
                             var MDUConfig = config.data.mdu_listings;
                             var MDUListing = MDUListingFactory(MDUConfig);
+                            console.log(MDUListing);
 
                             MDUListing.query().then(function (response) {
                                 console.log(response);

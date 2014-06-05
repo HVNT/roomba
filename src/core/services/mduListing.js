@@ -15,33 +15,47 @@ angular.module('rescour.services')
              */
             var MDUListing = function (data) {
                 /*
-                NOTE: might want to refactor to itar over all collections for finer control
+                 NOTE: might want to refactor to itar over all collections for finer control
                  */
                 /** MDU Listing Fields **/
                 this.id = data.id || 'lol no id?';
                 this.workflowState = data.workflowState || 'lol no state?';
                 this.title = data.title || 'Untitled Property';
-                this.page = data.page || 'None Available';
+                this.sourceUrl = data.sourceUrl || 'None Available';
                 this.description = data.description || 'None Available';
                 this.broker = data.broker || 'None Available';
-                this.flyer = data.flyer || 'None Available';
-                this.marketingUrl = data.marketingUrl  || 'None Available';
-                this.callForOffers = data.callForOffers  || 'None Available';
-                this.datePosted = data.datePosted  || 'None Available';
-                this.status = data.status  || 'None Available'; // key should be propertyStatus
-                // might want to itar
-                this.price = data.price  || [];
+                this.flyerUrl = data.flyerUrl || 'None Available';
+                this.marketingUrl = data.marketingUrl || 'None Available';
+                this.callForOffers = data.callForOffers || new Date();
+                this.datePosted = data.datePosted || new Date();
+                this.status = data.status || 'None Available'; // key should be propertyStatus
+                //MARKETPLACE NEEDS TO BE REFACTORED TO HANDLE ARR OF INTS
+                //this.price = data.price || new Array(2);
+                this.price = [];
+                if (data.price) {
+                    this.price[0] = data.price[0] ? {low: data.price[0]} : {low: null};
+                    this.price[1] = data.price[1] ? {high: data.price[1]} : {high: null};
+                }
+//                this.lowPrice = data.price[0] || null;
+//                this.highPrice = data.price[1] || null;
+
                 this.images = data.images || [];
                 this.tourDates = data.tourDates || [];
                 this.contacts = data.contacts || [];
                 /** MDU Fields **/
                 this.mdus = [];
-                if(data.mdus.length > 0) {
+                if (data.mdus.length > 0) {
                     for (var i = 0; i < data.mdus.length; i++) {
                         var mdu = {},
                             mduData = data.mdus[i];
+                        mdu.title = mduData.title || 'Untitled MDU';
                         mdu.type = mduData.type || 'None Available';
-                        mdu.yearBuilt = mduData.yearBuilt || 'None Available';
+                        mdu.yearsBuilt = [];
+                        if(mduData.yearsBuilt) { // because MARKETPLACE needs to be refactored to handle arr ints
+                            for (var j = 0; j < mduData.yearsBuilt.length; j++) {
+                                mdu.yearsBuilt.push({value: mduData.yearsBuilt[j]});
+                            }
+                        }
                         mdu.numUnits = mduData.numUnits || 'None Available';
                         mdu.acres = mduData.acres || 'None Available';
                         mdu.assessorUrl = mduData.assessorUrl || 'None Available';
@@ -135,7 +149,7 @@ angular.module('rescour.services')
                     }
                 );
                 return defer.promise;
-           };
+            };
 
             MDUListing.prototype.update = function () {
                 console.log(this);

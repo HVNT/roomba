@@ -26,7 +26,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
             id: '1'
         };
 
-        $http.get('/app/environment/market.json').then(function (response) {
+        $http.get('/app/config/market.json').then(function (response) {
             MDU_CONFIG = response.data;
             initialize();
         }, function (response) {
@@ -149,6 +149,26 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                                     mduListing[field.key] = Utilities.randomUrl(10);
                                 }
                                 break;
+                            case('years-built'):
+                                if (field.key.charAt(3) == '.') {
+                                    mduKey = field.key.slice(4, field.key.length);
+                                    mdu[mduKey] = [];
+                                    matchMdu[mduKey] = [];
+                                    var itarFor = Utilities.generateNum(0, 6, false);
+                                    for (var i = 0; i < itarFor; i++) {
+                                        mdu[mduKey].push(Utilities.generateNum(1500, 2020, false));
+                                        matchMdu[mduKey].push(Utilities.generateNum(1500, 2020, false));
+                                    }
+                                } else {
+                                    mdu[field.key] = [];
+                                    matchMdu[field.key] = [];
+                                    var itarFor = Utilities.generateNum(0, 6, false);
+                                    for (var i = 0; i < itarFor; i++) {
+                                        mdu[field.key].push(Utilities.generateNum(1500, 2020, false));
+                                        matchMdu[field.key].push(Utilities.generateNum(1500, 2020, false));
+                                    }
+                                }
+                                break;
                             case('address'):
                                 if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
@@ -183,13 +203,10 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                             case('price'):
                                 if (field.key.charAt(3) == '.') {
                                     mduKey = field.key.slice(4, field.key.length);
-                                    mdu[mduKey] = [Utilities.generateNum(10000, 99999, false),
-                                        Utilities.generateNum(10000, 99999, false)];
-                                    matchMdu[mduKey] = [Utilities.generateNum(10000, 99999, false),
-                                        Utilities.generateNum(10000, 99999, false)];
+                                    mdu[mduKey] = [Utilities.generateNum(10000, 50000, false), Utilities.generateNum(50001, 99999, false)];
+                                    matchMdu[mduKey] = [Utilities.generateNum(10000, 50000, false), Utilities.generateNum(50001, 99999, false)];
                                 } else {
-                                    mduListing[field.key] = [Utilities.generateNum(10000, 99999, false),
-                                        Utilities.generateNum(10000, 99999, false)];
+                                    mduListing[field.key] = [Utilities.generateNum(10000, 50000, false), Utilities.generateNum(50001, 99999, false)];
                                 }
                                 break;
                             default:

@@ -34,10 +34,14 @@ angular.module('rescour.roomba')
     .controller('StageCtrl', function ($scope, $state, $http, $q, Environment) {
 
         $scope.closeStageDetails = function () {
-            $state.go('mduListings.stage.list');
+            if (confirm("Are you sure you want to exit? You will lose your shit.")) {
+                resetMduListingFormModel();
+                $state.go('mduListings.stage.list');
+            }
         };
         $scope.openToDoDetails = function (mduListing) {
             console.log(mduListing);
+            $scope.mduListingFormModel = mduListing;
             $state.go('mduListings.stage.todoDetails',
                 {
                     listingId: mduListing.id
@@ -54,18 +58,22 @@ angular.module('rescour.roomba')
             $state.go('mduListings.stage.newMduListing');
         };
 
+        //////////////////////////////////////////////////////////////////////////////
+        /* ADDRESS SHIT */
+        //////////////////////////////////////////////////////////////////////////////
         var mduAddressModel = {
             localId: 0,
             street1: 'Street',
-            //street2
+            street2: null,
             city: 'City',
             state: 'State',
             zip: 'Zip Code'
         };
         $scope.mduAddressModels = [mduAddressModel];
+
         $scope.mduAddress0 = {
             street1: 'test remove for',
-            //street2
+            street2: null,
             city: 'production',
             state: 'GA',
             zip: 30332
@@ -75,7 +83,6 @@ angular.module('rescour.roomba')
         $scope.whichAddress = function (index) {
             return $scope.mduAddresses[index];
         };
-
         $scope.addAddress = function () {
             var newMduAddressModel = mduAddressModel;
             newMduAddressModel.localId++;
@@ -84,7 +91,7 @@ angular.module('rescour.roomba')
             var mduAddressNamespace = 'mduAddress' + newMduAddressModel.localId;
             $scope[mduAddressNamespace] = {
                 street1: null,
-                //street2
+                street2: null,
                 city: null,
                 state: null,
                 zip: null
@@ -96,6 +103,9 @@ angular.module('rescour.roomba')
             $scope.mduAddressModels.splice(index, 1);
         };
 
+        //////////////////////////////////////////////////////////////////////////////
+        /* MATCHING MDU(S) SHIT */
+        //////////////////////////////////////////////////////////////////////////////
         $scope.matchingMdus = [];
 
         $scope.openNewMduListingMatch = function () {
@@ -148,6 +158,12 @@ angular.module('rescour.roomba')
             $state.go('mduListings.stage.newMduListingMatch');
         };
 
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        /* FORM SHIT */
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+
         /** VIEW MODEL FOR MDU LISTING FORM **/
             // reset data? --> from one place..
         $scope.newMduListingFormModel = {
@@ -158,17 +174,29 @@ angular.module('rescour.roomba')
             mdus: [],
             images: [],
             tourDates: [],
-            contacts: []
+            contacts: [],
+            price: []
         };
+
+        function resetMduListingFormModel() {
+            $scope.mduListingFormModel = {
+                mdus: [],
+                images: [],
+                tourDates: [],
+                contacts: [],
+                price: []
+            };
+        }
+
         /*******************************/
 
         $scope.openNewMduListingForm = function () {
             assessMatches();
 
+            console.log($scope.newMduListingFormModel);
             $scope.MduListing.init($scope.newMduListingFormModel).then(function (response) {
                 $scope.newMduListingFormModel.id = response.data.response.id;
                 $scope.mduListingFormModel = new $scope.MduListing($scope.newMduListingFormModel);
-                console.log($scope.mduListingFormModel);
                 $scope.continueToNewMduListingForm();
             }, function (response) {
                 console.log(response);
@@ -176,7 +204,6 @@ angular.module('rescour.roomba')
         };
 
         function assessMatches() {
-            console.log($scope.matchingMdus);
             for (var i = 0; i < $scope.matchingMdus.length; i++) {
                 if ($scope.matchingMdus[i].length > 0) {
                     for (var j = 0; j < $scope.matchingMdus[i].length; j++) {
@@ -198,7 +225,6 @@ angular.module('rescour.roomba')
                     }; // no match
                 }
             }
-            console.log($scope.newMduListingFormModel);
         }
 
         $scope.continueToNewMduListingForm = function () {
@@ -213,25 +239,14 @@ angular.module('rescour.roomba')
 
         //////////////////////////////////////////////////////////////////////////////
         /* DROPDOWN TYPEAHEAD SHIT */
+        //////////////////////////////////////////////////////////////////////////////
         /*  NOTE: This shit will be deleted if we move to iterating over the config cus then we will
-            just have this shit at the appropriate $index */
+         just have this shit at the appropriate $index */
         // broker
         $scope.brokerTypeahead = [
             "ARA", "Brown Realty Advisors", "Cushman & Wakefield", "CBRE", "Jones Lang LaSalle", "Capital Advisors",
             "Capstone", "Engler Financial Group", "HFF", "Hendricks Berkadia", "IPA", "MHA", "Mays Vetter", "Moran & Company",
             "Muskin Commercial", "Rock Apartment Advisors", "Transwestern", "Walchle Lear"
-        ];
-        // unit mix
-        $scope.unitMixTypeahead = [
-            "1 BR / 1 BA", "1 BR / 1.5 BA", "1 BR / 2 BA",
-            "2 BR / 1 BA", "2 BR / 1.5 BA", "2 BR / 2 BA", "2 BR / 2.5 BA", "2 BR / 3 BA",
-            "3 BR / 1 BA", "3 BR / 1.5 BA", "3 BR / 2 BA", "3 BR / 2.5 BA", "3 BR / 3 BA", "3 BR / 3.5 BA", "3 BR / 4 BA",
-            "4 BR / 1 BA", "4 BR / 1.5 BA", "4 BR / 2 BA", "4 BR / 2.5 BA", "4 BR / 3 BA", "4 BR / 3.5 BA", "4 BR / 4 BA",
-            "1 BR / 1 BA TH", "1 BR / 1.5 BA TH", "1 BR / 2 BA TH",
-            "2 BR / 1 BA TH", "2 BR / 1.5 BA TH", "2 BR / 2 BA TH", "2 BR / 2.5 BA TH", "2 BR / 3 BA TH",
-            "3 BR / 1 BA TH", "3 BR / 1.5 BA TH", "3 BR / 2 BA TH", "3 BR / 2.5 BA TH", "3 BR / 3 BA TH", "3 BR / 3.5 BA TH", "3 BR / 4 BA TH",
-            "4 BR / 1 BA TH", "4 BR / 1.5 BA TH", "4 BR / 2 BA TH", "4 BR / 2.5 BA TH", "4 BR / 3 BA TH", "4 BR / 3.5 BA TH", "4 BR / 4 BA TH",
-            "Average", "Studio", "Efficiency"
         ];
         // property status
         $scope.propertyStatusTypeahead = [
@@ -252,22 +267,25 @@ angular.module('rescour.roomba')
             'West Virginia', 'Wisconsin', 'Wyoming'
         ];
 
-
         //////////////////////////////////////////////////////////////////////////////
         /* DATE PICKER SHIT */
+        //////////////////////////////////////////////////////////////////////////////
         // date posted
         $scope.datePostedOptions = {
             formatYear: 'yy'
         };
+        $scope.datePostedOpen = false;
         $scope.openMduListingDatePosted = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.datePostedOpen = true;
         };
+
         // call for offers
         $scope.callForOffersOptions = {
             formatYear: 'yy'
         };
+        $scope.callForOffersOpen = false;
         $scope.openMduListingCallForOffers = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -275,17 +293,63 @@ angular.module('rescour.roomba')
         };
 
         //////////////////////////////////////////////////////////////////////////////
+        /* TOUR DATES FIELD SHIT */
+        //////////////////////////////////////////////////////////////////////////////
+        function createNewTourDateModel() {
+            $scope['tempTourDateModel' + $scope.mduListingFormModel.tourDates.length] = {};
+        }
+
+        $scope.showNewTourDateFields = false;
+        $scope.toggleNewTourDateFields = function () {
+            $scope.showNewTourDateFields = !$scope.showNewTourDateFields;
+            if ($scope.showNewTourDateFields) createNewTourDateModel();
+        };
+        $scope.addMduListingFormTourDate = function () {
+            if ($scope['tempTourDateModel' + $scope.mduListingFormModel.tourDates.length]) {
+                $scope['tempTourDateModel' + $scope.mduListingFormModel.tourDates.length].id = null;
+                $scope.mduListingFormModel.tourDates.push($scope['tempTourDateModel' + $scope.mduListingFormModel.tourDates.length]);
+                createNewTourDateModel();
+                $scope.updateMduListing();
+            }
+        };
+        $scope.removeMduListingFormTourDate = function (idx) {
+            console.log(idx);
+            console.log($scope.mduListingFormModel.tourDates);
+            $scope.mduListingFormModel.tourDates.splice(idx, 1);
+            $scope.updateMduListing();
+        };
+        $scope.whichTourDateModel = function () {
+            return $scope['tempTourDateModel' + $scope.mduListingFormModel.tourDates.length];
+        };
+
+        // tour date datepicker shit
+        $scope.tourDateOptions = {
+            formatYear: 'yy'
+        };
+        $scope.tourDateOpen = false;
+        $scope.openMduListingTourDate = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.tourDateOpen = true;
+        };
+
+        //////////////////////////////////////////////////////////////////////////////
         /* CONTACT FIELD SHIT */
+        //////////////////////////////////////////////////////////////////////////////
+        function createNewContactModel() {
+            $scope['tempContactModel' + $scope.mduListingFormModel.contacts.length] = {};
+        }
+
         $scope.showNewContactFields = false;
         $scope.toggleNewContactFields = function () {
             $scope.showNewContactFields = !$scope.showNewContactFields;
-            $scope['tempContactModel' + $scope.mduListingFormModel.contacts.length] = {};
+            if ($scope.showNewContactFields) createNewContactModel();
         };
         $scope.addMduListingFormContact = function () {
             if ($scope['tempContactModel' + $scope.mduListingFormModel.contacts.length]) {
                 $scope['tempContactModel' + $scope.mduListingFormModel.contacts.length].id = null;
                 $scope.mduListingFormModel.contacts.push($scope['tempContactModel' + $scope.mduListingFormModel.contacts.length]);
-                $scope.showNewContactFields = !$scope.showNewContactFields;
+                createNewContactModel();
                 $scope.updateMduListing();
             }
         };
@@ -298,18 +362,82 @@ angular.module('rescour.roomba')
         };
 
         //////////////////////////////////////////////////////////////////////////////
+        /* YEARS BUILT SHIT */
+        //////////////////////////////////////////////////////////////////////////////
+        $scope.yearsBuiltInputActive = false;
+        function createNewYearsBuiltModel() {
+            $scope['tempYearsBuiltModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].yearsBuilt.length] = { value: null };
+        }
+
+        $scope.addMduListingFormYearBuilt = function () {
+            if ($scope['tempYearsBuiltModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].yearsBuilt.length] &&
+                $scope['tempYearsBuiltModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].yearsBuilt.length].value != null) {
+                $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].yearsBuilt.push($scope['tempYearsBuiltModel'
+                    + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].yearsBuilt.length]);
+                createNewYearsBuiltModel();
+                $scope.updateMduListing();
+            }
+        };
+        $scope.removeMduListingFormYearBuilt = function (idx) {
+            $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].yearsBuilt.splice(idx, 1);
+            $scope.updateMduListing();
+        };
+        $scope.whichYearBuiltModel = function () {
+            $scope['tempYearsBuiltModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].yearsBuilt.length] =
+                $scope['tempYearsBuiltModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].yearsBuilt.length] || { value: null };
+            return $scope['tempYearsBuiltModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].yearsBuilt.length];
+        };
+
+
+        //////////////////////////////////////////////////////////////////////////////
+        /* UNIT MIX FIELD SHIT */
+        //////////////////////////////////////////////////////////////////////////////
+        function createNewUnitMixModel() {
+            $scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length] = {
+                marketRent: []
+            };
+        }
+
+        $scope.showNewUnitMixFields = false;
+        $scope.toggleNewUnitMixFields = function () {
+            $scope.showNewUnitMixFields = !$scope.showNewUnitMixFields;
+            if ($scope.newUnitMixFields) createNewUnitMixModel();
+        };
+        $scope.addMduListingFormUnitMix = function () {
+            if ($scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length]) {
+                $scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length].id = null;
+                $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.push($scope['tempUnitMixModel'
+                    + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length]);
+                createNewUnitMixModel();
+                $scope.updateMduListing();
+            }
+        };
+        $scope.removeMduListingFormUnitMix = function (idx) {
+            $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.splice(idx, 1);
+            $scope.updateMduListing();
+        };
+        $scope.whichUnitMixModel = function () {
+            return $scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length];
+        };
+
+        //////////////////////////////////////////////////////////////////////////////
         /* SALES HISTORY FIELD SHIT */
+        //////////////////////////////////////////////////////////////////////////////
+        function createNewSalesHistoryModel() {
+            $scope['tempSalesHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length] = {};
+        }
+
         $scope.showNewSalesHistoryFields = false;
         $scope.toggleNewSalesHistoryFields = function () {
             $scope.showNewSalesHistoryFields = !$scope.showNewSalesHistoryFields;
-            $scope['tempSalesHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length] = {};
+            if ($scope.showNewSalesHistoryFields) createNewSalesHistoryModel();
         };
         $scope.addMduListingFormSalesHistory = function () {
             if ($scope['tempSalesHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length]) {
                 $scope['tempSalesHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length].id = null;
                 $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.push($scope['tempSalesHistoryModel'
                     + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].salesHistory.length]);
-                $scope.showNewSalesHistoryFields = !$scope.showNewSalesHistoryFields;
+                createNewSalesHistoryModel();
                 $scope.updateMduListing();
             }
         };
@@ -323,10 +451,15 @@ angular.module('rescour.roomba')
 
         //////////////////////////////////////////////////////////////////////////////
         /* TAX HISTORY FIELD SHIT */
+        //////////////////////////////////////////////////////////////////////////////
+        function createNewTaxHistoryModel() {
+            $scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length] = {};
+        }
+
         $scope.showNewTaxHistoryFields = false;
         $scope.toggleNewTaxHistoryFields = function () {
             $scope.showNewTaxHistoryFields = !$scope.showNewTaxHistoryFields;
-            $scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length] = {};
+            if ($scope.showNewTaxHistoryFields) createNewTaxHistoryModel();
         };
         $scope.addMduListingFormTaxHistory = function () {
             if ($scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length]) {
@@ -345,48 +478,47 @@ angular.module('rescour.roomba')
             return $scope['tempTaxHistoryModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].taxHistory.length];
         };
 
-        //////////////////////////////////////////////////////////////////////////////
-        /* UNIT MIX FIELD SHIT */
-        $scope.showNewUnitMixFields = false;
-        $scope.toggleNewUnitMixFields = function () {
-            $scope.showNewUnitMixFields = !$scope.showNewUnitMixFields;
-            $scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length] = {};
-        };
-        $scope.addMduListingFormUnitMix = function () {
-            if ($scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length]) {
-                $scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length].id = null;
-                $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.push($scope['tempUnitMixModel'
-                    + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length]);
-                $scope.showNewUnitMixFields = !$scope.showNewUnitMixFields;
-                $scope.updateMduListing();
-            }
-        };
-        $scope.removeMduListingFormUnitMix = function (idx) {
-            $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.splice(idx, 1);
-            $scope.updateMduListing();
-        };
-        $scope.whichUnitMixModel = function () {
-            return $scope['tempUnitMixModel' + $scope.mduListingFormModel.mdus[$scope.activeMduFormIndex].unitMix.length];
-        };
-
         /* FORM AXNS AND SHIT */
         $scope.updateMduListing = function () {
+            console.log($scope.mduListingFormModel);
+
+            transformMduListingFormModel();
             $scope.mduListingFormModel.update().then(function (response) {
-                console.log(response);
+
             }, function (response) {
-                console.log(response);
+
             });
         };
 
         $scope.saveMduListingForm = function () {
             // put in to-do and set workflow state for demo
             $scope.mduListingFormModel.workflowState = 'todo';
-            $scope.todoListings.push($scope.mduListingFormModel);
 
+            // not added yet so add
+            if($scope.todoListings.indexOf($scope.mduListingFormModel) < 0) {
+                $scope.todoListings.push($scope.mduListingFormModel);
+            }
+
+            resetMduListingFormModel();
             // some kind of check here??
             $state.go('mduListings.stage.list');
             console.log($scope.mduListingFormModel);
         };
+
+        function transformMduListingFormModel () {
+            // transform price on listing
+            $scope.mduListingFormModel.price = [$scope.mduListingFormModel.price[0], $scope.mduListingFormModel.price[1]];
+
+            // transform yearsBuilt on mdu(s)
+            for (var i = 0; i < $scope.mduListingFormModel.mdus.length; i++) {
+                var mdu = $scope.mduListingFormModel.mdus[i];
+                if(mdu.yearsBuilt.length > 0) {
+                    for (var j = 0; j < mdu.yearsBuilt.length; j++) {
+                        mdu.yearsBuilt[j] = mdu.yearsBuilt[j].value || mdu.yearsBuilt[j];
+                    }
+                }
+            }
+        }
 
     })
     .controller('StageListCtrl', function ($scope) {

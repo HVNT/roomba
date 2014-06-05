@@ -44,7 +44,7 @@
   }
 
   &:active {
-    @include box-shadow(0px 0px 0px 0px rgba(0, 0, 0, 0));
+    @include box-shadow(none !important);
   }
 
   &.isActive {
@@ -56,6 +56,7 @@
 //////////////////////////////////////////////
 //  FORM INPUT FIELDS
 ///////
+
 
 .form-input {
   font-size: 12px;
@@ -69,6 +70,10 @@
     border: 1px solid $gray-light;
     background: $white !important;
   }
+
+  &:hover:not(:focus) {
+    background: $gray-light;
+  }
 }
 
 .form-input--white {
@@ -81,5 +86,155 @@
   &:focus {
     border: 1px solid $gray-light;
     background: $white !important;
+  }
+}
+
+.form-input--btn {
+  position: absolute;
+  background: $gray-dark;
+  color: $gray-lighter;
+  z-index: 3;
+  @include border-radius($border-radius-small);
+
+  &, i {
+    cursor: pointer;
+  }
+
+  &:hover {
+    background: $gray-darker;
+  }
+
+  &:active {
+    @include box-shadow(inset 0px 1px darken($gray-darker, 7%));
+    background: darken($gray-darker, 5%);
+  }
+}
+
+.form-input__btn--left {
+  top: 5px;
+  left: 5px;
+}
+
+.form-input__btn--right {
+  top: 5px;
+  right: 15px;
+}
+
+//////////////////////////////////////////////
+//  SIMPLE BTNS
+///////
+
+.simple-btn {
+  background: $white-google;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+
+  color: $gray-dark;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  height: 27px;
+  line-height: 27px;
+  outline: none;
+  padding: 0 8px;
+  text-align: center;
+  transition: all .218s;
+  -moz-transition: all .218s;
+  -moz-user-select: none;
+  -o-transition: all .218s;
+  -webkit-transition: all .218s;
+  -webkit-user-select: none;
+
+  &:hover {
+    @include box-shadow(0px 0px 1px 2px rgba(0, 0, 0, 0.2));
+  }
+  &:active {
+    @include box-shadow(none !important);
+  }
+}
+
+.simple-btn--primary {
+  background: $brand-primary;
+  color: $white;
+}
+
+
+
+//////////////////////////////////////////////
+//  GROUP EDITOR
+///////
+
+
+.group-editor {
+
+  &.model-editor {
+    .dropdown {
+      position: absolute;
+    }
+  }
+
+  .cell-view {
+    img {
+      margin: 15px;
+      display: block;
+      height: 100px;
+    }
+  }
+
+  .input-preview {
+    position: absolute;
+    left: 0;
+  }
+
+  .table-icon-action {
+    cursor: pointer;
+    font-size: 16px;
+    background: transparent;
+    text-align: center;
+    vertical-align: middle;
+    width: 35px;
+  }
+
+  .input-overlay {
+    color: $brand-primary;
+  }
+
+  .table-input-action {
+    font-size: 10px;
+    position: absolute;
+    right: 0;
+    padding: 5px;
+    top: 5px;
+    color: white;
+    cursor: pointer;
+    @include border-radius(4px);
+  }
+
+  table {
+    padding: 15px;
+
+    td {
+      position: relative;
+    }
+
+    .hover-display {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+
+      i {
+        color: red;
+      }
+    }
+
+    tr:hover {
+
+      & > .hover-display {
+        display: block;
+      }
+    }
   }
 }

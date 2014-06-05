@@ -9,12 +9,6 @@
                     "title": "Broker",
                     "weight": 10
                 }
-            },
-            "range": {
-                "price": {
-                    "title": "Price",
-                    "weight": 5
-                }
             }
         },
         "fields": [
@@ -52,8 +46,8 @@
                 "mock": "date"
             },
             {
-                "title": "Page URL",
-                "key": "page",
+                "title": "Source URL",
+                "key": "sourceUrl",
                 "type": "text",
                 "weight": 980,
                 "fieldWidth": 7,
@@ -100,7 +94,7 @@
             },
             {
                 "title": "Flyer URL",
-                "key": "flyer",
+                "key": "flyerUrl",
                 "type": "text",
                 "weight": 940,
                 "fieldWidth": 7,
@@ -115,6 +109,14 @@
                 "mock": "url"
             },
             {
+                "title": "Title",
+                "key": "mdu.title",
+                "type": "text",
+                "weight": 910,
+                "fieldWidth": 7,
+                "mock": "text-med"
+            },
+            {
                 "title": "Property Type",
                 "key": "mdu.type",
                 "type": "typeahead",
@@ -124,12 +126,12 @@
                 "mock": "prop-type"
             },
             {
-                "title": "Year Built",
-                "key": "mdu.yearBuilt",
+                "title": "Years Built",
+                "key": "mdu.yearsBuilt",
                 "type": "text",
                 "weight": 900,
                 "fieldWidth": 1,
-                "mock": "int-4"
+                "mock": "years-built"
             },
             {
                 "title": "# Units",
@@ -317,32 +319,38 @@
                 "weight": 100,
                 "fields": [
                     {
-                        "key": "type",
-                        "title": "Type",
-                        "type": "typeahead",
-                        "typeahead": [
-                            "1 BR / 1 BA", "1 BR / 1.5 BA", "1 BR / 2 BA",
-                            "2 BR / 1 BA", "2 BR / 1.5 BA", "2 BR / 2 BA", "2 BR / 2.5 BA", "2 BR / 3 BA",
-                            "3 BR / 1 BA", "3 BR / 1.5 BA", "3 BR / 2 BA", "3 BR / 2.5 BA", "3 BR / 3 BA", "3 BR / 3.5 BA", "3 BR / 4 BA",
-                            "4 BR / 1 BA", "4 BR / 1.5 BA", "4 BR / 2 BA", "4 BR / 2.5 BA", "4 BR / 3 BA", "4 BR / 3.5 BA", "4 BR / 4 BA",
-                            "1 BR / 1 BA TH", "1 BR / 1.5 BA TH", "1 BR / 2 BA TH",
-                            "2 BR / 1 BA TH", "2 BR / 1.5 BA TH", "2 BR / 2 BA TH", "2 BR / 2.5 BA TH", "2 BR / 3 BA TH",
-                            "3 BR / 1 BA TH", "3 BR / 1.5 BA TH", "3 BR / 2 BA TH", "3 BR / 2.5 BA TH", "3 BR / 3 BA TH", "3 BR / 3.5 BA TH", "3 BR / 4 BA TH",
-                            "4 BR / 1 BA TH", "4 BR / 1.5 BA TH", "4 BR / 2 BA TH", "4 BR / 2.5 BA TH", "4 BR / 3 BA TH", "4 BR / 3.5 BA TH", "4 BR / 4 BA TH",
-                            "Average", "Studio", "Efficiency"
-                        ]
+                        "key": "bedrooms",
+                        "title": "Bedrooms"
                     },
                     {
-                        "key": "units",
-                        "title": "Units"
+                        "key": "bathrooms",
+                        "title": "Bathrooms"
+                    },
+                    {
+                        "key": "count",
+                        "title": "Count"
                     },
                     {
                         "key": "sqft",
                         "title": "Sq Ft"
                     },
                     {
-                        "key": "rent",
-                        "title": "Rent"
+                        "key": "marketRent",
+                        "title": "Market Rent",
+                        "fields": [
+                            {
+                                "key": "lowMarketRent",
+                                "title": "Low Market Rent"
+                            },
+                            {
+                                "key": "highMarketRent",
+                                "title": "High Market Rent"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "effectiveRent",
+                        "title": "Effective Rent"
                     }
                 ]
             }

@@ -30,6 +30,16 @@ input.input-dropdown__input {
   }
 }
 
+.input-dropdown__input--whiter {
+  background: $white-google !important;
+  &:focus {
+    background: $white !important;
+  }
+  &:hover:not(:focus) {
+    background: $gray-light !important;
+  }
+}
+
 .input-dropdown__overlay {
   position: absolute;
   top: 0;
@@ -66,6 +76,21 @@ input.input-dropdown__input {
   &:active {
     @include box-shadow(inset 0px 1px darken($gray-darker, 7%));
     background: darken($gray-darker, 5%);
+  }
+}
+
+.input-dropdown__btn-primary {
+  background: $brand-primary;
+  &, i {
+    cursor: pointer;
+  }
+
+  &:hover {
+    background: $brand-primary;
+  }
+  &:active {
+    @include box-shadow(inset 0px 1px darken($brand-primary, 7%));
+    background: darken($brand-primary, 5%);
   }
 }
 
