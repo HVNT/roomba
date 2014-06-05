@@ -263,7 +263,7 @@ angular.module('rescour.mock', ['rescour.roomba', 'ngMockE2E'])
                 }, {}];
             });
             /* Receives collection of Addresses, returns matching MDUs */
-            $httpBackend.whenGET(/\/mdus\/$/).respond(function (method, url, data, headers) {
+            $httpBackend.whenGET(/\/mdus\/search_by_addresses\/$/).respond(function (method, url, data, headers) {
                 var matchingMdus = [];
                 // hardcoded this shit sucks i just wanted to move on to other shit and this
                 // is the absolute bare minimum i dont have any validation for why its this way

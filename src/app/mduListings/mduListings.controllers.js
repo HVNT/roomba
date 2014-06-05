@@ -128,11 +128,12 @@ angular.module('rescour.roomba')
                     params: $scope.mduAddresses
                 }, Environment.config);
 
-            var path = Environment.path + '/mdus/';
+            var path = Environment.path + '/mdus/search_by_addresses/';
             $http.get(path, {}, config).then(function (response) {
                 console.log(response);
                 defer.resolve(response);
             }, function (response) {
+                //set status code
                 defer.reject(response);
             });
             return defer.promise;
@@ -530,10 +531,10 @@ angular.module('rescour.roomba')
     .controller('StageDoneDetailsCtrl', function ($scope) {
 
     })
-    .controller('StageNewMduListingCtrl', function ($scope, $state, $http, $q, Environment) {
+    .controller('StageNewMduListingCtrl', function ($scope) {
 
     })
-    .controller('StageNewMduListingMatchCtrl', function ($scope, $state) {
+    .controller('StageNewMduListingMatchCtrl', function ($scope) {
 
     })
     .controller('StageNewMduListingFormCtrl', function ($scope) {

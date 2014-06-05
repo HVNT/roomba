@@ -3,6 +3,7 @@
         "title": "MDU Listings",
         "key": "mdu_listings",
         "path": "/mdu_listings/",
+        "raw_path": "/mdu_listings_raw/",
         "dimensions": {
             "discrete": {
                 "broker": {

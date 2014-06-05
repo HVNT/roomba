@@ -82,6 +82,7 @@ angular.module('rescour.services')
             MDUListing.title = config.title;
             MDUListing.key = config.key;
             MDUListing.path = config.path;
+            MDUListing.rawPath = config.raw_path;
             MDUListing.fields = config.fields;
             MDUListing.dimensions = config.dimensions;
 
@@ -95,43 +96,30 @@ angular.module('rescour.services')
              * @returns {HttpPromise} Future Promise
              */
             MDUListing.query = function () {
-                var items = [],
-                    defer = $q.defer(),
+                var defer = $q.defer(),
                     config = _.extend({
                         cache: true
                     }, Environment.config),
-                    batchLimit = 500;
+                    path = Environment.path + MDUListing.path;
 
-                var path = Environment.path + MDUListing.path;
                 $http.get(path, config).then(function (response) {
                     defer.resolve(response);
                 }, function (response) {
                     defer.reject(response);
                 });
                 return defer.promise;
-
-//                (function batchItems(limit, offset) {
-//                    var path = Environment.path + MDUListing.path + "?limit=" + limit + (offset ? "&offset=" + offset : "");
-//
-//                    $http.get(path, config).then(function (response) {
-//                        items = items.concat(response.data);
-//                        console.log(items);
-//
-//                        if (response.data.length < limit || response.data.length === 0) {
-//                            defer.resolve(items);
-//                        } else {
-//                            offset += batchLimit;
-//                            batchItems(limit, offset);
-//                        }
-//                    }, function (response) {
-//                        defer.reject(response);
-//                    });
-//
-//                })(batchLimit);
-//
-//                return defer.promise;
             };
 
+            /**
+             * @doc method
+             * @name init
+             * @methodOf MDUListing
+             *
+             * @description takes in a MDU Listing form model
+             * and creates a MDU Listing
+             *
+             * @returns {HttpPromise} Future Promise
+             */
             MDUListing.init = function (listingData) {
                 var defer = $q.defer(),
                     self = this,
@@ -151,8 +139,16 @@ angular.module('rescour.services')
                 return defer.promise;
             };
 
+            /**
+             * @doc method
+             * @name update
+             * @methodOf MDUListing.prototype
+             *
+             * @description updates a MDU Listing
+             *
+             * @returns {HttpPromise} Future Promise
+             */
             MDUListing.prototype.update = function () {
-                console.log(this);
                 var defer = $q.defer(),
                     self = this,
                     path = Environment.path + MDUListing.path + self.id,
@@ -169,7 +165,128 @@ angular.module('rescour.services')
                     }
                 );
                 return defer.promise;
+            };
 
+            /**
+             * @doc method
+             * @name toWorkflowStateTodo
+             * @methodOf MDUListing.prototype
+             *
+             * @description updates a MDU Listing to
+             * workflowState to-do
+             *
+             * @returns {HttpPromise} Future Promise
+             */
+            MDUListing.prototype.toWorkflowStateTodo = function () {
+                this.workflowState = 'todo';
+
+                var defer = $q.defer(),
+                    self = this,
+                    path = Environment.path + MDUListing.path + self.id,
+                    config = angular.extend({}, Environment.config),
+                    body = JSON.stringify(self);
+
+                $http.put(path, body, config).then(
+                    function (response) {
+                        defer.resolve(response);
+                    },
+                    function (response) {
+                        // set status code
+                        defer.reject(response);
+                    }
+                );
+                return defer.promise;
+            };
+
+            /**
+             * @doc method
+             * @name toWorkFlowStateDone
+             * @methodOf MDUListing.prototype
+             *
+             * @description updates a MDU Listing to
+             * workflowState done
+             *
+             * @returns {HttpPromise} Future Promise
+             */
+            MDUListing.prototype.toWorkflowStateDone = function () {
+                this.workflowState = 'done';
+
+                var defer = $q.defer(),
+                    self = this,
+                    path = Environment.path + MDUListing.path + self.id,
+                    config = angular.extend({}, Environment.config),
+                    body = JSON.stringify(self);
+
+                $http.put(path, body, config).then(
+                    function (response) {
+                        defer.resolve(response);
+                    },
+                    function (response) {
+                        // set status code
+                        defer.reject(response);
+                    }
+                );
+                return defer.promise;
+            };
+
+            /**
+             * @doc method
+             * @name toWorkflowStatePublished
+             * @methodOf MDUListing.prototype
+             *
+             * @description updates a MDU Listing to
+             * workflowState published
+             *
+             * @returns {HttpPromise} Future Promise
+             */
+            MDUListing.prototype.toWorkflowStatePublished = function () {
+                this.workflowState = 'published';
+
+                var defer = $q.defer(),
+                    self = this,
+                    path = Environment.path + MDUListing.path + self.id,
+                    config = angular.extend({}, Environment.config),
+                    body = JSON.stringify(self);
+
+                $http.put(path, body, config).then(
+                    function (response) {
+                        defer.resolve(response);
+                    },
+                    function (response) {
+                        // set status code
+                        defer.reject(response);
+                    }
+                );
+                return defer.promise;
+            };
+
+            /**
+             * @doc method
+             * @name getRawData
+             * @methodOf MDUListing.prototype
+             *
+             * @description Returns raw data for an
+             * mdu_listing
+             *
+             * @returns {HttpPromise} Future Promise
+             */
+            MDUListing.prototype.getRawData = function () {
+                var defer = $q.defer(),
+                    self = this,
+                    path = Environment.path + MDUListing.rawPath + self.id,
+                    config = angular.extend({}, Environment.config),
+                    body = JSON.stringify(self);
+
+                $http.get(path, body, config).then(
+                    function (response) {
+                        defer.resolve(response);
+                    },
+                    function (response) {
+                        // set status code
+                        defer.reject(response);
+                    }
+                );
+                return defer.promise;
             };
 
             /**
